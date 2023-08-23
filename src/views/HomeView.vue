@@ -1,0 +1,14 @@
+<template>
+    <h1>
+        Home View: {{ counterStore.counter }}
+    </h1>
+    <h3> numero de cambios: {{ counterStore.numberOfChanges }}</h3>
+</template>
+
+<script lang="ts" setup>
+
+import { useCounterStore } from '../store/counterStore'
+
+const counterStore = useCounterStore()
+
+</script>
