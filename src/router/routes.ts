@@ -17,6 +17,18 @@ export const routes = [
         //     return true
         // }
     }, 
+    {
+        path: '/saop/table',
+        name: 'table',
+        component: () => import('@/views/BitacoraMovimientos/Index.vue'),
+        // TODO: Implement autentication 
+        // beforeEnter: (to:any) => {
+        //     if (isAuthenticated()) {
+        //         return '/siasp'
+        //     }
+        //     return true
+        // }
+    }, 
 ]
 
 export default routes
