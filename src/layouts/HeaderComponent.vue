@@ -97,7 +97,7 @@ const toggleCatalogueMenu = () => {
 const handleLogout = () => {
     authStore.logout().then(response => {
         if (response) {
-            window.location.href = '/saop/'
+            window.location.href = '/SAOP/'
         }
     }).catch(error => {
         console.error(error)
