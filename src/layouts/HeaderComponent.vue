@@ -3,7 +3,7 @@
         <div class="options-bar container">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: 'home' }">
+                    <router-link class="nav-link" :to="{ name: 'table' }">
                         Inicio
                     </router-link>
                 </li>
@@ -14,39 +14,39 @@
                     </a>
                     <ul class="dropdown-menu catalogue-dropdown" v-show="showCatalogueMenu">
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-niveles-area' }"
+                            <router-link class="dropdown-item" :to="{ name: 'table' }"
                                 @click="toggleCatalogueMenu">
                                 Niveles por área
                             </router-link>
                         </li>
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-puestos' }"
+                            <router-link class="dropdown-item" :to="{ name: 'table' }"
                                 @click="toggleCatalogueMenu">
                                 Puestos
                             </router-link>
                         </li>
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-escalas-nivel' }"
+                            <router-link class="dropdown-item" :to="{ name: 'table' }"
                                 @click="toggleCatalogueMenu">
                                 Escalas por nivel
                             </router-link>
                         </li>
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-subunidades-clave-presupuesto' }"
+                            <router-link class="dropdown-item" :to="{ name: 'table' }"
                                 @click="toggleCatalogueMenu">
                                 Subunidades vs. clave presupuesto
                             </router-link>
                         </li>
 
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-niveles-tabulador' }"
+                            <router-link class="dropdown-item" :to="{ name: 'table' }"
                                 @click="toggleCatalogueMenu">
                                 Niveles por Tabulador
                             </router-link>
                         </li>
 
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-tipos-nombramiento' }"
+                            <router-link class="dropdown-item" :to="{ name: 'table' }"
                                 @click="toggleCatalogueMenu">
                                 Tipos de Nombramiento
                             </router-link>
@@ -65,7 +65,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item btn" @click="">
+                            <a class="dropdown-item btn" @click="handleLogout">
                                 Cerrar Sesión
                             </a>
                         </li>
@@ -80,9 +80,9 @@
 import {
     ref
 } from 'vue';
-// import useAuthStore from '@/store/authenticationStore';
+import useAuthStore from '@/store/authenticationStore';
 
-// const authStore = useAuthStore();
+const authStore = useAuthStore();
 const showAccountMenu = ref(false);
 const showCatalogueMenu = ref(false);
 
@@ -94,15 +94,15 @@ const toggleCatalogueMenu = () => {
     showCatalogueMenu.value = !showCatalogueMenu.value
 }
 
-// const handleLogout = () => {
-//     authStore.logout().then(response => {
-//         if (response) {
-//             window.location.href = '/siasp/'
-//         }
-//     }).catch(error => {
-//         console.error(error)
-//     })
-// }
+const handleLogout = () => {
+    authStore.logout().then(response => {
+        if (response) {
+            window.location.href = '/saop/'
+        }
+    }).catch(error => {
+        console.error(error)
+    })
+}
 </script>
 
 <style lang="scss" scoped>

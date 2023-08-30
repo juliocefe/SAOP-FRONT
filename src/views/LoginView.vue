@@ -29,7 +29,7 @@
                         </a>
                     </div>
                     <div className="buttons-login text-end">
-                        <button class="btn btn-primary" type="button" @click="">
+                        <button class="btn btn-primary" type="button" @click="handleLogin">
                             Iniciar sesión
                         </button>
                     </div>
@@ -46,39 +46,39 @@
 </template>
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
-// import { useAuthenticationStore } from '@/store/authenticationStore'
-// import router from '@/router'
+import { useAuthenticationStore } from '@/store/authenticationStore'
+import router from '@/router'
 import { APP_DESCRIPTION, APP_TITLE } from '@/utils/constants/application'
 import { useFormValidation } from '@/composables/useFormValidation';
 import { loginValidation } from '@/utils/validations/loginValidations';
 import { defaultValues, ILogin } from '@/utils/models/loginModel'
 
-// const authStore = useAuthenticationStore()
+const authStore = useAuthenticationStore()
 const error = ref(false)
 const message = ref('')
 const showLogin = ref(false)
 
 const loginForm = reactive<ILogin>(defaultValues)
 
-const { errors } = useFormValidation(loginForm, loginValidation)
+const { isValid, errors } = useFormValidation(loginForm, loginValidation)
 
-// const handleLogin = () => {
-//     if (isValid.value) {
-//         showLogin.value = false
-//         authStore.login(loginForm.username, loginForm.password).then(response => {
-//             if (response) {
-//                 router.push({ name: 'home' })
-//             } else {
-//                 router.push({ name: 'login' })
-//             }
-//         }).catch(() => {
-//             showLogin.value = true
-//             error.value = true;
-//             message.value = 'Hubo un problema al iniciar sesión. Favor de verificar sus credenciales e intentar de nuevo.'
-//             router.push({ name: 'login' })
-//         })
-//     }
-// }
+const handleLogin = () => {
+    if (isValid.value) {
+        showLogin.value = false
+        authStore.login(loginForm.username, loginForm.password).then(response => {
+            if (response) {
+                router.push({ name: 'table' })
+            } else {
+                router.push({ name: 'login' })
+            }
+        }).catch(() => {
+            showLogin.value = true
+            error.value = true;
+            message.value = 'Hubo un problema al iniciar sesión. Favor de verificar sus credenciales e intentar de nuevo.'
+            router.push({ name: 'login' })
+        })
+    }
+}
 
 onMounted(() => {
     showLogin.value = true

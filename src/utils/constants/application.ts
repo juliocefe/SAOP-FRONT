@@ -21,4 +21,4 @@ export const MONTHS = [
     'diciembre'
 ]
 
-// export const AUTHORIZATION_TOKEN = 'sia-sp-token'
+export const AUTHORIZATION_TOKEN = 'token'

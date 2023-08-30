@@ -1,33 +1,34 @@
 
+import { isAuthenticated } from '@/utils/helpers/authenticationHelper'
+
 export const routes = [
     {
         path: '/saop/',
         component: () => import('@/layouts/LayoutComponent.vue'),
-        children: []
+        children: [
+            {
+                path: '/saop/table',
+                name: 'table',
+                component: () => import('@/views/BitacoraMovimientos/Index.vue'),
+            }, 
+        ],
+        beforeEnter: (to:any) => {
+            if (!isAuthenticated()) {
+                return '/saop/login'
+            }
+            return true
+        }
     },
     {
         path: '/saop/login',
         name: 'login',
         component: () => import('@/views/LoginView.vue'),
-        // TODO: Implement autentication 
-        // beforeEnter: (to:any) => {
-        //     if (isAuthenticated()) {
-        //         return '/siasp'
-        //     }
-        //     return true
-        // }
-    }, 
-    {
-        path: '/saop/table',
-        name: 'table',
-        component: () => import('@/views/BitacoraMovimientos/Index.vue'),
-        // TODO: Implement autentication 
-        // beforeEnter: (to:any) => {
-        //     if (isAuthenticated()) {
-        //         return '/siasp'
-        //     }
-        //     return true
-        // }
+        beforeEnter: (to:any) => {
+            if (isAuthenticated()) {
+                return '/saop'
+            }
+            return true
+        }
     }, 
 ]
 
