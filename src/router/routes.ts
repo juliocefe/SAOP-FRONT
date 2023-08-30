@@ -12,7 +12,7 @@ export const routes = [
                 component: () => import('@/views/BitacoraMovimientos/Index.vue'),
             }, 
         ],
-        beforeEnter: (to:any) => {
+        beforeEnter: () => {
             if (!isAuthenticated()) {
                 return '/saop/login'
             }
@@ -23,7 +23,7 @@ export const routes = [
         path: '/saop/login',
         name: 'login',
         component: () => import('@/views/LoginView.vue'),
-        beforeEnter: (to:any) => {
+        beforeEnter: () => {
             if (isAuthenticated()) {
                 return '/saop'
             }
