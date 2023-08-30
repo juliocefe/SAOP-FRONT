@@ -60,7 +60,7 @@ const showLogin = ref(false)
 
 const loginForm = reactive<ILogin>(defaultValues)
 
-const { isValid, errors } = useFormValidation(loginForm, loginValidation)
+const { errors } = useFormValidation(loginForm, loginValidation)
 
 // const handleLogin = () => {
 //     if (isValid.value) {

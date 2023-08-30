@@ -80,9 +80,9 @@ export const useFormValidation = (initialForm: any, formValidation: any = {}) =>
         }
     }
 
-    const onResetForm = () => {
-        formState.value = initialForm;
-    };
+    // const onResetForm = () => {
+    //     formState.value = initialForm;
+    // };
 
     return {
         formState,

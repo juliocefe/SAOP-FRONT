@@ -13,7 +13,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import { defineComponent, ref } from 'vue';
 import DatatableComponent from '@/components/DataTableComponent.vue';
 
 const columns = [
