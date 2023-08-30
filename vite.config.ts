@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'https://jgsolis88.github.io/saop/',
+  base: 'https://vicmms.github.io/SAOP-FRONT/',
   plugins: [vue()],
   resolve: {
     alias: {
