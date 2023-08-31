@@ -14,44 +14,10 @@
                     </a>
                     <ul class="dropdown-menu catalogue-dropdown" v-show="showCatalogueMenu">
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'table' }"
-                                @click="toggleCatalogueMenu">
-                                Niveles por área
-                            </router-link>
+                            <div class="dropdown-item">
+                                No hay catálogos
+                            </div>
                         </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'table' }"
-                                @click="toggleCatalogueMenu">
-                                Puestos
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'table' }"
-                                @click="toggleCatalogueMenu">
-                                Escalas por nivel
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'table' }"
-                                @click="toggleCatalogueMenu">
-                                Subunidades vs. clave presupuesto
-                            </router-link>
-                        </li>
-
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'table' }"
-                                @click="toggleCatalogueMenu">
-                                Niveles por Tabulador
-                            </router-link>
-                        </li>
-
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'table' }"
-                                @click="toggleCatalogueMenu">
-                                Tipos de Nombramiento
-                            </router-link>
-                        </li>
-
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -60,10 +26,6 @@
                         Cuenta
                     </a>
                     <ul class="dropdown-menu account-dropdown" v-show="showAccountMenu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
                         <li>
                             <a class="dropdown-item btn" @click="handleLogout">
                                 Cerrar Sesión
