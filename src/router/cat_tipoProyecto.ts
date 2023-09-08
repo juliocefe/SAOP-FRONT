@@ -1,0 +1,17 @@
+export const cat_tipoProyectoRoutes = [
+    {
+        path: '',
+        name: 'cat_tipoProyecto',
+        component: () => import('@/views/Cat_TipoProyecto/Index.vue'),
+    },
+    {
+        path: 'crear',
+        name: 'crear-tipoProyecto',
+        component: () => import('@/views/Cat_TipoProyecto/Create.vue')
+    },
+    {
+        path: ':id/editar',
+        name: 'editar-tipoProyecto',
+        component: () => import('@/views/Cat_TipoProyecto/Create.vue')
+    },
+]
