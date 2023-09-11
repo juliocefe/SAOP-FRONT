@@ -1,5 +1,6 @@
 
 import { isAuthenticated } from '@/utils/helpers/authenticationHelper'
+import { constructionTypesRoutes } from './constructionTypesRoutes'
 
 export const routes = [
     {
@@ -11,6 +12,11 @@ export const routes = [
                 name: 'table',
                 component: () => import('@/views/BitacoraMovimientos/Index.vue'),
             }, 
+            {
+              path: '/saop/tipo_obra',
+              name: 'tipo-obra',
+              children: constructionTypesRoutes
+          }, 
         ],
         beforeEnter: () => {
             if (!isAuthenticated()) {
