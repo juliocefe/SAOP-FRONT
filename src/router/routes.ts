@@ -1,4 +1,7 @@
-import { cat_tipoProyectoRoutes } from "@/router/exportFile.ts";
+import {
+  cat_tipoProyectoRoutes,
+  cat_tipoDocumentoRoutes
+} from "@/router/exportFile.ts";
 
 import { isAuthenticated } from "@/utils/helpers/authenticationHelper";
 
@@ -16,6 +19,11 @@ export const routes = [
         path: "cat_tipoProyecto",
         name: "cat_tipoProyecto",
         children: cat_tipoProyectoRoutes,
+      },
+      {
+        path: "cat_tipoDocumento",
+        name: "cat_tipoDocumento",
+        children: cat_tipoDocumentoRoutes,
       },
     ],
     beforeEnter: () => {
