@@ -2,7 +2,15 @@
     <h4 class="view-name">{{ titulo }}</h4>
     <hr class="red" />
     <div class="container">
-      <form role="form" @submit.prevent="saveActividadInstitucional">
+      <form role="form" @submit.prevent="saveTipoProyecto">
+        <InputText
+          v-model="data.clave"
+          title="Clave:"
+          placeholder="Clave"
+          name="clave"
+          id="clave"
+          :error="errors"
+        />
         <InputText
           v-model="data.descripcion"
           title="Descripción:"
@@ -34,7 +42,7 @@
   const router = useRouter();
   const itemId = ref("");
   const { updateData, getData, createData } = usePetition(
-    "cat_actividad_institucional/"
+    "cat_tipo_proyecto/"
   );
   
   const data = ref<CatTipoProyeto>({
@@ -50,7 +58,7 @@
   const handleCancel = () =>
     router.push({ name: "cat_tipoProyecto" });
   
-  async function saveActividadInstitucional() {
+  async function saveTipoProyecto() {
     if (isValid.value) {
       try {
         if (itemId.value) {
@@ -74,13 +82,12 @@
       ? "Editar Tipo Proyecto"
       : "Crear Tipo Proyecto";
     if (itemId.value) {
-      console.log('Se consulta la informacion');
-        /* getData(itemId.value).then((response: any) => {
+        getData(itemId.value).then((response: any) => {
           data.value.descripcion = response.descripcion;
           data.value.clave = response.clave;
         }).catch(()=>{
           router.push({ name: "cat_tipoProyecto" });
-        }); */
+        });
     }
     scrollTop();
   });

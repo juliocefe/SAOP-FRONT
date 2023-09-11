@@ -14,4 +14,9 @@ export const cat_tipoProyectoRoutes = [
         name: 'editar-tipoProyecto',
         component: () => import('@/views/Cat_TipoProyecto/Create.vue')
     },
+    {
+        path: ':id/eliminar',
+        name: 'eliminar-tipoProyecto',
+        component: () => import('@/views/Cat_TipoProyecto/Delete.vue')
+    }
 ]
