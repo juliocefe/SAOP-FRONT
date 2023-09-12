@@ -14,9 +14,22 @@
                     </a>
                     <ul class="dropdown-menu catalogue-dropdown" v-show="showCatalogueMenu">
                         <li>
-                            <div class="dropdown-item">
-                                No hay catálogos
-                            </div>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-tipo-obra' }"
+                                @click="toggleCatalogueMenu">
+                                Tipo de obras
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-prioridades' }"
+                                @click="toggleCatalogueMenu">
+                                Prioridades
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-niveles-area' }"
+                                @click="toggleCatalogueMenu">
+                                Niveles por area
+                            </router-link>
                         </li>
                     </ul>
                 </li>

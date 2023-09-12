@@ -2,6 +2,7 @@
 import { isAuthenticated } from '@/utils/helpers/authenticationHelper'
 import { constructionTypesRoutes } from './constructionTypesRoutes'
 import { prioritiesRoutes } from './prioritiesRoutes'
+import { levelsByAreaRoutes } from './levelsByAreaRoutes'
 
 export const routes = [
     {
@@ -22,6 +23,11 @@ export const routes = [
                 path: '/saop/prioridades',
                 name: 'prioridades',
                 children: prioritiesRoutes
+            }, 
+            {
+                path: '/saop/niveles_area',
+                name: 'niveles-area',
+                children: levelsByAreaRoutes
             }, 
         ],
         beforeEnter: () => {
