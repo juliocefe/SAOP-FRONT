@@ -1,6 +1,7 @@
 
 import { isAuthenticated } from '@/utils/helpers/authenticationHelper'
 import { constructionTypesRoutes } from './constructionTypesRoutes'
+import { prioritiesRoutes } from './prioritiesRoutes'
 
 export const routes = [
     {
@@ -16,7 +17,12 @@ export const routes = [
               path: '/saop/tipo_obra',
               name: 'tipo-obra',
               children: constructionTypesRoutes
-          }, 
+            }, 
+            {
+                path: '/saop/prioridades',
+                name: 'prioridades',
+                children: prioritiesRoutes
+            }, 
         ],
         beforeEnter: () => {
             if (!isAuthenticated()) {
