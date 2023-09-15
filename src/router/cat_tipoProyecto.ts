@@ -1,7 +1,7 @@
 export const cat_tipoProyectoRoutes = [
     {
         path: '',
-        name: 'cat_tipoProyecto',
+        name: 'listar-cat_tipoProyecto',
         component: () => import('@/views/Cat_TipoProyecto/Index.vue'),
     },
     {

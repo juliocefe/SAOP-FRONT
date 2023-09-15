@@ -13,27 +13,27 @@ export const routes = [
         component: () => import('@/layouts/LayoutComponent.vue'),
         children: [
             {
-                path: '/saop/table',
+                path: 'saop/table',
                 name: 'table',
                 component: () => import('@/views/BitacoraMovimientos/Index.vue'),
             }, 
             {
-              path: '/saop/tipo_obra',
+              path: 'tipo_obra',
               name: 'tipo-obra',
               children: constructionTypesRoutes
             }, 
             {
-                path: '/saop/prioridades',
+                path: 'prioridades',
                 name: 'prioridades',
                 children: prioritiesRoutes
             }, 
             {
-                path: '/saop/niveles_area',
+                path: 'niveles_area',
                 name: 'niveles-area',
                 children: levelsByAreaRoutes
             }, 
             {
-                path: "/saop/bitacora",
+                path: "bitacora",
                 name: "bitacora",
                 component: () => import("@/views/BitacoraMovimientos/Index.vue"),
               },

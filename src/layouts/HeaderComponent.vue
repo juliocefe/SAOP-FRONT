@@ -31,6 +31,18 @@
                                 Niveles por area
                             </router-link>
                         </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_tipoProyecto' }"
+                                @click="toggleCatalogueMenu">
+                                Tipo de proyectos
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_tipoDocumento' }"
+                                @click="toggleCatalogueMenu">
+                                Tipo de documentos
+                            </router-link>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
