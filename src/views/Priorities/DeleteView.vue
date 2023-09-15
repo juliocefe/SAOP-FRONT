@@ -59,10 +59,11 @@ const itemId = ref("");
 const showView = ref(false)
 const data = reactive({
   clave: "",
-  nivel: "",
   descripcion: "",
-  base_confianza:0,
-  fojaref:0
+  presidencial: "",
+  tipo_prioridad:"",
+  fecha_prioridad:"",
+  normal:""
 });
 
 const handleCancel = () => router.push({ name: "listar-prioridades" });
