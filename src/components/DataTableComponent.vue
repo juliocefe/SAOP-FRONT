@@ -51,19 +51,12 @@ import DataTablesCore from 'datatables.net-bs4';
 import { DEFAULT_OPTIONS } from '@/utils/constants/datatable'
 import { render } from '@/utils/helpers/renderHelper'
 import { PAGINATION_MAX_PAGES, PAGINATION_OFFSET, PAGINATION_DOTS } from '@/utils/constants/pagination'
+import { IDatatable } from '@/utils/models/dataTableModel'
+
 
 DataTable.use(DataTablesCore);
 
-const props = defineProps<{
-    columns: any[]
-    data: any[]
-    pagination: any
-    rowId: string
-    showEdit: boolean
-    showDelete: boolean
-    showDetail: boolean
-    showSubGroup?: boolean
-}>()
+const props = defineProps<IDatatable>()
 
 const emit = defineEmits(['onEdit', 'onDelete', 'onCreate', 'onDetail', 'onPaginate', 'onSubGroup'])
 const handlePage = (page:any) => emit('onPaginate', page)

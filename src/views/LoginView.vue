@@ -67,7 +67,7 @@ const handleLogin = () => {
         showLogin.value = false
         authStore.login(loginForm.username, loginForm.password).then(response => {
             if (response) {
-                router.push({ name: 'table' })
+                router.push({ name: 'listar-tipo-obra' })
             } else {
                 router.push({ name: 'login' })
             }

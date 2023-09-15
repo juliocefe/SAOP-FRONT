@@ -1,7 +1,7 @@
 export const cat_tipoDocumentoRoutes = [
     {
         path: '',
-        name: 'cat_tipoDocumento',
+        name: 'listar-cat_tipoDocumento',
         component: () => import('@/views/Cat_TipoDocumento/Index.vue'),
     },
     {
