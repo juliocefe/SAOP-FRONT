@@ -20,7 +20,7 @@ const baseURL:string = getBaseURL()
  * @return {any} response data
  * 
  */
-const makeRequest = async (url:string, method:string, body:any = {}, params:any = {}): Promise<any> => {
+export const makeRequest = async (url:string, method:string, body:any = {}, params:any = {}): Promise<any> => {
     const appStore = useApplicationStore()
     try {
         appStore.initTransaction()
