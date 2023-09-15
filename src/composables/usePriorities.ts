@@ -3,11 +3,12 @@ import { getRequest, postRequest, putRequest } from "@/api"
 import { CATALOGO_DEFAULTS } from "@/utils/constants/catalogue"
 import { paginate } from '@/utils/helpers/paginationHelper'
 import { deleteRequest } from "@/api/api"
+import useAlert from "./useAlert"
 
 const ENDPOINT = 'cat_prioridad/'
 
 export const usePriorities = () => {
-
+    const {showAlertSuccess,showAlertWarning} = useAlert();
     const priorities = ref(CATALOGO_DEFAULTS)
 
     const getPriorities = async ({ page = 1 }) => {
@@ -58,10 +59,12 @@ export const usePriorities = () => {
     const savePriority = async (data:any) => {
         try {
             const response = await postRequest(ENDPOINT, data)
+            showAlertSuccess("Registro guardado correctamente");
             return Promise.resolve(response)
         }
-        catch(err) {
+        catch(err:any) {
             console.error(err)
+            showAlertWarning(err) 
             console.log('Error al guardar la nueva prioridad', err)
             return Promise.reject(err)
         } 
@@ -70,10 +73,12 @@ export const usePriorities = () => {
     const deletePriority = async (id:any) => {
         try {
             const response = await deleteRequest(`${ENDPOINT}`, id)
+            showAlertSuccess("Registro eliminado correctamente");
             return Promise.resolve(response)
         }
-        catch(err) {
+        catch(err:any) {
             console.error(err)
+            showAlertWarning(err) 
             console.log('Error al eliminar la prioridad', err)
             return Promise.reject(err)
         } 
@@ -83,10 +88,12 @@ export const usePriorities = () => {
         console.log(data)
         try {
             const response = await putRequest(`${ENDPOINT}`, data.clave, data)
+            showAlertSuccess("Registro actualizado correctamente");
             return Promise.resolve(response)
         }
-        catch(err) {
+        catch(err:any) {
             console.error(err)
+            showAlertWarning(err) 
             console.log('Error al guardar la nueva prioridad', err)
             return Promise.reject(err)
         } 

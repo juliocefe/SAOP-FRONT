@@ -56,7 +56,7 @@
   );
   
   const handleCancel = () =>
-    router.push({ name: "cat_tipoProyecto" });
+    router.push({ name: "listar-cat_tipoProyecto" });
   
   async function saveTipoProyecto() {
     if (isValid.value) {
@@ -66,7 +66,7 @@
         } else {
           await createData(formState.value);
         }
-        router.push({ name: "cat_tipoProyecto" });
+        router.push({ name: "listar-cat_tipoProyecto" });
       } catch (error) {
       }
     } else {
@@ -86,7 +86,7 @@
           data.value.descripcion = response.descripcion;
           data.value.clave = response.clave;
         }).catch(()=>{
-          router.push({ name: "cat_tipoProyecto" });
+          router.push({ name: "listar-cat_tipoProyecto" });
         });
     }
     scrollTop();

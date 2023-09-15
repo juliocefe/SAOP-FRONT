@@ -65,7 +65,7 @@
   );
   
   const handleCancel = () =>
-    router.push({ name: "cat_tipoProyecto" });
+    router.push({ name: "listar-cat_tipoDocumento" });
   
   async function saveTipoProyecto() {
     if (isValid.value) {
@@ -75,7 +75,7 @@
         } else {
           await createData(formState.value);
         }
-        router.push({ name: "cat_tipoDocumento" });
+        router.push({ name: "listar-cat_tipoDocumento" });
       } catch (error) {
       }
     } else {
@@ -96,11 +96,11 @@
           data.value.nombre = response.nombre;
           data.value.clave = response.clave;
         }).catch(()=>{
-          router.push({ name: "cat_tipoDocumento" });
+          router.push({ name: "listar-cat_tipoDocumento" });
         });
     }
     scrollTop();
   });
   </script>
   @/models/institutionalActivity
-  @/utils/validations/cat_tipoProyectoValidations
+  @/utils/validations/cat_tipoDocumentoValidations

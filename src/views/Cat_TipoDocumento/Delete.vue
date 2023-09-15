@@ -48,10 +48,10 @@ const data = reactive({
 })
 const viewName = 'Eliminar Tipo de Documento'
 const {deleteData,getData,} =usePetition("cat_tipo_documento/");
-const handleCancel = () => router.push({ name: 'cat_tipoDocumento' })
+const handleCancel = () => router.push({ name: 'listar-cat_tipoDocumento' })
 const handleConfirm = () => deleteData(itemId.value).then(response => {
     if (response) {
-        router.push({ name: 'cat_tipoDocumento' })  
+        router.push({ name: 'listar-cat_tipoDocumento' })  
     }
 });
 onMounted(() => {
@@ -63,7 +63,7 @@ onMounted(() => {
             data.estatus=response.estatus;
             data.clave=response.clave;
         }).catch(()=>{
-            router.push({ name: 'cat_tipoDocumento' })  
+            router.push({ name: 'listar-cat_tipoDocumento' })  
         })
     } else {return router.push({ name: 'not-found' })}
     scrollTop()
