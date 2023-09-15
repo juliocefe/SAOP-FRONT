@@ -19,8 +19,6 @@
                             title="Eliminar" @click="emit('onDelete', value[rowId])"><i class="bi bi-trash"></i></button>
                         <button v-if="showDetail" class="btn btn-primary btn-sm active mt-2 mb-2" data-placement="top"
                             title="Ver" @click="emit('onDetail', value[rowId])"><i class="bi bi-search"></i></button>
-                        <button v-if="showSubGroup" class="btn btn-primary btn-sm active mt-2 mb-2" data-placement="top"
-                            title="Ver subgrupo" @click="emit('onSubGroup', value[rowId])"><i class="bi bi-eye"></i></button>
                     </td>
                 </tr>
             </tbody>

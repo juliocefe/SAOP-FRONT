@@ -70,7 +70,7 @@ import router from "@/router";
 import { usePriorities } from "@/composables/usePriorities";
 import { useFormValidation } from "@/composables/useFormValidation";
 import { constructionTypesValidations } from "@/utils/validations/constructionTypesValidations";
-import { IConstructionType, defaultValues } from "@/utils/models/constructionTypeModel";
+import { IPriority, defaultValues } from "@/utils/models/priorityModel";
 import { priorities } from "@/utils/constants/priorities"
 
 const viewName = ref("Registrar Prioridad");
@@ -78,7 +78,7 @@ const { savePriority, getPriorityById, updatePriority } = usePriorities(); //, u
 const itemId = ref("");
 const showView = ref(true);//false
 const showKey = ref(true);
-const data = reactive<IConstructionType>(defaultValues);
+const data = reactive<IPriority>(defaultValues);
 
 const { isValid, errors } = useFormValidation(data, constructionTypesValidations);
 
