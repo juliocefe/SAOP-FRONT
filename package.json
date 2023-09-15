@@ -13,7 +13,8 @@
     "vue": "^3.2.47",
     "vue-router": "^4.2.2",
     "datatables.net-bs4": "^1.13.5",
-    "datatables.net-vue3": "^2.1.1"
+    "datatables.net-vue3": "^2.1.1",
+    "vue-sweetalert2": "^5.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
