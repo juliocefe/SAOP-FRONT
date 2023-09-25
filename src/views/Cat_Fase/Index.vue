@@ -34,14 +34,14 @@ import usePetition from "@/composables/usePetition";
 
 const viewName = "Catalogo De Fase";
 const searchTerm = ref("");
-const { arrayData, getDatas, searchData } = usePetition("cat_tipo_proyecto/");
+const { arrayData, getDatas, searchData } = usePetition("cat_fase/");
 
-const handleCreate = () => router.push({ name: "crear-tipoProyecto" });
+const handleCreate = () => router.push({ name: "crear-cat_Fase" });
 const handleEdit = (data: string) =>
-  router.push({ name: "editar-tipoProyecto", params: { id: data } });
+  router.push({ name: "editar-cat_Fase", params: { id: data } });
 const handleDelete = (data: string) =>
   router.push({
-    name: "eliminar-tipoProyecto",
+    name: "eliminar-cat_Fase",
     params: { id: data },
   });
 /* const handleSubGroup = (data: any) =>
@@ -61,8 +61,8 @@ const handleSearch = (term: any) => {
 };
 
 const columns = [
-  { title: "Tipo de Proyecto", data: "clave" },
-  { title: "Descripcion Tipo de Proyecto", data: "descripcion" },
+  { title: "Clave", data: "clave" },
+  { title: "Descripcion de Fase", data: "descripcion" },
 ];
 
 onMounted(() => getDatas({ page: 1 }));
