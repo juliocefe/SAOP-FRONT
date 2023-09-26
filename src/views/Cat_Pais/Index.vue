@@ -34,14 +34,14 @@ import usePetition from "@/composables/usePetition";
 
 const viewName = "Catalogo De Paises";
 const searchTerm = ref("");
-const { arrayData, getDatas, searchData } = usePetition("cat_tipo_proyecto/");
+const { arrayData, getDatas, searchData } = usePetition("cat_pais/");
 
-const handleCreate = () => router.push({ name: "crear-tipoProyecto" });
+const handleCreate = () => router.push({ name: "crear-cat_Pais" });
 const handleEdit = (data: string) =>
-  router.push({ name: "editar-tipoProyecto", params: { id: data } });
+  router.push({ name: "editar-cat_Pais", params: { id: data } });
 const handleDelete = (data: string) =>
   router.push({
-    name: "eliminar-tipoProyecto",
+    name: "eliminar-cat_Pais",
     params: { id: data },
   });
 /* const handleSubGroup = (data: any) =>
@@ -61,8 +61,10 @@ const handleSearch = (term: any) => {
 };
 
 const columns = [
-  { title: "Tipo de Proyecto", data: "clave" },
-  { title: "Descripcion Tipo de Proyecto", data: "descripcion" },
+  { title: "Clave", data: "clave" },
+  { title: "Nombre", data: "nombre_oficial" },
+  { title: "Capital", data: "capital" },
+  { title: "Tipo de Gobierno", data: "tipo_gobierno" },
 ];
 
 onMounted(() => getDatas({ page: 1 }));

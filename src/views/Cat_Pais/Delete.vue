@@ -7,13 +7,23 @@
         <form class="mt-4 card p-4">
         <div class="text-center mb-4">Detalle:</div>
         <div class="form-group">
-            <label for="nombre-operacion">clave</label>
+            <label for="clave-pais">Clave</label>
             <input type="text" :value="data.clave" class="form-control" id="nombre-operacion"
                 placeholder="Introduzca el nombre de la operación" autocomplete="off" disabled>
         </div>
         <div class="form-group">
-            <label for="siglas">Descripción</label>
-            <input type="text" :value="data.descripcion" class="form-control" id="siglas"
+            <label for="nombre-operacion">Nombre</label>
+            <input type="text" :value="data.nombre_oficial" class="form-control" id="nombre-operacion"
+                placeholder="Introduzca el nombre de la operación" autocomplete="off" disabled>
+        </div>
+        <div class="form-group">
+            <label for="nombre-operacion">Capital</label>
+            <input type="text" :value="data.capital" class="form-control" id="nombre-operacion"
+                placeholder="Introduzca el nombre de la operación" autocomplete="off" disabled>
+        </div>
+        <div class="form-group">
+            <label for="siglas">Tipo de Gobiarno</label>
+            <input type="text" :value="data.tipo_gobierno" class="form-control" id="siglas"
                 placeholder="Introduzca el nombre de la operación" autocomplete="off" disabled>
         </div>
         <div class="form-check">
@@ -36,27 +46,30 @@ const itemId = ref<any>({value:0});
 const route = useRoute()
 const router = useRouter();
 const data = reactive({
-    descripcion: "",    
+    tipo_gobierno: "",    
+    capital: "",    
+    nombre_oficial: "",    
     estatus: false,
     clave: ""
 })
-const viewName = 'Eliminar Tipo de Proyecto'
-const {deleteData,getData,} =usePetition("cat_tipo_proyecto/");
-const handleCancel = () => router.push({ name: 'listar-cat_tipoProyecto' })
+const viewName = 'Eliminar Pais'
+const {deleteData,getData,} =usePetition("cat_pais/");
+const handleCancel = () => router.push({ name: 'listar-cat_Pais' })
 const handleConfirm = () => deleteData(itemId.value).then(response => {
     if (response) {
-        router.push({ name: 'listar-cat_tipoProyecto' })  
+        router.push({ name: 'listar-cat_Pais' })  
     }
 });
 onMounted(() => {
     itemId.value = route.params.id
     if (itemId.value) {
         getData(itemId.value).then(response => {
-            data.descripcion=response.descripcion;
-            data.estatus=response.estatus;
+            data.nombre_oficial=response.nombre_oficial;
+            data.capital=response.capital;
+            data.tipo_gobierno=response.tipo_gobierno;
             data.clave=response.clave;
         }).catch(()=>{
-            router.push({ name: 'listar-cat_tipoProyecto' })  
+            router.push({ name: 'listar-cat_Pais' })  
         })
     } else {return router.push({ name: 'not-found' })}
     scrollTop()
