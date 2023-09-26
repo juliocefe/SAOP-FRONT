@@ -22,28 +22,28 @@ import { onMounted, ref } from 'vue'
 import { useLevelsByArea } from '@/composables/useLevelsByArea'
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
-// import SearchComponent from '@/components/SearchComponent.vue'
+import SearchComponent from '@/components/SearchComponent.vue'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 
 const viewName = 'Niveles por Area'
-const { levelsByArea, getLevelsByArea } = useLevelsByArea()
-const busqueda = ref('')
+const { levelsByArea, getLevelsByArea, searchLevelsByArea } = useLevelsByArea()
+const searchText = ref<string>('')
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-nivel-area' })
 const handleEdit = (data: any) => router.push({ name: 'editar-nivel-area', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-nivel-area', params: { id: data } })
 
 const handlePaginate = (page: number) => {
-    if (busqueda) {
-        // searchPositions(busqueda.value, page)
+    if (searchText.value) {
+        searchLevelsByArea(searchText.value, page)
     } else {
         getLevelsByArea({ page })
     }
 }
 
 const handleSearch = (term: any) => {
-    busqueda.value = term
-    // searchPositions(term, 1)
+    searchText.value = term
+    searchLevelsByArea(term, 1)
 }
 
 const columns = [

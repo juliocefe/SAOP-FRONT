@@ -11,48 +11,49 @@
                     <SearchComponent @onSearch="handleSearch" />
                 </div>
             </div>
-            <DataTableComponent v-if="!constructionTypes.loading" rowId="clave" :columns="columns" :data="constructionTypes.data"
-                :pagination="constructionTypes.pagination" showDelete showEdit
+            <DataTableComponent v-if="!feasibility.loading" rowId="clave" :columns="columns" :data="feasibility.data"
+                :pagination="feasibility.pagination" showDelete showEdit
                 @onPaginate="handlePaginate" @onEdit="handleEdit" @onDelete="handleDelete" @onCreate="handleCreate" />
         </div>
     </Transition>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useConstructionTypes } from '@/composables/useConstructionTypes'
+import { useFeasibility } from '@/composables/useFeasibility'
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
 import SearchComponent from '@/components/SearchComponent.vue'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 
-const viewName = 'Tipos de obra'
-const { constructionTypes, getConstructionTypes, searchConstructionTypes } = useConstructionTypes()
-const searchText = ref<string>('')
+const viewName = 'Factibilidad de Obra'
+const { feasibility, getFeasibilities, searchFeasibilities } = useFeasibility()
+const searchText = ref<string>('') 
 const showView = ref(false)
-const handleCreate = () => router.push({ name: 'crear-tipo-obra' })
-const handleEdit = (data: any) => router.push({ name: 'editar-tipo-obra', params: { id: data } })
-const handleDelete = (data: any) => router.push({ name: 'eliminar-tipo-obra', params: { id: data } })
+const handleCreate = () => router.push({ name: 'crear-factibilidad-obra' })
+const handleEdit = (data: any) => router.push({ name: 'editar-factibilidad-obra', params: { id: data } })
+const handleDelete = (data: any) => router.push({ name: 'eliminar-factibilidad-obra', params: { id: data } })
 
 const handlePaginate = (page: number) => {
     if (searchText.value) {
-        searchConstructionTypes(searchText.value, page)
+        searchFeasibilities(searchText.value, page)
     } else {
-        getConstructionTypes({ page })
+        getFeasibilities({ page })
     }
 }
 
 const handleSearch = (term: any) => {
     searchText.value = term
-    searchConstructionTypes(term, 1)
+    searchFeasibilities(term, 1)
 }
 
 const columns = [
+    { title: 'ID', data: 'id', align: 'center' },
     { title: 'Clave', data: 'clave', align: 'center' },
     { title: 'Descripción', data: 'descripcion', align: 'left' },
 ]
 
 onMounted(() => {
-  getConstructionTypes({ page: 1 }).then(() => showView.value = true)
+    getFeasibilities({ page: 1 }).then(() => showView.value = true)
 })
 </script>
 <style lang="scss" scoped></style>

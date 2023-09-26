@@ -4,10 +4,13 @@ import {
   cat_PaisRoutes,
   cat_FaseRoutes,
 } from "@/router/exportFile.ts";
-import { isAuthenticated } from "@/utils/helpers/authenticationHelper";
-import { constructionTypesRoutes } from "./constructionTypesRoutes";
-import { prioritiesRoutes } from "./prioritiesRoutes";
-import { levelsByAreaRoutes } from "./levelsByAreaRoutes";
+import { isAuthenticated } from '@/utils/helpers/authenticationHelper'
+import { constructionTypesRoutes } from './constructionTypesRoutes'
+import { prioritiesRoutes } from './prioritiesRoutes'
+import { levelsByAreaRoutes } from './levelsByAreaRoutes'
+import { statusRoutes } from './statusRoutes'
+import { feasibilityRoutes } from './feasibilityRoutes'
+
 
 export const routes = [
   {
@@ -48,7 +51,17 @@ export const routes = [
         path: "cat_tipoDocumento",
         name: "cat_tipoDocumento",
         children: cat_tipoDocumentoRoutes,
-      },
+              },
+              {
+                path: 'esatus-proyecto',
+                name: 'esatus-proyecto',
+                children: statusRoutes
+              }, 
+              {
+                path: 'factibilidad-obra',
+                name: 'factibilidad-obra',
+                children: feasibilityRoutes
+      }, 
       {
         path: "cat_Pais",
         name: "cat_Pais",

@@ -22,28 +22,28 @@ import { onMounted, ref } from 'vue'
 import { usePriorities } from '@/composables/usePriorities'
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
-// import SearchComponent from '@/components/SearchComponent.vue'
+import SearchComponent from '@/components/SearchComponent.vue'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 
 const viewName = 'Prioridad'
-const { priorities, getPriorities } = usePriorities()
-const busqueda = ref('')
+const { priorities, getPriorities, searchPriorities } = usePriorities()
+const searchText = ref<string>('') 
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-prioridad' })
 const handleEdit = (data: any) => router.push({ name: 'editar-prioridad', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-prioridad', params: { id: data } })
 
 const handlePaginate = (page: number) => {
-    if (busqueda) {
-        // searchPositions(busqueda.value, page)
+    if (searchText.value) {
+        searchPriorities(searchText.value, page)
     } else {
         getPriorities({ page })
     }
 }
 
 const handleSearch = (term: any) => {
-    busqueda.value = term
-    // searchPositions(term, 1)
+    searchText.value = term
+    searchPriorities(term, 1)
 }
 
 const columns = [

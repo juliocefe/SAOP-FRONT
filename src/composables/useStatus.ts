@@ -5,58 +5,58 @@ import { paginate } from '@/utils/helpers/paginationHelper'
 import { deleteRequest } from "@/api/api"
 import useAlert from "./useAlert"
 
-const ENDPOINT = 'cat_tipo_obra/'
+const ENDPOINT = 'cat_estatus/'
 
-export const useConstructionTypes = () => {
+export const useStatus = () => {
     const {showAlertSuccess,showAlertWarning} = useAlert();
-    const constructionTypes = ref(CATALOGO_DEFAULTS)
+    const status = ref(CATALOGO_DEFAULTS)
 
-    const getConstructionTypes = async ({ page = 1 }) => {
+    const getStatus = async ({ page = 1 }) => {
         try {
-            constructionTypes.value.loading = true
-            const response = await getRequest(`${ENDPOINT}`, { page: page, page_size: constructionTypes.value.pagination.page_size })
+            status.value.loading = true
+            const response = await getRequest(`${ENDPOINT}`, { page: page, page_size: status.value.pagination.page_size })
+            status.value.data= response.results
+            status.value.pagination = paginate(status.value.pagination, page, response.count)
+            status.value.loading = false
             console.log(response)
-            constructionTypes.value.data= response.results
-            constructionTypes.value.pagination = paginate(constructionTypes.value.pagination, page, response.count)
-            constructionTypes.value.loading = false
             return Promise.resolve(response.results)
         }
         catch (error) {
             console.error(error)
-            console.log("Error al cargar los tipos de obra", error)
+            console.log("Error al cargar los estatus", error)
             return Promise.reject(error)
         } 
     }
 
-    const searchConstructionTypes = async (term:string = '', page: number = 1) => {
+    const searchStatus = async (term:string = '', page: number = 1) => {
         try {
-            constructionTypes.value.loading = true
-            const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: constructionTypes.value.pagination.page_size })
-            constructionTypes.value.data= response.results
-            constructionTypes.value.pagination = paginate(constructionTypes.value.pagination, page, response.count)
-            constructionTypes.value.loading = false
+            status.value.loading = true
+            const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: status.value.pagination.page_size })
+            status.value.data= response.results
+            status.value.pagination = paginate(status.value.pagination, page, response.count)
+            status.value.loading = false
             return Promise.resolve(response.results)
         }
         catch (error) {
             console.error(error)
-            console.log("Error al cargar los tipos de obra", error)
+            console.log("Error al los estatus", error)
             return Promise.reject(error)
         } 
     }
 
-    const getConstructionTypeById = async (id:any) => {
+    const getStatusById = async (id:any) => {
         try {
             const response = await getRequest(`${ENDPOINT}${id}/`)
             return Promise.resolve(response)
         }
         catch (error) {
             console.error(error)
-            console.log("Error al cargar tipo de obra", error)
+            console.log("Error al cargar estatus", error)
             return Promise.reject(error)
         }
     }
 
-    const saveConstructionType = async (data:any) => {
+    const saveStatus = async (data:any) => {
         try {
             const response = await postRequest(ENDPOINT, data)
             showAlertSuccess("Registro guardado correctamente");
@@ -65,12 +65,12 @@ export const useConstructionTypes = () => {
         catch(err:any) {
             console.error(err)
             showAlertWarning(err) 
-            console.log('Error al guardar el nuevo tipo de obra', err)
+            console.log('Error al guardar el nuevo estatus', err)
             return Promise.reject(err)
         } 
     }
 
-    const deleteConstructionType = async (id:any) => {
+    const deleteStatus = async (id:any) => {
         try {
             const response = await deleteRequest(`${ENDPOINT}`, id)
             showAlertSuccess("Registro eliminado correctamente");
@@ -79,35 +79,36 @@ export const useConstructionTypes = () => {
         catch(err:any) {
             console.error(err)
             showAlertWarning(err) 
-            console.log('Error al eliminar el puesto', err)
+            console.log('Error al eliminar el estatus', err)
             return Promise.reject(err)
         } 
     }
 
-    const updateConstructionType = async (data:any) => {
+    const updateStatus = async (data:any) => {
+        console.log(data)
         try {
             const response = await putRequest(`${ENDPOINT}`, data.clave, data)
             showAlertSuccess("Registro actualizado correctamente");
             return Promise.resolve(response)
         }
         catch(err:any) {
-            showAlertWarning(err) 
             console.error(err)
-            console.log('Error al guardar el nuevo tipo de obra', err)
+            showAlertWarning(err) 
+            console.log('Error al guardar el nuevo estatus', err)
             return Promise.reject(err)
         } 
     }
 
     return {
-        constructionTypes, 
+        status, 
 
-        getConstructionTypes,
-        saveConstructionType,
-        getConstructionTypeById,
-        updateConstructionType,
-        deleteConstructionType,
-        searchConstructionTypes
+        getStatus,
+        saveStatus,
+        getStatusById,
+        updateStatus,
+        deleteStatus,
+        searchStatus
     }
 }
 
-export default useConstructionTypes
+export default useStatus

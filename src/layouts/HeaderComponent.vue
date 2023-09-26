@@ -43,6 +43,18 @@
                                 Tipo de documentos
                             </router-link>
                         </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-estatus-proyecto' }"
+                                @click="toggleCatalogueMenu">
+                                Estatus de proyecto
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-factibilidad-obra' }"
+                                @click="toggleCatalogueMenu">
+                                Factibilidad de obra
+                            </router-link>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
