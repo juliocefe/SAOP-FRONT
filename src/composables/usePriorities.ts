@@ -28,21 +28,21 @@ export const usePriorities = () => {
         } 
     }
 
-    // const searchPositions = async (term:string = '', page: number = 1) => {
-    //     try {
-    //         positions.value.loading = true
-    //         const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: positions.value.pagination.page_size })
-    //         positions.value.data= response.results
-    //         positions.value.pagination = paginate(positions.value.pagination, page, response.count)
-    //         positions.value.loading = false
-    //         return Promise.resolve(response.results)
-    //     }
-    //     catch (error) {
-    //         console.error(error)
-    //         console.log("Error al cargar puestos", error)
-    //         return Promise.reject(error)
-    //     } 
-    // }
+    const searchPriorities = async (term:string = '', page: number = 1) => {
+        try {
+            priorities.value.loading = true
+            const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: priorities.value.pagination.page_size })
+            priorities.value.data= response.results
+            priorities.value.pagination = paginate(priorities.value.pagination, page, response.count)
+            priorities.value.loading = false
+            return Promise.resolve(response.results)
+        }
+        catch (error) {
+            console.error(error)
+            console.log("Error al las prioridades", error)
+            return Promise.reject(error)
+        } 
+    }
 
     const getPriorityById = async (id:any) => {
         try {
@@ -106,7 +106,8 @@ export const usePriorities = () => {
         savePriority,
         getPriorityById,
         updatePriority,
-        deletePriority
+        deletePriority,
+        searchPriorities
     }
 }
 
