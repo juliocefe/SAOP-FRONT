@@ -42,10 +42,10 @@ const data = reactive({
 })
 const viewName = 'Eliminar Tipo de Proyecto'
 const {deleteData,getData,} =usePetition("cat_tipo_proyecto/");
-const handleCancel = () => router.push({ name: 'cat_tipoProyecto' })
+const handleCancel = () => router.push({ name: 'listar-cat_tipoProyecto' })
 const handleConfirm = () => deleteData(itemId.value).then(response => {
     if (response) {
-        router.push({ name: 'cat_tipoProyecto' })  
+        router.push({ name: 'listar-cat_tipoProyecto' })  
     }
 });
 onMounted(() => {
@@ -56,7 +56,7 @@ onMounted(() => {
             data.estatus=response.estatus;
             data.clave=response.clave;
         }).catch(()=>{
-            router.push({ name: 'cat_tipoProyecto' })  
+            router.push({ name: 'listar-cat_tipoProyecto' })  
         })
     } else {return router.push({ name: 'not-found' })}
     scrollTop()

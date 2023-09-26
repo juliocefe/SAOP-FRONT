@@ -3,7 +3,7 @@
   <hr class="red" />
   <div class="row app-options-bar">
     <div class="col buttons-component">
-      <ButtonBarComponent @create="handleCreate"  />
+      <ButtonBarComponent @onCreate="handleCreate"  />
     </div>
     <div class="col search-component">
         <SearchComponent  @onSearch="handleSearch"/>

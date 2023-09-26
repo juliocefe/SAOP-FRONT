@@ -3,11 +3,12 @@ import { getRequest, postRequest, putRequest } from "@/api"
 import { CATALOGO_DEFAULTS } from "@/utils/constants/catalogue"
 import { paginate } from '@/utils/helpers/paginationHelper'
 import { deleteRequest } from "@/api/api"
+import useAlert from "./useAlert"
 
 const ENDPOINT = 'cat_nivel_area/'
 
 export const useLevelsByArea = () => {
-
+    const {showAlertSuccess,showAlertWarning} = useAlert();
     const levelsByArea = ref(CATALOGO_DEFAULTS)
 
     const getLevelsByArea = async ({ page = 1 }) => {
@@ -57,10 +58,12 @@ export const useLevelsByArea = () => {
     const saveLevelByArea = async (data:any) => {
         try {
             const response = await postRequest(ENDPOINT, data)
+            showAlertSuccess("Registro guardado correctamente");
             return Promise.resolve(response)
         }
-        catch(err) {
+        catch(err:any) {
             console.error(err)
+            showAlertWarning(err) 
             console.log('Error al guardar el nuevo nievel por area', err)
             return Promise.reject(err)
         } 
@@ -69,10 +72,12 @@ export const useLevelsByArea = () => {
     const deleteLevelByArea = async (id:any) => {
         try {
             const response = await deleteRequest(`${ENDPOINT}`, id)
+            showAlertSuccess("Registro eliminado correctamente");
             return Promise.resolve(response)
         }
-        catch(err) {
+        catch(err:any) {
             console.error(err)
+            showAlertWarning(err) 
             console.log('Error al eliminar el nivel por area', err)
             return Promise.reject(err)
         } 
@@ -82,9 +87,11 @@ export const useLevelsByArea = () => {
         console.log(data)
         try {
             const response = await putRequest(`${ENDPOINT}`, data.clave, data)
+            showAlertSuccess("Registro actualizado correctamente");
             return Promise.resolve(response)
         }
-        catch(err) {
+        catch(err:any) {
+            showAlertWarning(err) 
             console.error(err)
             console.log('Error al guardar el nuevo nievel por area', err)
             return Promise.reject(err)
