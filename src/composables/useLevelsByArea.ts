@@ -26,21 +26,21 @@ export const useLevelsByArea = () => {
         } 
     }
 
-    // const searchPositions = async (term:string = '', page: number = 1) => {
-    //     try {
-    //         positions.value.loading = true
-    //         const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: positions.value.pagination.page_size })
-    //         positions.value.data= response.results
-    //         positions.value.pagination = paginate(positions.value.pagination, page, response.count)
-    //         positions.value.loading = false
-    //         return Promise.resolve(response.results)
-    //     }
-    //     catch (error) {
-    //         console.error(error)
-    //         console.log("Error al cargar puestos", error)
-    //         return Promise.reject(error)
-    //     } 
-    // }
+    const searchLevelsByArea = async (term:string = '', page: number = 1) => {
+        try {
+            levelsByArea.value.loading = true
+            const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: levelsByArea.value.pagination.page_size })
+            levelsByArea.value.data= response.results
+            levelsByArea.value.pagination = paginate(levelsByArea.value.pagination, page, response.count)
+            levelsByArea.value.loading = false
+            return Promise.resolve(response.results)
+        }
+        catch (error) {
+            console.error(error)
+            console.log("Error al cargar puestos", error)
+            return Promise.reject(error)
+        } 
+    }
 
     const getLevelByAreaById = async (id:any) => {
         try {
@@ -98,7 +98,8 @@ export const useLevelsByArea = () => {
         saveLevelByArea,
         getLevelByAreaById,
         updateLevelByArea,
-        deleteLevelByArea
+        deleteLevelByArea,
+        searchLevelsByArea
     }
 }
 

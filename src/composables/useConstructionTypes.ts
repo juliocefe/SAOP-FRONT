@@ -27,21 +27,21 @@ export const useConstructionTypes = () => {
         } 
     }
 
-    // const searchPositions = async (term:string = '', page: number = 1) => {
-    //     try {
-    //         positions.value.loading = true
-    //         const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: positions.value.pagination.page_size })
-    //         positions.value.data= response.results
-    //         positions.value.pagination = paginate(positions.value.pagination, page, response.count)
-    //         positions.value.loading = false
-    //         return Promise.resolve(response.results)
-    //     }
-    //     catch (error) {
-    //         console.error(error)
-    //         console.log("Error al cargar puestos", error)
-    //         return Promise.reject(error)
-    //     } 
-    // }
+    const searchConstructionTypes = async (term:string = '', page: number = 1) => {
+        try {
+            constructionTypes.value.loading = true
+            const response = await getRequest(`${ENDPOINT}`, { page: page, search: term, page_size: constructionTypes.value.pagination.page_size })
+            constructionTypes.value.data= response.results
+            constructionTypes.value.pagination = paginate(constructionTypes.value.pagination, page, response.count)
+            constructionTypes.value.loading = false
+            return Promise.resolve(response.results)
+        }
+        catch (error) {
+            console.error(error)
+            console.log("Error al cargar los tipos de obra", error)
+            return Promise.reject(error)
+        } 
+    }
 
     const getConstructionTypeById = async (id:any) => {
         try {
@@ -99,7 +99,8 @@ export const useConstructionTypes = () => {
         saveConstructionType,
         getConstructionTypeById,
         updateConstructionType,
-        deleteConstructionType
+        deleteConstructionType,
+        searchConstructionTypes
     }
 }
 
