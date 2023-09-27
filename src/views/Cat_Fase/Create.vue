@@ -2,7 +2,7 @@
   <h4 class="view-name">{{ titulo }}</h4>
   <hr class="red" />
   <div class="container">
-    <form role="form" @submit.prevent="saveTipoProyecto">
+    <form role="form" @submit.prevent="saveFase">
       <InputText
         :disabled="itemId !== ''"
         v-model="data.clave"
@@ -35,28 +35,28 @@ import { scrollTop } from "@/utils/helpers/scrollHelper";
 import { useRoute, useRouter } from "vue-router";
 import { useForm } from "@/composables/useForm";
 import InputText from "@/components/InputText.vue";
-import { cat_tipoProyectoValidations } from "@/utils/validations/cat_tipoProyectoValidations";
+import { cat_faseValidations } from "@/utils/validations/cat_faseValidations";
 import usePetition from "@/composables/usePetition";
-import CatTipoProyeto from "@/utils/models/cat_tipoProyecto";
+import CatFase from "@/utils/models/cat_fase";
 
 const route = useRoute();
 const router = useRouter();
 const itemId = ref("");
-const { updateData, getData, createData } = usePetition("cat_tipo_proyecto/");
+const { updateData, getData, createData } = usePetition("cat_fase/");
 
-const data = ref<CatTipoProyeto>({
+const data = ref<CatFase>({
   clave: "",
   descripcion: "",
 });
 
 const { formState, isValid, errors, showErrors } = useForm(
   data.value,
-  cat_tipoProyectoValidations
+  cat_faseValidations
 );
 
-const handleCancel = () => router.push({ name: "listar-cat_tipoProyecto" });
+const handleCancel = () => router.push({ name: "listar-cat_Fase" });
 
-async function saveTipoProyecto() {
+async function saveFase() {
   if (isValid.value) {
     try {
       if (itemId.value) {
@@ -64,18 +64,18 @@ async function saveTipoProyecto() {
       } else {
         await createData(formState.value);
       }
-      router.push({ name: "listar-cat_tipoProyecto" });
+      router.push({ name: "listar-cat_Fase" });
     } catch (error) {}
   } else {
     showErrors();
   }
 }
 
-const titulo = ref("Crear Tipo Proyecto");
+const titulo = ref("Crear Fase");
 
 onMounted(() => {
   itemId.value = route.params.id ? route.params.id.toString() : "";
-  titulo.value = itemId.value ? "Editar Tipo Proyecto" : "Crear Tipo Proyecto";
+  titulo.value = itemId.value ? "Editar Fase" : "Crear Fase";
   if (itemId.value) {
     getData(itemId.value)
       .then((response: any) => {
@@ -83,7 +83,7 @@ onMounted(() => {
         data.value.clave = response.clave;
       })
       .catch(() => {
-        router.push({ name: "listar-cat_tipoProyecto" });
+        router.push({ name: "listar-cat_Fase" });
       });
   }
   scrollTop();
