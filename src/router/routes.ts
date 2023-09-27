@@ -52,8 +52,8 @@ export const routes = [
         children: cat_tipoDocumentoRoutes,
       },
       {
-        path: "esatus-proyecto",
-        name: "esatus-proyecto",
+        path: "estatus-proyecto",
+        name: "estatus-proyecto",
         children: statusRoutes,
       },
       {
