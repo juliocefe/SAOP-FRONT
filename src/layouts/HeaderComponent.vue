@@ -55,6 +55,18 @@
                                 Factibilidad de obra
                             </router-link>
                         </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_Fase' }"
+                                @click="toggleCatalogueMenu">
+                                Fase 
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_Pais' }"
+                                @click="toggleCatalogueMenu">
+                                País
+                            </router-link>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
