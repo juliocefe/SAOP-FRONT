@@ -4,7 +4,7 @@
     <select :disabled="disabled" class="form-select form-control"   :value="modelValue" @change="$emit('update:modelValue', ($event.target as HTMLInputElement).value), emit('onChange', modelValue)" :name="name" :id="id" :placeholder="placeholder">
       <option value="">Seleccione</option>
       <option v-for="opt in options"    :key="opt.value" :value="optionValue ? opt[optionValue] : opt.id ? opt.id : opt.clave">
-        {{ opt.nombre }}
+        {{ opt[displayProperty] }}
       </option>
     </select>
     <div class="ui basic label pointing red" v-if="error[name]">
@@ -13,6 +13,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+
 defineProps({
   title: {
     type: String,
@@ -61,6 +63,11 @@ defineProps({
     type :String ,
     default: null,
     required: false
+  },
+  displayProperty: {
+    type: String,
+    required: false,
+    default: "nombre"
   }
 });
 

@@ -34,14 +34,14 @@ import usePetition from "@/composables/usePetition";
 
 const viewName = "Catalogo Unidad Responsable";
 const searchTerm = ref("");
-const { arrayData, getDatas, searchData } = usePetition("cat_fase/");
+const { arrayData, getDatas, searchData } = usePetition("cat_unidad_responsable/");
 
-const handleCreate = () => router.push({ name: "crear-cat_Fase" });
+const handleCreate = () => router.push({ name: "crear-cat_unidad_responsable" });
 const handleEdit = (data: string) =>
-  router.push({ name: "editar-cat_Fase", params: { id: data } });
+  router.push({ name: "editar-cat_unidad_responsable", params: { id: data } });
 const handleDelete = (data: string) =>
   router.push({
-    name: "eliminar-cat_Fase",
+    name: "eliminar-cat_unidad_responsable",
     params: { id: data },
   });
 /* const handleSubGroup = (data: any) =>
@@ -62,7 +62,24 @@ const handleSearch = (term: any) => {
 
 const columns = [
   { title: "Clave", data: "clave" },
-  { title: "Descripcion de Fase", data: "descripcion" },
+  { title: "Descripcion", data: "descripcion" },
+  { title: "Descripcion Corta", data: "descripcion_corta" },
+  { title: "Tipo de Unidad", data: "tipo_unidad" },
+  { title: "Titular", data: "titular" },
+  { title: "Sub-Director", data: "subdirector" },
+  { title: "Dependencia", data: "dependencia" },
+  { title: "Codigo Postal", data: "codigo_postal" },
+  { title: "Telefono", data: "telefono" },
+  { title: "Extension", data: "extension" },
+  { title: "Calle", data: "calle" },
+  { title: "No. Ext", data: "numero_exterior" },
+  { title: "No. Int", data: "numero_interior" },
+  { title: "Colonia", data: "colonia" },
+  { title: "Folio Licitacion", data: "folio_licitacion" },
+  { title: "Folio Contratacion", data: "folio_contratacion" },
+  { title: "Contrato", data: "nombre_contrato" },
+  { title: "Jefe de Laboratorio ", data: "nombre_jefe_laboratorio" },
+  { title: "Entidad", data: "entidad" },
 ];
 
 onMounted(() => getDatas({ page: 1 }));

@@ -61,13 +61,13 @@ const data = reactive({
   estatus: false,
   clave: "",
 });
-const viewName = "Eliminar Fase";
-const { deleteData, getData } = usePetition("cat_fase/");
-const handleCancel = () => router.push({ name: "listar-cat_Fase" });
+const viewName = "Eliminar Unidad Responsable";
+const { deleteData, getData } = usePetition("cat_unidad_responsable/");
+const handleCancel = () => router.push({ name: "listar-cat_unidad_responsable" });
 const handleConfirm = () =>
   deleteData(itemId.value).then((response) => {
     if (response) {
-      router.push({ name: "listar-cat_Fase" });
+      router.push({ name: "listar-cat_unidad_responsable" });
     }
   });
 onMounted(() => {
@@ -80,7 +80,7 @@ onMounted(() => {
         data.clave = response.clave;
       })
       .catch(() => {
-        router.push({ name: "listar-cat_Fase" });
+        router.push({ name: "listar-cat_unidad_responsable" });
       });
   } else {
     return router.push({ name: "not-found" });
