@@ -73,6 +73,12 @@
                                 Entidad federativa
                             </router-link>
                         </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_unidad_responsable' }"
+                                @click="toggleCatalogueMenu">
+                                Unidad Responsable
+                            </router-link>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

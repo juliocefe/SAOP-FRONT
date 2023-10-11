@@ -3,6 +3,7 @@ import {
   cat_tipoDocumentoRoutes,
   cat_PaisRoutes,
   cat_FaseRoutes,
+  cat_Unidad_Responsable,
 } from "@/router/exportFile.ts";
 import { isAuthenticated } from "@/utils/helpers/authenticationHelper";
 import { constructionTypesRoutes } from "./constructionTypesRoutes";
@@ -76,6 +77,11 @@ export const routes = [
         path: "entidad-federativa",
         name: "entidad-federativa",
         children: federalEntityRoutes,
+      },
+      {
+        path: "cat_unidad_responsable",
+        name: "cat_unidad_responsable",
+        children: cat_Unidad_Responsable,
       },
     ],
     beforeEnter: () => {
