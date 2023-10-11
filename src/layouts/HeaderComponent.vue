@@ -68,6 +68,12 @@
                             </router-link>
                         </li>
                         <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-entidad-federativa' }"
+                                @click="toggleCatalogueMenu">
+                                Entidad federativa
+                            </router-link>
+                        </li>
+                        <li>
                             <router-link class="dropdown-item" :to="{ name: 'listar-cat_unidad_responsable' }"
                                 @click="toggleCatalogueMenu">
                                 Unidad Responsable

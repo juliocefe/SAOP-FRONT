@@ -10,6 +10,7 @@ import { constructionTypesRoutes } from "./constructionTypesRoutes";
 import { prioritiesRoutes } from "./prioritiesRoutes";
 import { levelsByAreaRoutes } from "./levelsByAreaRoutes";
 import { statusRoutes } from "./statusRoutes";
+import { federalEntityRoutes } from "./federalEntityRoutes";
 import { feasibilityRoutes } from "./feasibilityRoutes";
 
 export const routes = [
@@ -71,6 +72,11 @@ export const routes = [
         path: "cat_Fase",
         name: "cat_Fase",
         children: cat_FaseRoutes,
+      },
+      {
+        path: "entidad-federativa",
+        name: "entidad-federativa",
+        children: federalEntityRoutes,
       },
       {
         path: "cat_unidad_responsable",
