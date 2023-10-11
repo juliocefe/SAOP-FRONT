@@ -1,10 +1,10 @@
 <template>
   <div class="form-group">
-    <label  class="control-label" :for="id">{{ title }}</label>
-    <select :disabled="disabled" class="form-select form-control"   :value="modelValue" @change="$emit('update:modelValue', ($event.target as HTMLInputElement).value), emit('onChange', modelValue)" :name="name" :id="id" :placeholder="placeholder">
+    <label class="control-label" :for="id">{{ title }}</label>
+    <select :disabled="disabled" class="form-select form-control" :value="modelValue" @change="$emit('update:modelValue', ($event.target as HTMLInputElement).value), emit('onChange', modelValue)" :name="name" :id="id" :placeholder="placeholder">
       <option value="">Seleccione</option>
-      <option v-for="opt in options"    :key="opt.value" :value="optionValue ? opt[optionValue] : opt.id ? opt.id : opt.clave">
-        {{ opt[displayProperty] }}
+      <option v-for="opt in options" :key="opt.value" :value="optionValue ? opt[optionValue] : opt.id ? opt.id : opt.clave">
+        {{ opt[optionText] }}
       </option>
     </select>
     <div class="ui basic label pointing red" v-if="error[name]">
@@ -12,9 +12,8 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
 
+<script setup lang="ts">
 defineProps({
   title: {
     type: String,
@@ -33,8 +32,8 @@ defineProps({
   },
   error: {
     type: Object,
-    required:false,
-    default:{}
+    required: false,
+    default: {}
   },
   id: {
     type: String,
@@ -44,12 +43,12 @@ defineProps({
   modelValue: {
     required: false,
   },
-  options:{
+  options: {
     type: Object,
-    required:false,
-    default:{}
+    required: false,
+    default: {}
   },
-  disabled:{
+  disabled: {
     type: Boolean,
     required: false,
     default: false
@@ -60,14 +59,14 @@ defineProps({
     default: "select",
   },
   optionValue: {
-    type :String ,
+    type: String,
     default: null,
     required: false
   },
-  displayProperty: {
-    type: String,
-    required: false,
-    default: "nombre"
+  optionText: {
+    type: String, // Nuevo prop para especificar la propiedad a mostrar
+    default: "nombre", // Valor predeterminado: "nombre"
+    required: false
   }
 });
 
