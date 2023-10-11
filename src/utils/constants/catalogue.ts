@@ -1,6 +1,6 @@
 import { PAGINATION_DEFAULTS } from "@/utils/constants/pagination"
 
-export const CATALOGO_DEFAULTS = {
+export const CATALOGO_DEFAULTS : any = {
     data: [],
     pagination: PAGINATION_DEFAULTS,
     loading: false

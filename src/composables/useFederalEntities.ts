@@ -19,8 +19,8 @@ export const useFederalEntities = () => {
             federalEntities.value.loading = true
             const response = await getRequest(`${ENDPOINT}`, { page: page, page_size: federalEntities.value.pagination.page_size })
             await getDatas({ page: 1 })
-            response.results.map((item) => {
-                let pais = paises.value.data.find((pais) => item.pais == pais.id)
+            response.results.map((item:any) => {
+                let pais:any = paises.value.data.find((pais:any) => item.pais == pais.id)
                 item.nombre_pais = pais ? pais.nombre_oficial : ''
                 return item
             })

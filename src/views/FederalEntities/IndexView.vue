@@ -24,7 +24,6 @@ import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
 import SearchComponent from '@/components/SearchComponent.vue'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
-import usePetition from "@/composables/usePetition";
 
 const viewName = 'Entidades Federativas'
 const { federalEntities, getFederalEntities, searchFederalEntities } = useFederalEntities()
@@ -33,8 +32,6 @@ const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-entidad-federativa' })
 const handleEdit = (data: any) => router.push({ name: 'editar-entidad-federativa', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-entidad-federativa', params: { id: data } })
-
-const { arrayData: paises, getDatas } = usePetition("cat_pais/");
 
 const handlePaginate = (page: number) => {
     if (searchText.value) {
@@ -60,7 +57,6 @@ const columns = [
 ]
 
 onMounted(() => {
-    getDatas({ page: 1 })
     getFederalEntities({ page: 1 }).then(() => {
         showView.value = true
     })

@@ -86,7 +86,7 @@ onMounted(() => {
       data.descripcion_capital = response.descripcion_capital;
       data.region = response.region;
       data.meso_region = response.meso_region;
-      let pais = paises.value.data.find((pais) => response.pais == pais.id)
+      let pais:any = paises.value.data.find((pais:any) => response.pais == pais.id)
       data.pais = pais ? pais.nombre_oficial : '-'
       showView.value = true
     });
