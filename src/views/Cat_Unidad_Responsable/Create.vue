@@ -194,7 +194,7 @@
           :error="errors"
           class="col-sm-6"
           :options="arrayData.data"
-          :displayProperty="'descripcion'"
+          :optionText="'descripcion'"
         />
       </div>
       <div class="modal-footer">
