@@ -85,6 +85,7 @@ onMounted(() => {
       showView.value = true;
     });
   } else {
+    resetValues()
     showView.value = true;
   }
   scrollTop();
