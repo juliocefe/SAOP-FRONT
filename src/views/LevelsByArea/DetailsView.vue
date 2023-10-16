@@ -106,6 +106,7 @@
       });
     } else {
       showView.value = true;
+      resetValues()
     }
     scrollTop();
   });
