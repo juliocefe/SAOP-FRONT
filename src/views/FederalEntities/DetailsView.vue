@@ -80,11 +80,11 @@ import { federalEntitiesValidations } from "@/utils/validations/federalEntitiesV
 import { IFederalEntity, defaultValues } from "@/utils/models/federalEntityModel";
 import usePetition from "@/composables/usePetition";
 
-const viewName = ref("Registrar Prioridad");
+const viewName = ref("Registrar Entidad Federativa");
 const { saveFederalEntity, getFederalEntityById, updateFederalEntity } = useFederalEntities(); //, updateConstructionType, getConstructionTypeById
 const { arrayData: paises, getDatas } = usePetition("cat_pais/");
 const itemId = ref("");
-const showView = ref(true);//false
+const showView = ref(false);
 const showKey = ref(true);
 const data = reactive<IFederalEntity>(defaultValues);
 
