@@ -118,7 +118,7 @@ import ProyectoDeInversion from "@/utils/models/ProyectoDeInversion";
 const route = useRoute();
 const router = useRouter();
 const itemId = ref("");
-const { updateData, getData, createData } = usePetition(
+const { getData, createFromData , updateFromData } = usePetition(
   "cartera_proyectos_inversion/"
 );
 
@@ -223,35 +223,11 @@ async function saveProyectoDeInversion() {
         formData.append("documento", formState.value.documento);
       }
 
-      const token =
-      localStorage.getItem("token") ||
-      sessionStorage.getItem("token") ||
-      "";
-
-      const response = await fetch(import.meta.env.VITE_API_URL + "cartera_proyectos_inversion/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`, // Asegúrate de que haya un Bearer antes de tu token
-        },
-        body: formData,
-      });
-      // Manejar la respuesta aquí si es necesario
-      if (response.ok) {
-        // La solicitud fue exitosa
-        console.log("Solicitud exitosa");
+      if (itemId.value) {
+        await updateFromData(formData , itemId.value);
       } else {
-        // La solicitud no fue exitosa, manejar el error aquí
-        console.error("Error en la solicitud");
+        await createFromData(formData);
       }
-
-
-      
-
-      /* if (itemId.value) {
-        await updateData(formData);
-      } else {
-        await createData(formData);
-      } */
       /* router.push({ name: "listar-cat_Fase" }); */
     } catch (error) { }
   } else {
