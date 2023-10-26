@@ -89,7 +89,7 @@
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Documento</label>
           <input type="file" class="form-control" id="precidencial-prioridad" placeholder="" autocomplete="off"
-            />
+          @change="handleFileUpload" />
           <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
             v-if="errors && errors.fecha_prioridad">{{ errors.fecha_prioridad }}</small>
         </div>
@@ -182,18 +182,76 @@ const { formState, isValid, errors, showErrors } = useForm(
   cat_faseValidations
 );
 
-
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files.length) {
+    data.value.documento = target.files[0];
+  }
+};
 const handleCancel = () => router.push({ name: "crear-proyecto_de_inversion" });
 
 async function saveProyectoDeInversion() {
   if (isValid.value) {
     try {
-      if (itemId.value) {
-        await updateData(formState.value);
-      } else {
+      const formData = new FormData()
+      // Agregar campos del formulario
+      formData.append("clave", formState.value.clave);
+      formData.append("no_solicitud", formState.value.no_solicitud.toString());
+      formData.append("nombre", formState.value.nombre);
+      formData.append("descripcion", formState.value.descripcion);
+      formData.append("municipio", formState.value.municipio);
+      formData.append("beneficios", formState.value.beneficios);
+      formData.append("fecha_inicial", formState.value.fecha_inicial);
+      formData.append("fecha_final", formState.value.fecha_final);
+      formData.append("ejercicio_presupuestal", formState.value.ejercicio_presupuestal.toString());
+      formData.append("comentarios", formState.value.comentarios);
+      formData.append("clave_compromiso", formState.value.clave_compromiso);
+      formData.append("factibilidad_obra", formState.value.factibilidad_obra);
+      formData.append("prioridad", formState.value.prioridad);
+      formData.append("tipo_proyecto", formState.value.tipo_proyecto);
+      formData.append("estatus_proyecto", formState.value.estatus_proyecto);
+      formData.append("cartera_estatus", formState.value.cartera_estatus);
+      formData.append("pais", formState.value.pais);
+      formData.append("entidad_federativa", formState.value.entidad_federativa);
+      formData.append("fase", formState.value.fase);
+      formData.append("tipo_obra", formState.value.tipo_obra);
+      formData.append("tipo_documento", formState.value.tipo_documento);
+      formData.append("unidad_responsable", formState.value.unidad_responsable);
+      formData.append("area", formState.value.area);
 
-        await createData(formState);
+      if (data.value.documento instanceof File) {
+        formData.append("documento", formState.value.documento);
       }
+
+      const token =
+      localStorage.getItem("token") ||
+      sessionStorage.getItem("token") ||
+      "";
+
+      const response = await fetch(import.meta.env.VITE_API_URL + "cartera_proyectos_inversion/", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // Asegúrate de que haya un Bearer antes de tu token
+        },
+        body: formData,
+      });
+      // Manejar la respuesta aquí si es necesario
+      if (response.ok) {
+        // La solicitud fue exitosa
+        console.log("Solicitud exitosa");
+      } else {
+        // La solicitud no fue exitosa, manejar el error aquí
+        console.error("Error en la solicitud");
+      }
+
+
+      
+
+      /* if (itemId.value) {
+        await updateData(formData);
+      } else {
+        await createData(formData);
+      } */
       /* router.push({ name: "listar-cat_Fase" }); */
     } catch (error) { }
   } else {
