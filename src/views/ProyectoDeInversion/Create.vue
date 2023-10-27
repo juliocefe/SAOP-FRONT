@@ -4,79 +4,258 @@
   <div class="container">
     <form role="form" @submit.prevent="saveProyectoDeInversion">
       <div class="row">
-        <InputText :disabled="itemId !== ''" v-model="data.no_solicitud" title="Numero de Solicitud:"
-          placeholder="Numero de Solicitud" name="clave" id="clave" :error="errors" class="col-sm-6" />
-        <SelectComponent v-model="data.prioridad" title="Prioridad:" placeholder="Prioridad" name="prioridad"
-          id="prioridad" :error="errors" class="col-sm-6" :options="arrayDataPrioridad.data"
-          :optionText="'descripcion'" />
+        <InputText
+          :disabled="itemId !== ''"
+          v-model="data.no_solicitud"
+          title="Numero de Solicitud:"
+          placeholder="Numero de Solicitud"
+          name="clave"
+          id="clave"
+          :error="errors"
+          class="col-sm-6"
+        />
+        <SelectComponent
+          v-model="data.prioridad"
+          title="Prioridad:"
+          placeholder="Prioridad"
+          name="prioridad"
+          id="prioridad"
+          :error="errors"
+          class="col-sm-6"
+          :options="arrayDataPrioridad.data"
+          :optionText="'descripcion'"
+        />
       </div>
       <div class="row">
-        <InputText v-model="data.clave" title="Clv Cartera:" placeholder="Clv Cartera" name="clave" id="clave"
-          :error="errors" class="col-sm-6" />
-        <SelectComponent v-model="data.factibilidad_obra" title="Factibilidad de la obra :"
-          placeholder="Factibilidad de la obra" name="Factibilidad_de_la_obra" id="Factibilidad_de_la_obra"
-          :error="errors" class="col-sm-6" :options="arrayDataFactibilidad.data" :optionText="'descripcion'" />
+        <InputText
+          v-model="data.clave"
+          title="Clv Cartera:"
+          placeholder="Clv Cartera"
+          name="clave"
+          id="clave"
+          :error="errors"
+          class="col-sm-6"
+        />
+        <SelectComponent
+          v-model="data.factibilidad_obra"
+          title="Factibilidad de la obra :"
+          placeholder="Factibilidad de la obra"
+          name="factibilidad_obra"
+          id="factibilidad_obra"
+          :error="errors"
+          class="col-sm-6"
+          :options="arrayDataFactibilidad.data"
+          :optionText="'descripcion'"
+        />
       </div>
       <div class="row">
-        <SelectComponent v-model="data.area" title="Area:" placeholder="Area" name="area" id="area" :error="errors"
-          class="col-sm-12" :options="arrayDataArea.data" :optionText="'nombre'" />
-        <SelectComponent v-model="data.tipo_proyecto" title="Tipo de Proyecto:" placeholder="Tipo de Proyecto"
-          name="tipo_de_proyecto" id="tipo_de_proyecto" :error="errors" class="col-sm-12"
-          :options="arrayDataProyecto.data" :optionText="'descripcion'" />
-        <SelectComponent v-model="data.estatus_proyecto" title="Estatus de Proyecto:" placeholder="Estatus de Proyecto"
-          name="estatus_de_proyecto" id="estatus_de_proyecto" :error="errors" class="col-sm-12"
-          :options="arrayDataEstatus.data" :optionText="'descripcion'" />
-        <SelectComponent v-model="data.cartera_estatus" title="Estatus:" placeholder="Estatus" name="estatus" id="estatus"
-          :error="errors" class="col-sm-12" :options="arrayDataEstatus.data" :optionText="'descripcion'" />
-        <InputText v-model="data.nombre" title="Nombre del Proyecto:" placeholder="Nombre del Proyecto"
-          name="nombre_del_proyecto" id="nombre_del_proyecto" :error="errors" class="col-sm-12" />
+        <SelectComponent
+          v-model="data.area"
+          title="Area:"
+          placeholder="Area"
+          name="area"
+          id="area"
+          :error="errors"
+          class="col-sm-12"
+          :options="arrayDataArea.data"
+          :optionText="'nombre'"
+        />
+        <SelectComponent
+          v-model="data.tipo_proyecto"
+          title="Tipo de Proyecto:"
+          placeholder="Tipo de Proyecto"
+          name="tipo_proyecto"
+          id="tipo_proyecto"
+          :error="errors"
+          class="col-sm-12"
+          :options="arrayDataProyecto.data"
+          :optionText="'descripcion'"
+        />
+        <SelectComponent
+          :disabled="itemId !== ''"
+          v-model="data.estatus_proyecto"
+          title="Estatus de Proyecto:"
+          placeholder="Estatus de Proyecto"
+          name="estatus_proyecto"
+          id="estatus_proyecto"
+          :error="errors"
+          class="col-sm-12"
+          :options="arrayDataEstatus.data"
+          :optionText="'descripcion'"
+        />
+        <SelectComponent
+          v-model="data.cartera_estatus"
+          title="Estatus:"
+          placeholder="Estatus"
+          name="cartera_estatus"
+          id="cartera_estatus"
+          :error="errors"
+          class="col-sm-12"
+          :options="arrayDataEstatus.data"
+          :optionText="'descripcion'"
+        />
+        <InputText
+          v-model="data.nombre"
+          title="Nombre del Proyecto:"
+          placeholder="Nombre del Proyecto"
+          name="nombre"
+          id="nombre"
+          :error="errors"
+          class="col-sm-12"
+        />
       </div>
       <div class="row">
-        <TextAraComponent v-model="data.descripcion" :title="'Descripcion:'" :placeholder="'Ingresa una descripcion...'"
-          :name="'descripcion'" :error="errors" :id="'descripcion'" class="col-sm-12" />
+        <TextAraComponent
+          v-model="data.descripcion"
+          :title="'Descripcion:'"
+          :placeholder="'Ingresa una descripcion...'"
+          :name="'descripcion'"
+          :error="errors"
+          :id="'descripcion'"
+          class="col-sm-12"
+        />
       </div>
       <div class="row">
-        <SelectComponent v-model="data.pais" title="Pais:" placeholder="Pais" name="pais" id="pais" :error="errors"
-          class="col-sm-6" :options="arrayDataPais.data" :optionText="'nombre_oficial'" />
-        <SelectComponent v-model="data.entidad_federativa" title="Entidad Federativa:" placeholder="Entidad Federativa"
-          name="entidad_federativa" id="entidad_federativa" :error="errors" class="col-sm-6"
-          :options="arrayDataEntidadFederativa.data" :optionText="'descripcion'" />
+        <SelectComponent
+          :disabled="true"
+          v-model="data.pais"
+          title="Pais:"
+          placeholder="Pais"
+          name="pais"
+          id="pais"
+          :error="errors"
+          class="col-sm-6"
+          :options="arrayDataPais.data"
+          :optionText="'nombre_oficial'"
+        />
+        <SelectComponent
+          v-model="data.entidad_federativa"
+          title="Entidad Federativa:"
+          placeholder="Entidad Federativa"
+          name="entidad_federativa"
+          id="entidad_federativa"
+          :error="errors"
+          class="col-sm-6"
+          :options="arrayDataEntidadFederativa.data"
+          :optionText="'descripcion'"
+        />
       </div>
       <div class="row">
-        <SelectComponent v-model="data.unidad_responsable" title="Unidad Responsable:" placeholder="Unidad Responsable"
-          name="unidad_responsable" id="unidad_responsable" :error="errors" class="col-sm-12"
-          :options="arrayDataUnidadResponsable.data" :optionText="'descripcion'" />
-        <InputText v-model="data.municipio" title="Localizacion/Municipio:" placeholder="Localizacion/Municipio"
-          name="localizacion_municipio" id="localizacion_municipio" :error="errors" class="col-sm-12" />
-        <TextAraComponent v-model="data.beneficios" :title="'Beneficios:'" :placeholder="'Ingresa los beneficios...'"
-          :name="'beneficios'" :error="errors" :id="'beneficios'" class="col-sm-12" />
+        <SelectComponent
+          v-model="data.unidad_responsable"
+          title="Unidad Responsable:"
+          placeholder="Unidad Responsable"
+          name="unidad_responsable"
+          id="unidad_responsable"
+          :error="errors"
+          class="col-sm-12"
+          :options="arrayDataUnidadResponsable.data"
+          :optionText="'descripcion'"
+        />
+        <InputText
+          v-model="data.municipio"
+          title="Localizacion/Municipio:"
+          placeholder="Localizacion/Municipio"
+          name="municipio"
+          id="municipio"
+          :error="errors"
+          class="col-sm-12"
+        />
+        <TextAraComponent
+          v-model="data.beneficios"
+          :title="'Beneficios:'"
+          :placeholder="'Ingresa los beneficios...'"
+          :name="'beneficios'"
+          :error="errors"
+          :id="'beneficios'"
+          class="col-sm-12"
+        />
       </div>
       <div class="row">
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Fecha Inicial</label>
-          <input v-model="data.fecha_inicial" type="date" class="form-control" id="precidencial-prioridad" placeholder=""
-            autocomplete="off" />
-          <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
-            v-if="errors && errors.fecha_prioridad">{{ errors.fecha_prioridad }}</small>
+          <input
+            v-model="data.fecha_inicial"
+            type="date"
+            class="form-control"
+            id="fecha_inicial"
+            name="fecha_inicial"
+            placeholder=""
+            autocomplete="off"
+          />
+          <small
+            id="descripcion-nivel-small"
+            class="form-text text-muted app-validation"
+            v-if="errors && errors.fecha_inicial"
+            >{{ errors.fecha_inicial }}</small
+          >
         </div>
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Fecha Final</label>
-          <input v-model="data.fecha_final" type="date" class="form-control" id="precidencial-prioridad" placeholder=""
-            autocomplete="off" />
-          <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
-            v-if="errors && errors.fecha_prioridad">{{ errors.fecha_prioridad }}</small>
+          <input
+            v-model="data.fecha_final"
+            type="date"
+            class="form-control"
+            id="fecha_final"
+            placeholder=""
+            autocomplete="off"
+          />
+          <small
+            id="descripcion-nivel-small"
+            class="form-text text-muted app-validation"
+            v-if="errors && errors.fecha_final"
+            >{{ errors.fecha_final }}</small
+          >
         </div>
-        <InputText v-model="data.ejercicio_presupuestal" title="Ejercicio Presupuestal:"
-          placeholder="Ejercicio Presupuestal" name="ejercicio_presupuestal" id="ejercicio_presupuestal" :error="errors"
-          class="col-sm-6" />
-        <SelectComponent v-model="data.fase" title="Fase:" placeholder="Fase" name="fase" id="fase" :error="errors"
-          class="col-sm-6" :options="arrayDataFase.data" :optionText="'descripcion'" />
-        <TextAraComponent v-model="data.comentarios" :title="'Comentarios:'" :placeholder="'Ingresa los beneficios...'"
-          :name="'comentarios'" :error="errors" :id="'comentarios'" class="col-sm-12" />
-        <InputText v-model="data.clave_compromiso" title="Clave Compromiso:" placeholder="Fase" name="fase" id="fase"
-          :error="errors" class="col-sm-12" />
-        <SelectComponent v-model="data.tipo_obra" title="Tipo de Obra:" placeholder="Fase" name="fase" id="fase"
-          :error="errors" class="col-sm-12" :options="arrayDataTipoObra.data" :optionText="'descripcion'" />
+        <InputText
+          v-model="data.ejercicio_presupuestal"
+          title="Ejercicio Presupuestal:"
+          placeholder="Ejercicio Presupuestal"
+          name="ejercicio_presupuestal"
+          id="ejercicio_presupuestal"
+          :error="errors"
+          class="col-sm-6"
+        />
+        <SelectComponent
+          v-model="data.fase"
+          title="Fase:"
+          placeholder="Fase"
+          name="fase"
+          id="fase"
+          :error="errors"
+          class="col-sm-6"
+          :options="arrayDataFase.data"
+          :optionText="'descripcion'"
+        />
+        <TextAraComponent
+          v-model="data.comentarios"
+          :title="'Comentarios:'"
+          :placeholder="'Ingresa los beneficios...'"
+          :name="'comentarios'"
+          :error="errors"
+          :id="'comentarios'"
+          class="col-sm-12"
+        />
+        <InputText
+          v-model="data.clave_compromiso"
+          title="Clave Compromiso:"
+          placeholder="Clave Compromiso"
+          name="clave_compromiso"
+          id="clave_compromiso"
+          :error="errors"
+          class="col-sm-12"
+        />
+        <SelectComponent
+          v-model="data.tipo_obra"
+          title="Tipo de Obra:"
+          placeholder="Tipo de Obra"
+          name="tipo_obra"
+          id="tipo_obra"
+          :error="errors"
+          class="col-sm-12"
+          :options="arrayDataTipoObra.data"
+          :optionText="'descripcion'"
+        />
       </div>
       <div class="row">
         <div class="form-group col-sm-6">
@@ -84,16 +263,40 @@
         </div>
       </div>
       <div class="row">
-        <SelectComponent v-model="data.tipo_documento" title="Tipo Documento:" placeholder="Fase" name="fase" id="fase"
-          :error="errors" class="col-sm-6" :options="arrayDataTipoDocumento.data" :optionText="'nombre'" />
+        <SelectComponent
+          :disabled="true"
+          v-model="data.tipo_documento"
+          title="Tipo Documento:"
+          placeholder="Tipo Documento"
+          name="tipo_documento"
+          id="tipo_documento"
+          :error="errors"
+          class="col-sm-6"
+          :options="arrayDataTipoDocumento.data"
+          :optionText="'nombre'"
+        />
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Documento</label>
-          <input data.documento type="file" class="form-control" id="precidencial-prioridad" placeholder=""
-            autocomplete="off" ref="fileInput" @change="handleFileUpload" />
-          <small  class="form-text text-muted "
-            v-if="fileName">{{ fileName[fileName.length - 1] }}</small>
-          <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
-            v-if="errors && errors.fecha_prioridad">{{ errors.fecha_prioridad }}</small>
+          <input
+            data.documento
+            type="file"
+            class="form-control"
+            id="precidencial-prioridad"
+            placeholder=""
+            autocomplete="off"
+            ref="fileInput"
+            accept="application/pdf"
+            @change="handleFileUpload"
+          />
+          <small class="form-text text-muted" v-if="fileName">{{
+            fileName[fileName.length - 1]
+          }}</small>
+          <small
+            id="descripcion-nivel-small"
+            class="form-text text-muted app-validation"
+            v-if="errors && errors.fecha_prioridad"
+            >{{ errors.fecha_prioridad }}</small
+          >
         </div>
       </div>
       <div class="modal-footer">
@@ -113,7 +316,7 @@ import { useForm } from "@/composables/useForm";
 import InputText from "@/components/InputText.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
 import TextAraComponent from "@/components/TextAraComponent.vue";
-import { cat_faseValidations } from "@/utils/validations/cat_faseValidations";
+import { proyectoDeInversionValidations } from "@/utils/validations/proyectoDeInversionValidations";
 import usePetition from "@/composables/usePetition";
 import ProyectoDeInversion from "@/utils/models/ProyectoDeInversion";
 import { simpleDate } from "@/utils/helpers/dateHelper";
@@ -170,11 +373,11 @@ const data = ref<ProyectoDeInversion>({
   tipo_proyecto: "",
   estatus_proyecto: "",
   cartera_estatus: "",
-  pais: "",
+  pais: 1,
   entidad_federativa: "",
   fase: "",
   tipo_obra: "",
-  tipo_documento: "",
+  tipo_documento: 1,
   unidad_responsable: "",
   area: "",
   documento: null,
@@ -182,7 +385,7 @@ const data = ref<ProyectoDeInversion>({
 
 const { formState, isValid, errors, showErrors } = useForm(
   data.value,
-  cat_faseValidations
+  proyectoDeInversionValidations
 );
 
 const handleFileUpload = (event: Event) => {
@@ -242,11 +445,12 @@ async function saveProyectoDeInversion() {
           delete data.value.documento;
         }
         await updateFromData(formData, itemId.value);
+        router.push({ name: "listar-proyecto_de_inversion" });
       } else {
         await createFromData(formData);
+        router.push({ name: "listar-proyecto_de_inversion" });
       }
-      /* router.push({ name: "listar-cat_Fase" }); */
-    } catch (error) { }
+    } catch (error) {}
   } else {
     showErrors();
   }
@@ -289,7 +493,7 @@ onMounted(() => {
         data.value.tipo_documento = response.tipo_documento;
       })
       .catch(() => {
-        router.push({ name: "listar-cat_Fase" });
+        router.push({ name: "listar-proyecto_de_inversion" });
       });
   }
   getDatasPrioridad({ page: 1, size: 100 });
