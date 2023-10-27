@@ -22,5 +22,5 @@ export default interface ProyectoDeInversion {
   tipo_documento: string | number;
   unidad_responsable: string | number;
   area: string | number;
-  documento:  File | Blob | null;
+  documento?:  File | Blob | null;
 }

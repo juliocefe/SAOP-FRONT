@@ -88,8 +88,10 @@
           :error="errors" class="col-sm-6" :options="arrayDataTipoDocumento.data" :optionText="'nombre'" />
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Documento</label>
-          <input data.documento type="file" class="form-control" id="precidencial-prioridad" placeholder="" autocomplete="off" ref="fileInput"
-            @change="handleFileUpload" />
+          <input data.documento type="file" class="form-control" id="precidencial-prioridad" placeholder=""
+            autocomplete="off" ref="fileInput" @change="handleFileUpload" />
+          <small  class="form-text text-muted "
+            v-if="fileName">{{ fileName[fileName.length - 1] }}</small>
           <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
             v-if="errors && errors.fecha_prioridad">{{ errors.fecha_prioridad }}</small>
         </div>
@@ -114,7 +116,7 @@ import TextAraComponent from "@/components/TextAraComponent.vue";
 import { cat_faseValidations } from "@/utils/validations/cat_faseValidations";
 import usePetition from "@/composables/usePetition";
 import ProyectoDeInversion from "@/utils/models/ProyectoDeInversion";
-import { simpleDate } from "@/utils/helpers/dateHelper"
+import { simpleDate } from "@/utils/helpers/dateHelper";
 
 const route = useRoute();
 const router = useRouter();
@@ -189,12 +191,20 @@ const handleFileUpload = (event: Event) => {
     data.value.documento = target.files[0];
   }
 };
-const handleCancel = () => router.push({ name: "listar-proyecto_de_inversion" });
+const handleCancel = () =>
+  router.push({ name: "listar-proyecto_de_inversion" });
 
+/* const isFileLink = (str: string): boolean => {
+  // Expresión regular para verificar si la cadena es una URL
+  const urlPattern: RegExp = /^(ftp|http|https):\/\/[^ "]+$/;
+  console.log(urlPattern.test(str));
+  return urlPattern.test(str);
+};
+ */
 async function saveProyectoDeInversion() {
   if (isValid.value) {
     try {
-      const formData = new FormData()
+      const formData = new FormData();
       // Agregar campos del formulario
       formData.append("clave", formState.value.clave);
       formData.append("no_solicitud", formState.value.no_solicitud.toString());
@@ -204,7 +214,10 @@ async function saveProyectoDeInversion() {
       formData.append("beneficios", formState.value.beneficios);
       formData.append("fecha_inicial", formState.value.fecha_inicial);
       formData.append("fecha_final", formState.value.fecha_final);
-      formData.append("ejercicio_presupuestal", formState.value.ejercicio_presupuestal.toString());
+      formData.append(
+        "ejercicio_presupuestal",
+        formState.value.ejercicio_presupuestal.toString()
+      );
       formData.append("comentarios", formState.value.comentarios);
       formData.append("clave_compromiso", formState.value.clave_compromiso);
       formData.append("factibilidad_obra", formState.value.factibilidad_obra);
@@ -225,6 +238,9 @@ async function saveProyectoDeInversion() {
       }
 
       if (itemId.value) {
+        if (fileName) {
+          delete data.value.documento;
+        }
         await updateFromData(formData, itemId.value);
       } else {
         await createFromData(formData);
@@ -234,10 +250,10 @@ async function saveProyectoDeInversion() {
   } else {
     showErrors();
   }
-
 }
 
 const titulo = ref("Crear Proyecto de Inversión");
+const fileName = ref("");
 
 onMounted(() => {
   itemId.value = route.params.id ? route.params.id.toString() : "";
@@ -268,7 +284,7 @@ onMounted(() => {
         data.value.comentarios = response.comentarios;
         data.value.clave_compromiso = response.clave_compromiso;
         data.value.fase = response.fase;
-        data.value.documento = response.documento;
+        fileName.value = response.documento.split("/");
         data.value.tipo_obra = response.tipo_obra;
         data.value.tipo_documento = response.tipo_documento;
       })
