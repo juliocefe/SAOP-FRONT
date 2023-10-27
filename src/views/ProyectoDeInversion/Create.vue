@@ -88,8 +88,8 @@
           :error="errors" class="col-sm-6" :options="arrayDataTipoDocumento.data" :optionText="'nombre'" />
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Documento</label>
-          <input type="file" class="form-control" id="precidencial-prioridad" placeholder="" autocomplete="off"
-          @change="handleFileUpload" />
+          <input data.documento type="file" class="form-control" id="precidencial-prioridad" placeholder="" autocomplete="off" ref="fileInput"
+            @change="handleFileUpload" />
           <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
             v-if="errors && errors.fecha_prioridad">{{ errors.fecha_prioridad }}</small>
         </div>
@@ -114,11 +114,12 @@ import TextAraComponent from "@/components/TextAraComponent.vue";
 import { cat_faseValidations } from "@/utils/validations/cat_faseValidations";
 import usePetition from "@/composables/usePetition";
 import ProyectoDeInversion from "@/utils/models/ProyectoDeInversion";
+import { simpleDate } from "@/utils/helpers/dateHelper"
 
 const route = useRoute();
 const router = useRouter();
 const itemId = ref("");
-const { getData, createFromData , updateFromData } = usePetition(
+const { getData, createFromData, updateFromData } = usePetition(
   "cartera_proyectos_inversion/"
 );
 
@@ -188,7 +189,7 @@ const handleFileUpload = (event: Event) => {
     data.value.documento = target.files[0];
   }
 };
-const handleCancel = () => router.push({ name: "crear-proyecto_de_inversion" });
+const handleCancel = () => router.push({ name: "listar-proyecto_de_inversion" });
 
 async function saveProyectoDeInversion() {
   if (isValid.value) {
@@ -224,7 +225,7 @@ async function saveProyectoDeInversion() {
       }
 
       if (itemId.value) {
-        await updateFromData(formData , itemId.value);
+        await updateFromData(formData, itemId.value);
       } else {
         await createFromData(formData);
       }
@@ -241,13 +242,35 @@ const titulo = ref("Crear Proyecto de Inversión");
 onMounted(() => {
   itemId.value = route.params.id ? route.params.id.toString() : "";
   titulo.value = itemId.value
-    ? "Editar Fase"
-    : "Crear Crear Proyecto de Inversión";
+    ? "Editar Proyecto de Inversión"
+    : "Crear Proyecto de Inversión";
   if (itemId.value) {
     getData(itemId.value)
       .then((response: any) => {
-        data.value.descripcion = response.descripcion;
         data.value.clave = response.clave;
+        data.value.no_solicitud = response.no_solicitud;
+        data.value.prioridad = response.prioridad;
+        data.value.factibilidad_obra = response.factibilidad_obra;
+        data.value.area = response.area;
+        data.value.tipo_proyecto = response.tipo_proyecto;
+        data.value.estatus_proyecto = response.estatus_proyecto;
+        data.value.cartera_estatus = response.cartera_estatus;
+        data.value.nombre = response.nombre;
+        data.value.descripcion = response.descripcion;
+        data.value.pais = response.pais;
+        data.value.entidad_federativa = response.entidad_federativa;
+        data.value.unidad_responsable = response.unidad_responsable;
+        data.value.municipio = response.municipio;
+        data.value.beneficios = response.beneficios;
+        data.value.fecha_final = simpleDate(response.fecha_final);
+        data.value.fecha_inicial = simpleDate(response.fecha_inicial);
+        data.value.ejercicio_presupuestal = response.ejercicio_presupuestal;
+        data.value.comentarios = response.comentarios;
+        data.value.clave_compromiso = response.clave_compromiso;
+        data.value.fase = response.fase;
+        data.value.documento = response.documento;
+        data.value.tipo_obra = response.tipo_obra;
+        data.value.tipo_documento = response.tipo_documento;
       })
       .catch(() => {
         router.push({ name: "listar-cat_Fase" });

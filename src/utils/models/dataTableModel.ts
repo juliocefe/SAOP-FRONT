@@ -5,5 +5,7 @@ export interface IDatatable {
     rowId: string
     showEdit?: boolean
     showDelete?: boolean
-    showDetail?: boolean
+    showDetail?: boolean,
+    hideActions?:boolean,
+    fixedActions?:boolean
 }

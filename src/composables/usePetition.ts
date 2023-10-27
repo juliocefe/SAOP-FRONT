@@ -153,7 +153,7 @@ export const usePetition = (ENDPOINT: String) => {
     const token = getToken(); // obtenemos el token
     try {
       const response = await fetch(
-        `${ENDPOINT}${id}`,
+        import.meta.env.VITE_API_URL + ENDPOINT + id + '/',
         {
           method: "PUT",
           headers: {

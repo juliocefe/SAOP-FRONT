@@ -85,7 +85,7 @@ export const routes = [
         children: cat_Unidad_Responsable,
       },
       {
-        path: "proyecto_de_inversiones",
+        path: "cartera_proyectos_inversion",
         name: "proyecto_de_inversiones",
         children: proyectoDeInversiones,
       },

@@ -6,13 +6,13 @@
             <thead>
                 <tr>
                     <th v-for="col in columns" class="text-center">{{ col.title }}</th>
-                    <th class="text-center">Acciones</th>
+                    <th v-if="!props.hideActions" class="text-center" :class="{'fixed-actions-colum': props.fixedActions}">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="value in data" :key="value[rowId]">
                     <td v-for="col in columns" class="text-left" v-html="render(value[col.data])"></td>
-                    <td class="text-center action_items">
+                    <td v-if="!props.hideActions" class="text-center action_items" :class="{'fixed-actions-colum': props.fixedActions}">
                         <button v-if="showEdit" class="btn btn-primary btn-sm active mr-2 mt-2 mb-2" data-placement="top"
                             title="Editar" @click="emit('onEdit', value[rowId])"><i class="bi bi-pencil"></i></button>
                         <button v-if="showDelete" class="btn btn-primary btn-sm active mr-2 mt-2 mb-2" data-placement="top"
@@ -79,7 +79,7 @@ const showPaginationNumbers = (item:any) => {
 const OPTIONS = ref<any>({...DEFAULT_OPTIONS})
 
 OPTIONS.value.columnDefs = [{
-    'targets': [props.columns.length],
+    'targets': [props.hideActions ? props.columns.length - 1 : props.columns.length],
     'orderable': false,
 }]
 </script>
@@ -110,4 +110,10 @@ div.dataTables_wrapper div.dataTables_paginate,
     align-items: center;
 }
 
+.fixed-actions-colum{
+    position: sticky;
+    right: 0;
+    background-color: #fff;
+    z-index: 1;
+}
 </style>
