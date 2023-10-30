@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
@@ -34,12 +34,6 @@
                     </div>
                     <div class="d-flex px-2">
                         <div class="pr-3 col-md-1" style="font-size: 30px"><i class="px-2 bi bi-funnel-fill"></i></div>
-                        <!-- <SelectComponent title="Entidad:" name="prioridad" id="prioridad" class="px-4 col-md-2 h6"
-                :options="[]" :optionText="'descripcion'"/>
-                <SelectComponent title="Unidad Responsable:" name="prioridad" id="prioridad" class="px-4 col-md-2 h6"
-                :options="[]" :optionText="'descripcion'"/>
-                <SelectComponent title="No. Solicitud:" name="prioridad" id="prioridad" class="px-4 col-md-2 h6"
-                :options="[]" :optionText="'descripcion'"/> -->
                         <div class="px-3" style="min-width: 210px !important">
                             <select class="form-select form-control">
                                 <option value="">Entidad</option>
@@ -56,16 +50,18 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="px-3" style="min-width: 210px !important">
-                            <select class="form-select form-control">
-                                <option value="">No. Solicitud</option>
-                                <option v-for="opt in arrayDataEntidadFederativa.data" :key="opt.value" :value="opt.clave">
-                                    {{ opt.descripcion_corta }}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="flex-grow-1 d-flex justify-content-end form-group">
-                            <SearchComponent @onSearch="handleSearch" />
+                        <div class="flex-grow-1 d-flex justify-content-end">
+                            <div class="form-group">
+                                <div class="d-flex align-items-center form-group m-0">
+                                    <div>
+                                        <span class="font-weight-bold pr-2">No. Solicitud: </span>
+                                    </div>
+                                    <div>
+                                        <input class="form-control w-auto" placeholder="Buscar..." type="text"
+                                            @keyup.enter="handleSearch($event)" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <DataTableComponent v-if="!arrayData.loading" rowId="clave" :columns="columns" :data="arrayData.data"
@@ -84,7 +80,6 @@ import { onMounted, ref } from 'vue'
 import usePetition from "@/composables/usePetition";
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
-import SearchComponent from '@/components/SearchComponent.vue'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 
 
@@ -107,8 +102,8 @@ const handlePaginate = (page: number) => {
     }
 };
 
-const handleSearch = (term: any) => {
-    searchTerm.value = term;
+const handleSearch = (event: any) => {
+    searchTerm.value = event.target.value;
     searchData({ page: 1, search: searchTerm.value });
 };
 
