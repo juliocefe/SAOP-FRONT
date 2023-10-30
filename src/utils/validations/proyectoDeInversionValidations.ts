@@ -11,8 +11,13 @@ export const proyectoDeInversionValidations: any = {
       },
     ],
   },
-  no_solicitudcripcion: {
+  no_solicitud: {
+    //Solo Numerico
     rules: [
+      {
+        validation: (value: string) => value && /^\d+$/.test(value),
+        message: "Ingrese solo números enteros.",
+      },
       {
         validation: (value: string) => value && value.length > 0,
         message: "Campo requerido.",

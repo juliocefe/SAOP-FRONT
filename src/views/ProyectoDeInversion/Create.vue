@@ -9,8 +9,8 @@
           v-model="data.no_solicitud"
           title="Numero de Solicitud:"
           placeholder="Numero de Solicitud"
-          name="clave"
-          id="clave"
+          name="no_solicitud"
+          id="no_solicitud"
           :error="errors"
           class="col-sm-6"
         />
