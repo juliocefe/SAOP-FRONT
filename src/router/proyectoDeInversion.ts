@@ -10,6 +10,11 @@ export const proyectoDeInversiones = [
         component: () => import('@/views/ProyectoDeInversion/Create.vue')
     },
     {
+        path: ':id/ver',
+        name: 'ver-proyecto_de_inversion',
+        component: () => import('@/views/ProyectoDeInversion/Create.vue')
+    },
+    {
         path: ':id/editar',
         name: 'editar-proyecto_de_inversion',
         component: () => import('@/views/ProyectoDeInversion/Create.vue')

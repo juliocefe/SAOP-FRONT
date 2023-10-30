@@ -35,17 +35,17 @@
                     <div class="d-flex px-2">
                         <div class="pr-3 col-md-1" style="font-size: 30px"><i class="px-2 bi bi-funnel-fill"></i></div>
                         <div class="px-3" style="min-width: 210px !important">
-                            <select class="form-select form-control">
-                                <option value="">Entidad</option>
-                                <option v-for="opt in arrayDataEntidadFederativa.data" :key="opt.value" :value="opt.clave">
+                            <select class="form-select form-control" v-model="cbEntidad" @change="handleFilter()">
+                                <option selected value="">Entidad</option>
+                                <option v-for="opt in arrayDataEntidadFederativa.data" :key="opt.value" :value="opt.descripcion_corta">
                                     {{ opt.descripcion_corta }}
                                 </option>
                             </select>
                         </div>
                         <div class="px-3" style="min-width: 210px !important">
-                            <select class="form-select form-control">
+                            <select class="form-select form-control" v-model="cbUnidad" @change="handleFilter()">
                                 <option value="">Unidad reponsable</option>
-                                <option v-for="opt in arrayDataEntidadFederativa.data" :key="opt.value" :value="opt.clave">
+                                <option v-for="opt in arrayDataUnidadResponsable.data" :key="opt.value" :value="opt.clave">
                                     {{ opt.descripcion_corta }}
                                 </option>
                             </select>
@@ -57,16 +57,16 @@
                                         <span class="font-weight-bold pr-2">No. Solicitud: </span>
                                     </div>
                                     <div>
-                                        <input class="form-control w-auto" placeholder="Buscar..." type="text"
-                                            @keyup.enter="handleSearch($event)" />
+                                        <input class="form-control w-auto" placeholder="Buscar..." type="text" v-model="inputSolicitud"
+                                            @keyup.enter="handleFilter()" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <DataTableComponent v-if="!arrayData.loading" rowId="clave" :columns="columns" :data="arrayData.data"
-                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="false"
-                        :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDelete="handleDelete"
+                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true"
+                        :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDetail="handleDetail" @onDelete="handleDelete"
                         @onCreate="handleCreate" />
                 </div>
             </div>
@@ -89,11 +89,17 @@ const searchTerm = ref("");
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
+const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
 const {
     arrayData: arrayDataEntidadFederativa,
     getDatas: getDatasEntidadFederativa,
 } = usePetition("cat_entidad_federativa/");
+const {
+  arrayData: arrayDataUnidadResponsable,
+  getDatas: getDatasUnidadResponsable,
+} = usePetition("cat_unidad_responsable/");
+
 const handlePaginate = (page: number) => {
     if (searchTerm.value) {
         searchData({ page: page, search: searchTerm.value });
@@ -102,10 +108,24 @@ const handlePaginate = (page: number) => {
     }
 };
 
-const handleSearch = (event: any) => {
-    searchTerm.value = event.target.value;
-    searchData({ page: 1, search: searchTerm.value });
-};
+const handleFilter = () => {
+    let searchFilter = ""
+    if(cbEntidad.value.length) 
+        searchFilter += cbEntidad.value
+    if(cbUnidad.value.length){
+        if(searchFilter.length) searchFilter += ' ,'
+        searchFilter += cbEntidad.value
+    }
+    if(inputSolicitud.value.length){
+        if(searchFilter.length) searchFilter += ' ,'
+        searchFilter += inputSolicitud.value
+    }
+    searchData({ page: 1, search: searchFilter });
+}
+
+const cbEntidad = ref<string>('')
+const cbUnidad = ref<string>('')
+const inputSolicitud = ref<string>('')
 
 const columns = [
     { title: 'Clave', data: 'clave', align: 'left' },
@@ -124,6 +144,7 @@ const columns = [
 onMounted(() => {
     getDatas({ page: 1 }).then(() => showView.value = true)
     getDatasEntidadFederativa({ page: 1, size: 100 });
+    getDatasUnidadResponsable({ page: 1, size: 100 });
 })
 
 </script>
