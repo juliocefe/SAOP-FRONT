@@ -87,12 +87,24 @@ export const proyectoDeInversionValidations: any = {
   fecha_final: {
     rules: [
       {
+        validation: (value: string, fields: any) => {
+          if (fields && fields.fecha_inicial) {
+            const startDate = new Date(fields.fecha_inicial);
+            const endDate = new Date(value);
+            return endDate >= startDate;
+          }
+          return false; // or handle the error accordingly
+        },
+        message: "La fecha final debe ser mayor que la fecha de inicio.",
+      },
+      {
         validation: (value: string) => value && value.length > 0,
         message: "La fecha es requerida.",
       },
     ],
   },
   ejercicio_presupuestal: {
+    //Que solo tenga 4 digitos
     rules: [
       {
         validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value),
@@ -101,6 +113,10 @@ export const proyectoDeInversionValidations: any = {
       {
         validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value) && value !== 0,
         message: "Este campo numérico es obligatorio y no puede ser cero.",
+      },
+      {
+        validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value) && value.toString().length === 4,
+        message: "Este campo debe tener exactamente 4 dígitos.",
       },
     ],
   },
@@ -238,14 +254,14 @@ export const proyectoDeInversionValidations: any = {
   },
   tipo_documento: {
     rules: [
-      /* {
-        validation: (value: string | number) => value !== 'seleccionar' && value !== 'default', // Agrega aquí cualquier valor predeterminado que indique una selección no válida 
+      {
+        validation: (value: string | number) => value !== 'seleccionar' && value !== 'default' /* Agrega aquí cualquier valor predeterminado que indique una selección no válida */,
         message: "Este campo es obligatorio.",
       },
       {
         validation: (value: string | number) => value !== null && value !== undefined && value !== '',
         message: "Seleccione una opción válida de la lista.",
-      }, */
+      },
     ],
   },
   unidad_responsable: {

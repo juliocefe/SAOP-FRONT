@@ -264,7 +264,6 @@
       </div>
       <div class="row">
         <SelectComponent
-          :disabled="true"
           v-model="data.tipo_documento"
           title="Tipo Documento:"
           placeholder="Tipo Documento"
@@ -303,7 +302,7 @@
         <button type="button" class="btn btn-secondary" @click="handleCancel">
           Cancelar
         </button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary" :disabled=" Object.keys(errors).length !== 0 ">Guardar</button>
       </div>
     </form>
   </div>
@@ -377,7 +376,7 @@ const data = ref<ProyectoDeInversion>({
   entidad_federativa: "",
   fase: "",
   tipo_obra: "",
-  tipo_documento: 1,
+  tipo_documento: "",
   unidad_responsable: "",
   area: "",
   documento: null,
