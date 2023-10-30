@@ -284,7 +284,7 @@
             placeholder=""
             autocomplete="off"
             ref="fileInput"
-            accept="application/pdf"
+            accept="application/pdf, image/*"
             @change="handleFileUpload"
           />
           <small class="form-text text-muted" v-if="fileName">{{

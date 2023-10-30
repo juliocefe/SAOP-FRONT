@@ -87,17 +87,6 @@ export const proyectoDeInversionValidations: any = {
   fecha_final: {
     rules: [
       {
-        validation: (value: string, fields: any) => {
-          if (fields && fields.fecha_inicial) {
-            const startDate = new Date(fields.fecha_inicial);
-            const endDate = new Date(value);
-            return endDate >= startDate;
-          }
-          return false; // or handle the error accordingly
-        },
-        message: "La fecha final debe ser mayor que la fecha de inicio.",
-      },
-      {
         validation: (value: string) => value && value.length > 0,
         message: "La fecha es requerida.",
       },
