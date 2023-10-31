@@ -8,6 +8,20 @@
                     </router-link>
                 </li>
                 <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" @click="toggleScheduleModuleMenu" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Módulo de programación
+                    </a>
+                    <ul class="dropdown-menu catalogue-dropdown" v-show="showScheduleModuleMenu">
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'listar-proyecto_de_inversion' }"
+                                @click="toggleScheduleModuleMenu">
+                                Cartera de inversión
+                            </router-link>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" @click="toggleCatalogueMenu" role="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         Catálogos
@@ -108,12 +122,17 @@ import useAuthStore from '@/store/authenticationStore';
 const authStore = useAuthStore();
 const showAccountMenu = ref(false);
 const showCatalogueMenu = ref(false);
+const showScheduleModuleMenu = ref(false);
 
 const toggleAccountMenu = () => {
     showAccountMenu.value = !showAccountMenu.value
 }
 
 const toggleCatalogueMenu = () => {
+    showCatalogueMenu.value = !showCatalogueMenu.value
+}
+
+const toggleScheduleModuleMenu = () => {
     showCatalogueMenu.value = !showCatalogueMenu.value
 }
 

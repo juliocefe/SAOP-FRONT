@@ -4,6 +4,7 @@ import {
   cat_PaisRoutes,
   cat_FaseRoutes,
   cat_Unidad_Responsable,
+  proyectoDeInversiones,
 } from "@/router/exportFile.ts";
 import { isAuthenticated } from "@/utils/helpers/authenticationHelper";
 import { constructionTypesRoutes } from "./constructionTypesRoutes";
@@ -82,6 +83,11 @@ export const routes = [
         path: "cat_unidad_responsable",
         name: "cat_unidad_responsable",
         children: cat_Unidad_Responsable,
+      },
+      {
+        path: "cartera_proyectos_inversion",
+        name: "proyecto_de_inversiones",
+        children: proyectoDeInversiones,
       },
     ],
     beforeEnter: () => {

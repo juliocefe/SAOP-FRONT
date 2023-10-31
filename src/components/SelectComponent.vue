@@ -70,5 +70,5 @@ defineProps({
   }
 });
 
-const emit = defineEmits(['onChange'])
+const emit = defineEmits(['update:modelValue', 'onChange']);
 </script>
