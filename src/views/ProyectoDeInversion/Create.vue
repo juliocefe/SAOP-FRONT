@@ -127,8 +127,8 @@
         <SelectComponent
           :disabled="true"
           v-model="data.pais"
-          title="Pais:"
-          placeholder="Pais"
+          title="País:"
+          placeholder="País"
           name="pais"
           id="pais"
           :error="errors"
