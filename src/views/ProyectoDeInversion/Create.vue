@@ -8,7 +8,7 @@
           :disabled="itemId !== '' || readOnlyView === true"
           v-model.trim="data.no_solicitud"
           title="Número de Solicitud:"
-          placeholder="Numero de Solicitud"
+          placeholder="Número de Solicitud"
           name="no_solicitud"
           id="no_solicitud"
           :error="errors"
@@ -56,7 +56,7 @@
         :disabled="readOnlyView === true"
           v-model="data.area"
           title="Área:"
-          placeholder="Area"
+          placeholder="Área"
           name="area"
           id="area"
           :error="errors"
@@ -116,7 +116,7 @@
         :disabled="readOnlyView === true"
           v-model="data.descripcion"
           :title="'Descripción:'"
-          :placeholder="'Ingresa una descripcion...'"
+          :placeholder="'Ingresa una descripción...'"
           :name="'descripcion'"
           :error="errors"
           :id="'descripcion'"
@@ -128,7 +128,7 @@
           :disabled="true"
           v-model="data.pais"
           title="País:"
-          placeholder="Pais"
+          placeholder="País"
           name="pais"
           id="pais"
           :error="errors"
@@ -166,7 +166,7 @@
         :disabled="readOnlyView === true"
           v-model="data.municipio"
           title="Localización/Municipio:"
-          placeholder="Localizacion/Municipio"
+          placeholder="Localización/Municipio"
           name="municipio"
           id="municipio"
           :error="errors"
@@ -278,7 +278,7 @@
       </div>
       <div class="row">
         <div class="form-group col-sm-6">
-          <label for="nombre-operacion">Anexa Documentos</label>
+          <label for="nombre-operacion">Anexar Documentos</label>
         </div>
       </div>
       <div class="row">
@@ -293,7 +293,7 @@
           class="col-sm-6"
           :options="arrayDataTipoDocumento.data"
           :optionText="'nombre'"
-        />
+          />
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Documento</label>
           <input
@@ -418,13 +418,6 @@ const handleFileUpload = (event: Event) => {
 const handleCancel = () =>
   router.push({ name: "listar-proyecto_de_inversion" });
 
-/* const isFileLink = (str: string): boolean => {
-  // Expresión regular para verificar si la cadena es una URL
-  const urlPattern: RegExp = /^(ftp|http|https):\/\/[^ "]+$/;
-  console.log(urlPattern.test(str));
-  return urlPattern.test(str);
-};
- */
 async function saveProyectoDeInversion() {
   if (isValid.value) {
     try {
@@ -481,6 +474,8 @@ const titulo = ref("Crear Proyecto de Inversión");
 const fileName = ref("");
 
 onMounted(() => {
+  const currentYear = new Date().getFullYear();
+  data.value.ejercicio_presupuestal = currentYear.toString();
   readOnlyView.value = route.name === 'ver-proyecto_de_inversion' ? true : false
   itemId.value = route.params.id ? route.params.id.toString() : "";
   titulo.value = itemId.value

@@ -15,30 +15,20 @@ export const proyectoDeInversionValidations: any = {
     //Solo Numerico
     rules: [
       {
-        validation: (value: string) => (value && /^\d+$/.test(value)) || (typeof value === 'string'),
-        message: "Ingrese solo números enteros o texto.",
+        validation: (value: string) => value && /^\d+$/.test(value),
+        message: "Ingrese solo números enteros.",
       },
       {
-        validation: (value: number | string | null | undefined) => {
-          if (typeof value === 'number') {
-            return value !== null && value !== undefined && !isNaN(value) && value !== 0;
-          } else if (typeof value === 'string') {
-            return value.trim() !== "";
-          }
-          return false;
-        },
-        message: "Este campo es obligatorio y no puede ser cero.",
+        validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value) && value !== 0,
+        message: "Este campo numérico es obligatorio y no puede ser cero.",
       },
       {
-        validation: (value: number | string | null | undefined) => {
-          if (typeof value === 'number') {
-            return value !== null && value !== undefined && !isNaN(value) && value.toString().length <= 10;
-          } else if (typeof value === 'string') {
-            return value.trim().length <= 10;
-          }
-          return false;
-        },
-        message: "Este campo debe tener máximo 10 caracteres o dígitos.",
+        validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value) && value.toString().length <= 10,
+        message: "Este campo debe tener exactamente 10 dígitos.",
+      },
+      {
+        validation: (value: string) => value && parseInt(value) < 2147483647,
+        message: "Este campo debe ser menor que 2147483647.",
       },
     ],
   },
