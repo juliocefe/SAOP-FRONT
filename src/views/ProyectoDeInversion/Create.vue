@@ -5,8 +5,8 @@
     <form role="form" @submit.prevent="saveProyectoDeInversion">
       <div class="row">
         <InputText
-          :disabled="itemId !== ''"
-          v-model="data.no_solicitud"
+          :disabled="itemId !== '' || readOnlyView === true"
+          v-model.trim="data.no_solicitud"
           title="Numero de Solicitud:"
           placeholder="Numero de Solicitud"
           name="no_solicitud"
@@ -15,6 +15,7 @@
           class="col-sm-6"
         />
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.prioridad"
           title="Prioridad:"
           placeholder="Prioridad"
@@ -28,6 +29,7 @@
       </div>
       <div class="row">
         <InputText
+        :disabled="readOnlyView === true"
           v-model="data.clave"
           title="Clv Cartera:"
           placeholder="Clv Cartera"
@@ -37,6 +39,7 @@
           class="col-sm-6"
         />
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.factibilidad_obra"
           title="Factibilidad de la obra :"
           placeholder="Factibilidad de la obra"
@@ -50,6 +53,7 @@
       </div>
       <div class="row">
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.area"
           title="Area:"
           placeholder="Area"
@@ -61,6 +65,7 @@
           :optionText="'nombre'"
         />
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.tipo_proyecto"
           title="Tipo de Proyecto:"
           placeholder="Tipo de Proyecto"
@@ -72,7 +77,7 @@
           :optionText="'descripcion'"
         />
         <SelectComponent
-          :disabled="itemId !== ''"
+          :disabled="itemId !== ''|| readOnlyView === true"
           v-model="data.estatus_proyecto"
           title="Estatus de Proyecto:"
           placeholder="Estatus de Proyecto"
@@ -84,6 +89,7 @@
           :optionText="'descripcion'"
         />
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.cartera_estatus"
           title="Estatus:"
           placeholder="Estatus"
@@ -95,6 +101,7 @@
           :optionText="'descripcion'"
         />
         <InputText
+        :disabled="readOnlyView === true"
           v-model="data.nombre"
           title="Nombre del Proyecto:"
           placeholder="Nombre del Proyecto"
@@ -106,6 +113,7 @@
       </div>
       <div class="row">
         <TextAraComponent
+        :disabled="readOnlyView === true"
           v-model="data.descripcion"
           :title="'Descripcion:'"
           :placeholder="'Ingresa una descripcion...'"
@@ -129,6 +137,7 @@
           :optionText="'nombre_oficial'"
         />
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.entidad_federativa"
           title="Entidad Federativa:"
           placeholder="Entidad Federativa"
@@ -142,6 +151,7 @@
       </div>
       <div class="row">
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.unidad_responsable"
           title="Unidad Responsable:"
           placeholder="Unidad Responsable"
@@ -153,6 +163,7 @@
           :optionText="'descripcion'"
         />
         <InputText
+        :disabled="readOnlyView === true"
           v-model="data.municipio"
           title="Localizacion/Municipio:"
           placeholder="Localizacion/Municipio"
@@ -162,6 +173,7 @@
           class="col-sm-12"
         />
         <TextAraComponent
+        :disabled="readOnlyView === true"
           v-model="data.beneficios"
           :title="'Beneficios:'"
           :placeholder="'Ingresa los beneficios...'"
@@ -175,6 +187,7 @@
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Fecha Inicial</label>
           <input
+          :disabled="readOnlyView === true"
             v-model="data.fecha_inicial"
             type="date"
             class="form-control"
@@ -193,6 +206,7 @@
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Fecha Final</label>
           <input
+          :disabled="readOnlyView === true"
             v-model="data.fecha_final"
             type="date"
             class="form-control"
@@ -208,6 +222,7 @@
           >
         </div>
         <InputText
+        :disabled="readOnlyView === true"
           v-model="data.ejercicio_presupuestal"
           title="Ejercicio Presupuestal:"
           placeholder="Ejercicio Presupuestal"
@@ -217,6 +232,7 @@
           class="col-sm-6"
         />
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.fase"
           title="Fase:"
           placeholder="Fase"
@@ -228,6 +244,7 @@
           :optionText="'descripcion'"
         />
         <TextAraComponent
+        :disabled="readOnlyView === true"
           v-model="data.comentarios"
           :title="'Comentarios:'"
           :placeholder="'Ingresa los beneficios...'"
@@ -237,6 +254,7 @@
           class="col-sm-12"
         />
         <InputText
+        :disabled="readOnlyView === true"
           v-model="data.clave_compromiso"
           title="Clave Compromiso:"
           placeholder="Clave Compromiso"
@@ -246,6 +264,7 @@
           class="col-sm-12"
         />
         <SelectComponent
+        :disabled="readOnlyView === true"
           v-model="data.tipo_obra"
           title="Tipo de Obra:"
           placeholder="Tipo de Obra"
@@ -264,7 +283,7 @@
       </div>
       <div class="row">
         <SelectComponent
-          :disabled="true"
+        :disabled="readOnlyView === true"
           v-model="data.tipo_documento"
           title="Tipo Documento:"
           placeholder="Tipo Documento"
@@ -278,6 +297,7 @@
         <div class="form-group col-sm-6">
           <label for="nombre-operacion">Documento</label>
           <input
+          :disabled="readOnlyView === true"
             data.documento
             type="file"
             class="form-control"
@@ -285,7 +305,7 @@
             placeholder=""
             autocomplete="off"
             ref="fileInput"
-            accept="application/pdf"
+            accept="application/pdf, image/*"
             @change="handleFileUpload"
           />
           <small class="form-text text-muted" v-if="fileName">{{
@@ -303,7 +323,7 @@
         <button type="button" class="btn btn-secondary" @click="handleCancel">
           Cancelar
         </button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary" :disabled=" Object.keys(errors).length !== 0 || readOnlyView === true ">Guardar</button>
       </div>
     </form>
   </div>
@@ -324,6 +344,7 @@ import { simpleDate } from "@/utils/helpers/dateHelper";
 const route = useRoute();
 const router = useRouter();
 const itemId = ref("");
+const readOnlyView = ref(false)
 const { getData, createFromData, updateFromData } = usePetition(
   "cartera_proyectos_inversion/"
 );
@@ -377,7 +398,7 @@ const data = ref<ProyectoDeInversion>({
   entidad_federativa: "",
   fase: "",
   tipo_obra: "",
-  tipo_documento: 1,
+  tipo_documento: "",
   unidad_responsable: "",
   area: "",
   documento: null,
@@ -460,6 +481,7 @@ const titulo = ref("Crear Proyecto de Inversión");
 const fileName = ref("");
 
 onMounted(() => {
+  readOnlyView.value = route.name === 'ver-proyecto_de_inversion' ? true : false
   itemId.value = route.params.id ? route.params.id.toString() : "";
   titulo.value = itemId.value
     ? "Editar Proyecto de Inversión"

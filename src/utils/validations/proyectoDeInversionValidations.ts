@@ -15,16 +15,30 @@ export const proyectoDeInversionValidations: any = {
     //Solo Numerico
     rules: [
       {
-        validation: (value: string) => value && /^\d+$/.test(value),
-        message: "Ingrese solo números enteros.",
+        validation: (value: string) => (value && /^\d+$/.test(value)) || (typeof value === 'string'),
+        message: "Ingrese solo números enteros o texto.",
       },
       {
-        validation: (value: string) => value && value.length > 0,
-        message: "Campo requerido.",
+        validation: (value: number | string | null | undefined) => {
+          if (typeof value === 'number') {
+            return value !== null && value !== undefined && !isNaN(value) && value !== 0;
+          } else if (typeof value === 'string') {
+            return value.trim() !== "";
+          }
+          return false;
+        },
+        message: "Este campo es obligatorio y no puede ser cero.",
       },
       {
-        validation: (value: string) => value && value.length < 121,
-        message: "Maximo 120 caracteres.",
+        validation: (value: number | string | null | undefined) => {
+          if (typeof value === 'number') {
+            return value !== null && value !== undefined && !isNaN(value) && value.toString().length <= 10;
+          } else if (typeof value === 'string') {
+            return value.trim().length <= 10;
+          }
+          return false;
+        },
+        message: "Este campo debe tener máximo 10 caracteres o dígitos.",
       },
     ],
   },
@@ -93,6 +107,7 @@ export const proyectoDeInversionValidations: any = {
     ],
   },
   ejercicio_presupuestal: {
+    //Que solo tenga 4 digitos
     rules: [
       {
         validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value),
@@ -101,6 +116,10 @@ export const proyectoDeInversionValidations: any = {
       {
         validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value) && value !== 0,
         message: "Este campo numérico es obligatorio y no puede ser cero.",
+      },
+      {
+        validation: (value: number | null | undefined) => value !== null && value !== undefined && !isNaN(value) && value.toString().length === 4,
+        message: "Este campo debe tener exactamente 4 dígitos.",
       },
     ],
   },
@@ -238,14 +257,14 @@ export const proyectoDeInversionValidations: any = {
   },
   tipo_documento: {
     rules: [
-      /* {
-        validation: (value: string | number) => value !== 'seleccionar' && value !== 'default', // Agrega aquí cualquier valor predeterminado que indique una selección no válida 
+      {
+        validation: (value: string | number) => value !== 'seleccionar' && value !== 'default' /* Agrega aquí cualquier valor predeterminado que indique una selección no válida */,
         message: "Este campo es obligatorio.",
       },
       {
         validation: (value: string | number) => value !== null && value !== undefined && value !== '',
         message: "Seleccione una opción válida de la lista.",
-      }, */
+      },
     ],
   },
   unidad_responsable: {
