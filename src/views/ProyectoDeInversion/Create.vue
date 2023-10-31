@@ -7,7 +7,7 @@
         <InputText
           :disabled="itemId !== '' || readOnlyView === true"
           v-model.trim="data.no_solicitud"
-          title="Numero de Solicitud:"
+          title="Número de Solicitud:"
           placeholder="Numero de Solicitud"
           name="no_solicitud"
           id="no_solicitud"
@@ -55,7 +55,7 @@
         <SelectComponent
         :disabled="readOnlyView === true"
           v-model="data.area"
-          title="Area:"
+          title="Área:"
           placeholder="Area"
           name="area"
           id="area"
@@ -115,7 +115,7 @@
         <TextAraComponent
         :disabled="readOnlyView === true"
           v-model="data.descripcion"
-          :title="'Descripcion:'"
+          :title="'Descripción:'"
           :placeholder="'Ingresa una descripcion...'"
           :name="'descripcion'"
           :error="errors"
@@ -127,7 +127,7 @@
         <SelectComponent
           :disabled="true"
           v-model="data.pais"
-          title="Pais:"
+          title="País:"
           placeholder="Pais"
           name="pais"
           id="pais"
@@ -165,7 +165,7 @@
         <InputText
         :disabled="readOnlyView === true"
           v-model="data.municipio"
-          title="Localizacion/Municipio:"
+          title="Localización/Municipio:"
           placeholder="Localizacion/Municipio"
           name="municipio"
           id="municipio"
