@@ -37,7 +37,8 @@
                         <div class="px-3" style="min-width: 210px !important">
                             <select class="form-select form-control" v-model="cbEntidad" @change="handleFilter()">
                                 <option selected value="">Entidad</option>
-                                <option v-for="opt in arrayDataEntidadFederativa.data" :key="opt.value" :value="opt.descripcion_corta">
+                                <option v-for="opt in arrayDataEntidadFederativa.data" :key="opt.value"
+                                    :value="opt.descripcion_corta">
                                     {{ opt.descripcion_corta }}
                                 </option>
                             </select>
@@ -57,8 +58,8 @@
                                         <span class="font-weight-bold pr-2">No. Solicitud: </span>
                                     </div>
                                     <div>
-                                        <input class="form-control w-auto" placeholder="Buscar..." type="text" v-model="inputSolicitud"
-                                            @keyup.enter="handleFilter()" />
+                                        <input class="form-control w-auto" placeholder="Buscar..." type="text"
+                                            v-model="inputSolicitud" @keyup.enter="handleFilter()" />
                                     </div>
                                 </div>
                             </div>
@@ -66,8 +67,8 @@
                     </div>
                     <DataTableComponent v-if="!arrayData.loading" rowId="clave" :columns="columns" :data="arrayData.data"
                         :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true"
-                        :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDetail="handleDetail" @onDelete="handleDelete"
-                        @onCreate="handleCreate" />
+                        :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDetail="handleDetail"
+                        @onDelete="handleDelete" @onCreate="handleCreate" />
                 </div>
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
@@ -91,14 +92,24 @@ const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
+
+//Consultas para decorar
+const { arrayData: arrayDataPrioridad, getDatas: getDatasPrioridad } =
+  usePetition("cat_prioridad/");
 const {
     arrayData: arrayDataEntidadFederativa,
     getDatas: getDatasEntidadFederativa,
 } = usePetition("cat_entidad_federativa/");
 const {
-  arrayData: arrayDataUnidadResponsable,
-  getDatas: getDatasUnidadResponsable,
+    arrayData: arrayDataUnidadResponsable,
+    getDatas: getDatasUnidadResponsable,
 } = usePetition("cat_unidad_responsable/");
+const { arrayData: arrayDataEstatusProyecto, getDatas: getDatasEstatusProyecto } =
+  usePetition("cat_estatus/");
+const { arrayData: arrayDataFase, getDatas: getDatasFase } =
+  usePetition("cat_fase/");
+const { arrayData: arrayDataPais, getDatas: getDatasPais } =
+  usePetition("cat_pais/");
 
 const handlePaginate = (page: number) => {
     if (searchTerm.value) {
@@ -110,14 +121,14 @@ const handlePaginate = (page: number) => {
 
 const handleFilter = () => {
     let searchFilter = ""
-    if(cbEntidad.value.length) 
+    if (cbEntidad.value.length)
         searchFilter += cbEntidad.value
-    if(cbUnidad.value.length){
-        if(searchFilter.length) searchFilter += ' ,'
+    if (cbUnidad.value.length) {
+        if (searchFilter.length) searchFilter += ' ,'
         searchFilter += cbEntidad.value
     }
-    if(inputSolicitud.value.length){
-        if(searchFilter.length) searchFilter += ' ,'
+    if (inputSolicitud.value.length) {
+        if (searchFilter.length) searchFilter += ' ,'
         searchFilter += inputSolicitud.value
     }
     searchData({ page: 1, search: searchFilter });
@@ -128,24 +139,74 @@ const cbUnidad = ref<string>('')
 const inputSolicitud = ref<string>('')
 
 const columns = [
-    { title: 'Clave', data: 'clave', align: 'left' },
-    { title: 'Nombre', data: 'nombre', align: 'left' },
+    { title: 'Entidad', data: 'entidad_federativa', align: 'left' },
     { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
+    { title: 'Proceso', data: 'proceso', align: 'left' },
     { title: 'No. de Solicitud', data: 'no_solicitud', align: 'left' },
     { title: 'Descripción del proyecto', data: 'descripcion', align: 'left' },
-    { title: 'Municipio', data: 'municipio', align: 'left' },
+    { title: 'Prioridad', data: 'prioridad', align: 'left' },
+    { title: 'Clave Cartera', data: 'clave', align: 'left' },
+    { title: 'Nombre Proyecto', data: 'nombre', align: 'left' },
     { title: 'Beneficios', data: 'beneficios', align: 'left' },
-    { title: 'Clave compromiso', data: 'clave_compromiso', align: 'left' },
+    { title: 'Localizacion', data: 'municipio', align: 'left' },
+    { title: 'Fecha Inicial', data: 'fecha_inicial', align: 'left' },
+    { title: 'Fecha Final', data: 'fecha_final', align: 'left' },
+    { title: 'Fase', data: 'fase', align: 'left' },
+    { title: 'Ejercicio Ptal', data: 'ejercicio_presupuestal', align: 'left' },
     { title: 'Comentarios', data: 'comentarios', align: 'left' },
-
-
+    { title: 'Estatus Proyecto', data: 'estatus_proyecto', align: 'left' },
+    { title: 'Pais', data: 'pais', align: 'left' },
+    { title: 'Año Base', data: '', align: 'left' },
+    { title: 'Inversión Total', data: '', align: 'left' },
+    { title: 'Valor Presente Neto', data: '', align: 'left' },
+    { title: 'Gastos Estimación Operación', data: '', align: 'left' },
+    { title: 'Otros Costos', data: '', align: 'left' },
+    { title: 'Financiamiento Adicional', data: '', align: 'left' },
+    { title: 'Cto. Anual Equivalente', data: '', align: 'left' },
+    { title: 'Tasa de Retorno', data: '', align: 'left' },
+    { title: 'Tasa de Rendimiento Inmediata', data: '', align: 'left' },
+    { title: 'Tasa de Descuento', data: '', align: 'left' },
 ]
 
-onMounted(() => {
-    getDatas({ page: 1 }).then(() => showView.value = true)
-    getDatasEntidadFederativa({ page: 1, size: 100 });
-    getDatasUnidadResponsable({ page: 1, size: 100 });
+onMounted(async () => {
+    await getDatasEntidadFederativa({ page: 1, size: 100 });
+    await getDatasUnidadResponsable({ page: 1, size: 100 });
+    await getDatasPrioridad({ page: 1, size: 100 });
+    await getDatasFase({ page: 1, size: 100 });
+    await getDatasPais({ page: 1, size: 100 });
+    await getDatasEstatusProyecto({ page: 1, size: 100 });
+    await getDatas({ page: 1 }).then(() => {
+        arrayData.value.data.map((item: any) => {
+            // decorar entidades federativas
+            let entidadFederativa = arrayDataEntidadFederativa.value.data.find((entidad: any) => entidad.id == item.entidad_federativa)
+            item.entidad_federativa = entidadFederativa.descripcion_corta || '-'
+
+            // decorar unidades responsables
+            let unidadResponsable = arrayDataUnidadResponsable.value.data.find((unidad: any) => unidad.id == item.unidad_responsable)
+            item.unidad_responsable = unidadResponsable.descripcion_corta || '-'
+
+            // decorar prioridades
+            let prioridad = arrayDataPrioridad.value.data.find((prioridad: any) => prioridad.id == item.prioridad)
+            item.prioridad = prioridad.descripcion || '-'
+
+            // decorar estatus proyecto
+            let estatusProyecto = arrayDataEstatusProyecto.value.data.find((estatus: any) => estatus.id == item.estatus_proyecto)
+            item.estatus_proyecto = estatusProyecto.descripcion || '-'
+
+            // decorar fase
+            let fase = arrayDataFase.value.data.find((fase: any) => fase.id == item.fase)
+            item.fase = fase.descripcion || '-'
+
+            // decorar pais
+            let pais = arrayDataPais.value.data.find((pais: any) => pais.id == item.pais)
+            item.pais = pais.nombre_oficial || '-'
+        })
+        // arrayData.data.map((item: any) => {
+        // })
+        showView.value = true
+    })
 })
+
 
 </script>
 <style lang="scss" scoped>
