@@ -151,7 +151,7 @@
       </div>
       <div class="row">
         <SelectComponent
-        :disabled="readOnlyView === true"
+        :disabled="readOnlyView === true || itemId !== ''"
           v-model="data.unidad_responsable"
           title="Unidad Responsable:"
           placeholder="Unidad Responsable"

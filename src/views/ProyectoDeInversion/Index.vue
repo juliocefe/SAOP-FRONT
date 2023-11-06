@@ -68,7 +68,7 @@
                     <DataTableComponent v-if="!arrayData.loading" rowId="clave" :columns="columns" :data="arrayData.data"
                         :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true"
                         :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDetail="handleDetail"
-                        @onDelete="handleDelete" @onCreate="handleCreate" />
+                        @onDelete="handleDelete" @onCreate="handleCreate" @onGetID="handleRowClick" />
                 </div>
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
@@ -87,11 +87,19 @@ import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 const viewName = 'Cartera de Proyectos de Inversión'
 const { arrayData, getDatas, searchData } = usePetition("cartera_proyectos_inversion/");
 const searchTerm = ref("");
+const idRow = ref(0)
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
+const handleRowClick = (id : any) => {; // Obtén el ID del registro seleccionado
+    // Realiza las operaciones necesarias con el ID del registro seleccionado
+    idRow.value = id
+    console.log('ID del registro seleccionado:', idRow.value);
+    // Por ejemplo, puedes redirigir a una página de detalles del registro utilizando el enrutador de Vue.js
+    // router.push({ name: 'detalles-registro', params: { id: selectedId } });
+};
 
 //Consultas para decorar
 const { arrayData: arrayDataPrioridad, getDatas: getDatasPrioridad } =
