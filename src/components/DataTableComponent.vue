@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="value in data" :key="value[rowId]" @click="emit('onGetID', value.id)">
+                <tr v-for="value in data" :key="value[rowId]" @click="emit('onGetID', value[rowId])">
                     <td v-for="col in columns" class="text-left" v-html="render(value[col.data])"></td>
                     <td v-if="!props.hideActions" class="text-center action_items" :class="{'fixed-actions-colum': props.fixedActions}">
                         <button v-if="showEdit" class="btn btn-primary btn-sm active mr-2 mt-2 mb-2" data-placement="top"
