@@ -93,23 +93,13 @@ const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_invers
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
 
-//Consultas para decorar
-const { arrayData: arrayDataPrioridad, getDatas: getDatasPrioridad } =
-  usePetition("cat_prioridad/");
+
 const {
-    arrayData: arrayDataEntidadFederativa,
-    getDatas: getDatasEntidadFederativa,
+    arrayData: arrayDataEntidadFederativa
 } = usePetition("cat_entidad_federativa/");
 const {
-    arrayData: arrayDataUnidadResponsable,
-    getDatas: getDatasUnidadResponsable,
+    arrayData: arrayDataUnidadResponsable
 } = usePetition("cat_unidad_responsable/");
-const { arrayData: arrayDataEstatusProyecto, getDatas: getDatasEstatusProyecto } =
-  usePetition("cat_estatus/");
-const { arrayData: arrayDataFase, getDatas: getDatasFase } =
-  usePetition("cat_fase/");
-const { arrayData: arrayDataPais, getDatas: getDatasPais } =
-  usePetition("cat_pais/");
 
 const handlePaginate = (page: number) => {
     if (searchTerm.value) {
@@ -169,44 +159,8 @@ const columns = [
 ]
 
 onMounted(async () => {
-    await getDatasEntidadFederativa({ page: 1, size: 100 });
-    await getDatasUnidadResponsable({ page: 1, size: 100 });
-    await getDatasPrioridad({ page: 1, size: 100 });
-    await getDatasFase({ page: 1, size: 100 });
-    await getDatasPais({ page: 1, size: 100 });
-    await getDatasEstatusProyecto({ page: 1, size: 100 });
-    await getDatas({ page: 1 }).then(() => {
-        arrayData.value.data.map((item: any) => {
-            // decorar entidades federativas
-            let entidadFederativa = arrayDataEntidadFederativa.value.data.find((entidad: any) => entidad.id == item.entidad_federativa)
-            item.entidad_federativa = entidadFederativa.descripcion_corta || '-'
-
-            // decorar unidades responsables
-            let unidadResponsable = arrayDataUnidadResponsable.value.data.find((unidad: any) => unidad.id == item.unidad_responsable)
-            item.unidad_responsable = unidadResponsable.descripcion_corta || '-'
-
-            // decorar prioridades
-            let prioridad = arrayDataPrioridad.value.data.find((prioridad: any) => prioridad.id == item.prioridad)
-            item.prioridad = prioridad.descripcion || '-'
-
-            // decorar estatus proyecto
-            let estatusProyecto = arrayDataEstatusProyecto.value.data.find((estatus: any) => estatus.id == item.estatus_proyecto)
-            item.estatus_proyecto = estatusProyecto.descripcion || '-'
-
-            // decorar fase
-            let fase = arrayDataFase.value.data.find((fase: any) => fase.id == item.fase)
-            item.fase = fase.descripcion || '-'
-
-            // decorar pais
-            let pais = arrayDataPais.value.data.find((pais: any) => pais.id == item.pais)
-            item.pais = pais.nombre_oficial || '-'
-        })
-        // arrayData.data.map((item: any) => {
-        // })
-        showView.value = true
-    })
+    await getDatas({ page: 1 }).then(() => {showView.value = true})
 })
-
 
 </script>
 <style lang="scss" scoped>
