@@ -141,7 +141,7 @@ const inputSolicitud = ref<string>('')
 const columns = [
     { title: 'Entidad', data: 'entidad_federativa', align: 'left' },
     { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
-    { title: 'Proceso', data: 'proceso', align: 'left' },
+    { title: 'Proceso', data: '', align: 'left' },
     { title: 'No. de Solicitud', data: 'no_solicitud', align: 'left' },
     { title: 'Descripción del proyecto', data: 'descripcion', align: 'left' },
     { title: 'Prioridad', data: 'prioridad', align: 'left' },
