@@ -99,8 +99,6 @@ const handleFichaTecnica = () =>  router.push({ name: 'ficha_tecnica-proyecto_de
 const handleRowClick = (id : any) => {; // Obtén el ID del registro seleccionado
     // Realiza las operaciones necesarias con el ID del registro seleccionado
     idRow.value = id
-    console.log('ID del registro seleccionado:', idRow.value);
-
 };
 
 
