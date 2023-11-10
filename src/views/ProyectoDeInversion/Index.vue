@@ -100,7 +100,6 @@ const handleRowClick = (id : any) => {; // Obtén el ID del registro seleccionad
     // Realiza las operaciones necesarias con el ID del registro seleccionado
     idRow.value = parseInt(id)
     console.log('ID del registro seleccionado:', idRow.value);
-
 };
 
 

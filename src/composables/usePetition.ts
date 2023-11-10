@@ -77,6 +77,17 @@ export const usePetition = (ENDPOINT: String) => {
       return Promise.reject(error);
     }
   };
+
+  const getDataOutMesageModal = async (clave: string) => {
+    try {
+      const response = await makeRequest(`${ENDPOINT}${clave}/`, "GET");
+      return Promise.resolve(response);
+    } catch (error: any) {
+      return Promise.reject(error);
+    }
+  };
+
+
   const deleteData = async (clave: string) => {
     try {
       const response = await makeRequest(`${ENDPOINT}${clave}/`, "DELETE");
@@ -183,6 +194,7 @@ export const usePetition = (ENDPOINT: String) => {
     deleteData,
     updateData,
     getData,
+    getDataOutMesageModal,
     createData,
     searchData, //valores dinamicos {page: page, search: term}
     exportData, //valores dinamicos,
