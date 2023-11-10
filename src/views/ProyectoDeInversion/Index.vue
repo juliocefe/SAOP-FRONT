@@ -6,8 +6,8 @@
                     role="tab" aria-controls="home" aria-selected="true">Cartera de proyectos de inversión</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
-                    role="tab" aria-controls="profile" aria-selected="false">Datos financieros</button>
+                <button class="nav-link" id="datosFinancieros-tab" data-bs-toggle="tab" data-bs-target="#datosFinancieros" type="button"
+                    role="tab" aria-controls="datosFinancieros" aria-selected="false">Datos financieros</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button :disabled="idRow === 0" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
@@ -24,12 +24,7 @@
                             <div class="col-md-8">
                                 <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" />
                             </div>
-                            <div class="display-4 d-flex icon-actions py-2 col-md-4 d-flex justify-content-end">
-                                <i class="pl-5 ml-2 bi bi-calendar-date"></i>
-                                <i class="pl-5 ml-2 bi bi-bar-chart-steps"></i>
-                                <i class="pl-5 ml-2 bi bi-file-text-fill"></i>
-                                <i class="pl-5 ml-2 bi bi-folder-symlink-fill"></i>
-                            </div>
+                            <AccionesCartera />
                         </div>
                     </div>
                     <div class="d-flex px-2">
@@ -71,7 +66,11 @@
                         @onDelete="handleDelete" @onCreate="handleCreate" @onGetID="handleRowClick" />
                 </div>
             </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+            <div class="tab-pane fade show active" id="datosFinancieros" role="tabpanel" aria-labelledby="datosFinancieros-tab">
+                <DatosFinancieros :idRow="idRow"/>
+                <div>
+                </div>
+            </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
         </div>
     </div>
@@ -82,7 +81,8 @@ import usePetition from "@/composables/usePetition";
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
-
+import AccionesCartera from '@/components/AccionesCarteraPoyectos.vue'
+import DatosFinancieros from '@/components/forms/DatosFinancieros.vue'
 
 const viewName = 'Cartera de Proyectos de Inversión'
 const { arrayData, getDatas, searchData } = usePetition("cartera_proyectos_inversion/");
@@ -98,7 +98,7 @@ const handleFichaTecnica = () =>  router.push({ name: 'ficha_tecnica-proyecto_de
 
 const handleRowClick = (id : any) => {; // Obtén el ID del registro seleccionado
     // Realiza las operaciones necesarias con el ID del registro seleccionado
-    idRow.value = id
+    idRow.value = parseInt(id)
     console.log('ID del registro seleccionado:', idRow.value);
 
 };
@@ -173,16 +173,3 @@ onMounted(async () => {
 })
 
 </script>
-<style lang="scss" scoped>
-.icon-actions i {
-    cursor: pointer;
-    transition: transform 0.3s, font-size 0.2s;
-    opacity: 0.8;
-
-    &:hover {
-        transform: scale(1.1);
-        opacity: 1;
-        color: var(--primary-red);
-    }
-}
-</style>
