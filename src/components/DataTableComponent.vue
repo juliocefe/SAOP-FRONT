@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value[rowId])" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect}">
+                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value[rowId])" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect, 'selectedRow': selectRow == value[rowId]}">
                     <td v-for="col in columns" class="text-left" v-html="render(value[col.data])"></td>
                     <td v-if="!props.hideActions" class="text-center action_items"
                         :class="{ 'fixed-actions-colum': props.fixedActions }">
