@@ -7,5 +7,6 @@ export interface IDatatable {
     showDelete?: boolean
     showDetail?: boolean,
     hideActions?:boolean,
-    fixedActions?:boolean
+    fixedActions?:boolean,
+    rowSelect?:boolean
 }

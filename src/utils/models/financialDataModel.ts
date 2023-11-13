@@ -11,6 +11,7 @@ export interface IFinancialData {
     tasa_de_rendimiento_inmediata: string|null;
     tasa_de_descuento: string|null;
     cartera_proyecto_inversion: Number|null;
+    id: Number|null;
   }
   
   export const defaultValues: IFinancialData = {
@@ -25,6 +26,7 @@ export interface IFinancialData {
     tasa_interna_de_retorno: null,
     tasa_de_rendimiento_inmediata: null,
     tasa_de_descuento: null,
-    cartera_proyecto_inversion: null
+    cartera_proyecto_inversion: null,
+    id: null
   };
   

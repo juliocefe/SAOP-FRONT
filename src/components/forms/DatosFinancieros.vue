@@ -5,7 +5,10 @@
         <div class="row app-options-bar">
             <div class="d-flex align-items-center buttons-component align-items-center">
                 <div class="col-md-8">
-                    <!-- <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" /> -->
+                    <button title="Crear" class="dt-button btn btn-primary active" type="button" :disabled="!readOnlyView" v-if="props.data"
+                        @click="readOnlyView = false">
+                        <span><b>Editar</b></span>
+                    </button>
                 </div>
                 <AccionesCartera />
             </div>
@@ -50,10 +53,14 @@
                 <InputText :disabled="readOnlyView" v-model.trim="data.tasa_de_descuento" title="Tasa de Descuento:"
                     placeholder="0.00" name="tasa_de_descuento" id="tasa_de_descuento" :error="errors" />
 
-                <div class="text-right pr-2 flex-grow-1 mt-5">
+                <div class="text-right pr-2 flex-grow-1 mt-5" v-if="!readOnlyView">
+                    <button type="button" class="btn btn-secondary mr-4" @click="handleCancel">
+                        Cancelar
+                    </button>
                     <button title="Crear" class="dt-button btn btn-primary active btn-crear" type="button"
                         @click="handleSubmit()">
-                        <span><i class="bi bi-plus"></i> <b>Crear</b></span>
+                        <span v-if="props.data"><b>Guardar</b></span>
+                        <span v-else><i class="bi bi-plus"></i> <b>Crear</b></span>
                     </button>
                 </div>
             </div>
@@ -61,50 +68,93 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import AccionesCartera from '@/components/AccionesCarteraPoyectos.vue'
 import SelectComponent from "@/components/SelectComponent.vue";
 import InputText from "@/components/InputText.vue";
-import { useFormValidation } from "@/composables/useFormValidation";
+import { useForm } from "@/composables/useForm";
 import { financialDataValidations } from "@/utils/validations/financialDataValidations";
-import {  useRouter } from "vue-router";
 import { IFinancialData, defaultValues } from "@/utils/models/financialDataModel";
 import usePetition from "@/composables/usePetition";
 //TODO YEARS will be replaced with data from DB
 import { YEARS } from "@/utils/constants/exampleYears";
 
+
 const props = defineProps({
     idRow: {
         type: Number,
+    },
+    data: {
+        type: Object
     }
 })
 
 const viewName = 'Datos Financieros'
 const readOnlyView = ref(false)
-const router = useRouter();
 
-const { createData } = usePetition("informacion_financiera/");
+const { createData, updateData } = usePetition("informacion_financiera/");
 
-const data = reactive<IFinancialData>(defaultValues);
-const { formState, isValid, errors } = useFormValidation(data, financialDataValidations);
+var data = reactive<IFinancialData>(defaultValues);
+const { formState, isValid, errors, showErrors } = useForm(data, financialDataValidations);
 const itemId = ref("");
-// const props = defineProps({
-//     viewName: {
-//         type: Boolean,
-//     }
-// })
-const handleSubmit = async () => {
-  data.cartera_proyecto_inversion = props.idRow!!
-  if (isValid.value) {
-    if (itemId.value) {
-    //   updatePriority({ ...data }).then(() => {
-    //     resetValues();
-    //     router.push({ name: "listar-prioridades" });
-    //   });
+
+const handleSubmit = async () => {    
+    data.cartera_proyecto_inversion = props.idRow!!
+    if (isValid.value) {
+        if (itemId.value) {
+            await updateData({...data}).then(() => window.location.reload());
+        } else {
+            await createData(formState.value).then(() => window.location.reload());
+        }
     } else {
-        await createData(formState.value);
+        showErrors();
     }
-    router.push({ name: "listar-proyecto_de_inversion" });
-  }
 };
+
+const handleCancel = () => window.location.reload()
+
+const updateFormData = () => {
+    resetForm()
+    readOnlyView.value = false
+    if (props.data && !props.data.loading) {
+        data.id = props.data.cartera_proyecto_inversion
+        data.anio_base = props.data.anio_base
+        data.financiamiento_adicional = props.data.financiamiento_adicional
+        data.inversion_total = props.data.inversion_total
+        data.gastos_de_estimaciones_operacionales = props.data.gastos_de_estimaciones_operacionales
+        data.otros_costos = props.data.otros_costos
+        data.valor_presente_neto = props.data.valor_presente_neto
+        data.costo_anual_equivalente = props.data.costo_anual_equivalente
+        data.aportacion_estatal = props.data.aportacion_estatal
+        data.tasa_interna_de_retorno = props.data.tasa_interna_de_retorno
+        data.tasa_de_rendimiento_inmediata = props.data.tasa_de_rendimiento_inmediata
+        data.tasa_de_descuento = props.data.tasa_de_descuento
+        itemId.value = props.data.cartera_proyecto_inversion
+        readOnlyView.value = true
+    }
+}
+
+const resetForm = () => {
+    data.anio_base = null
+    data.financiamiento_adicional = null
+    data.inversion_total = null
+    data.gastos_de_estimaciones_operacionales = null
+    data.otros_costos = null
+    data.valor_presente_neto = null
+    data.costo_anual_equivalente = null
+    data.aportacion_estatal = null
+    data.tasa_interna_de_retorno = null
+    data.tasa_de_rendimiento_inmediata = null
+    data.tasa_de_descuento = null
+}
+
+watch(
+    () => props.data,
+    () => {
+        updateFormData()  
+    },
+    {
+        deep: true,
+    }
+);
 </script>

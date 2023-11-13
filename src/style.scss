@@ -40,6 +40,11 @@ img { user-select: none; pointer-events: none;}
     }
 }
 
+//utils
+.pointer{
+    cursor: pointer;
+}
+
 @media (max-width: 767px) {
     .search-component {
         justify-content: center !important;

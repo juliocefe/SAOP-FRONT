@@ -73,8 +73,7 @@ export const usePetition = (ENDPOINT: String) => {
       const response = await makeRequest(`${ENDPOINT}${clave}/`, "GET");
       return Promise.resolve(response);
     } catch (error: any) {
-      showAlertWarning(error);
-      return Promise.reject(error);
+      return Promise.resolve(null);
     }
   };
 

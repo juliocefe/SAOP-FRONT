@@ -6,12 +6,14 @@
                     role="tab" aria-controls="home" aria-selected="true">Cartera de proyectos de inversión</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="datosFinancieros-tab" data-bs-toggle="tab" data-bs-target="#datosFinancieros" type="button"
-                    role="tab" aria-controls="datosFinancieros" aria-selected="false">Datos financieros</button>
+                <button :disabled="!idRow" @click="handleDatosFinancieros()" class="nav-link" id="datosFinancieros-tab"
+                    data-bs-toggle="tab" data-bs-target="#datosFinancieros" type="button" role="tab"
+                    aria-controls="datosFinancieros">Datos financieros</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button :disabled="idRow === 0" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
-                    role="tab" aria-controls="contact" aria-selected="false" @click="handleFichaTecnica">Ficha técnica</button>
+                <button :disabled="idRow === 0" class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                    data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"
+                    @click="handleFichaTecnica">Ficha técnica</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -61,28 +63,27 @@
                         </div>
                     </div>
                     <DataTableComponent v-if="!arrayData.loading" rowId="clave" :columns="columns" :data="arrayData.data"
-                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true"
+                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true" :row-select="true"
                         :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDetail="handleDetail"
                         @onDelete="handleDelete" @onCreate="handleCreate" @onGetID="handleRowClick" />
                 </div>
             </div>
-            <div class="tab-pane fade show active" id="datosFinancieros" role="tabpanel" aria-labelledby="datosFinancieros-tab">
-                <DatosFinancieros :idRow="idRow"/>
-                <div>
-                </div>
+            <div class="tab-pane fade " id="datosFinancieros" role="tabpanel" aria-labelledby="datosFinancieros-tab">
+                <DatosFinancieros v-if="idRow" :idRow="idRow" :data="arrayDataDatosFinancieros" />
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
 import usePetition from "@/composables/usePetition";
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 import AccionesCartera from '@/components/AccionesCarteraPoyectos.vue'
 import DatosFinancieros from '@/components/forms/DatosFinancieros.vue'
+import { addClickListener, removeClickListener } from '@/utils/listeners/clickListener';
 
 const viewName = 'Cartera de Proyectos de Inversión'
 const { arrayData, getDatas, searchData } = usePetition("cartera_proyectos_inversion/");
@@ -93,15 +94,37 @@ const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
-const handleFichaTecnica = () =>  router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
-    )
+const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
+)
 
-const handleRowClick = (id : any) => {; // Obtén el ID del registro seleccionado
+const handleRowClick = (id: any) => {
+    ; // Obtén el ID del registro seleccionado
     // Realiza las operaciones necesarias con el ID del registro seleccionado
     idRow.value = parseInt(id)
     console.log('ID del registro seleccionado:', idRow.value);
 };
 
+const handleClick = (event: MouseEvent) => {
+  // Verificar si el clic proviene del componente DataTable
+  const isDataTableClick = (event.target as HTMLElement).closest('.datatable') !== null;
+
+  if (isDataTableClick) {
+    return;
+  }
+
+};
+
+const arrayDataDatosFinancieros = ref()
+
+const handleDatosFinancieros = () => {
+    let { getData: getDataDatosFinancieros } = usePetition(`informacion_financiera/`);
+    getDataDatosFinancieros(idRow.value.toString()).then((result) => {
+        arrayDataDatosFinancieros.value = result
+    })
+    // if (true) {
+    //     arrayDataDatosFinancieros = reactive<IFinancialData>(defaultValues);
+    // }
+}
 
 const {
     arrayData: arrayDataEntidadFederativa
@@ -119,6 +142,7 @@ const handlePaginate = (page: number) => {
 };
 
 const handleFilter = () => {
+
     let searchFilter = ""
     if (cbEntidad.value.length)
         searchFilter += cbEntidad.value
@@ -136,7 +160,6 @@ const handleFilter = () => {
 const cbEntidad = ref<string>('')
 const cbUnidad = ref<string>('')
 const inputSolicitud = ref<string>('')
-
 const columns = [
     { title: 'Entidad', data: 'entidad_federativa', align: 'left' },
     { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
@@ -168,7 +191,12 @@ const columns = [
 ]
 
 onMounted(async () => {
-    await getDatas({ page: 1 }).then(() => {showView.value = true})
+    await getDatas({ page: 1 }).then(() => { showView.value = true })
+    addClickListener(handleClick);
 })
+onBeforeUnmount(() => {
+  removeClickListener(handleClick);
+});
+
 
 </script>
