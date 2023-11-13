@@ -13,7 +13,7 @@
             <li class="nav-item" role="presentation">
                 <button :disabled="idRow === 0" class="nav-link" id="contact-tab" data-bs-toggle="tab"
                     data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"
-                    @click="handleFichaTecnica">Ficha técnica</button>
+                    @click="handleFichaTecnica()">Ficha técnica</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -71,7 +71,9 @@
             <div class="tab-pane fade " id="datosFinancieros" role="tabpanel" aria-labelledby="datosFinancieros-tab">
                 <DatosFinancieros v-if="idRow" :idRow="idRow" :data="arrayDataDatosFinancieros" />
             </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <FichaTecnica v-if="idRow" :idRow="idRow" :data="arrayDataFichaTecnica" />
+            </div>
         </div>
     </div>
 </template>
@@ -83,6 +85,7 @@ import router from '@/router'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 import AccionesCartera from '@/components/AccionesCarteraPoyectos.vue'
 import DatosFinancieros from '@/components/forms/DatosFinancieros.vue'
+import FichaTecnica from '@/components/forms/FichaTecnica.vue'
 import { addClickListener, removeClickListener } from '@/utils/listeners/clickListener';
 
 const viewName = 'Cartera de Proyectos de Inversión'
@@ -94,8 +97,8 @@ const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
-const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
-)
+/* const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
+) */
 
 const handleRowClick = (id: any) => {
     ; // Obtén el ID del registro seleccionado
@@ -115,12 +118,24 @@ const handleClick = (event: MouseEvent) => {
 };
 
 const arrayDataDatosFinancieros = ref()
+const arrayDataFichaTecnica = ref()
 
 const handleDatosFinancieros = () => {
     let { getData: getDataDatosFinancieros } = usePetition(`informacion_financiera/`);
     getDataDatosFinancieros(idRow.value.toString()).then((result) => {
         arrayDataDatosFinancieros.value = result
     })
+    // if (true) {
+    //     arrayDataDatosFinancieros = reactive<IFinancialData>(defaultValues);
+    // }
+}
+
+const handleFichaTecnica = () => {
+    let { getData: getDatahandleFichaTecnica } = usePetition(`ficha_tecnica/`);
+    getDatahandleFichaTecnica(idRow.value.toString()).then((result) => {
+        arrayDataFichaTecnica.value = result
+    })
+    console.log(arrayDataFichaTecnica.value);
     // if (true) {
     //     arrayDataDatosFinancieros = reactive<IFinancialData>(defaultValues);
     // }

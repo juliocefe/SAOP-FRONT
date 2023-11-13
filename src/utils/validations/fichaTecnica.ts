@@ -47,18 +47,6 @@ export const fichaTecnicaValidations: any = {
       },
     ],
   },
-  factibilidad_obra: {
-    rules: [
-      {
-        validation: (value: string | number) => value !== 'seleccionar' && value !== 'default' /* Agrega aquí cualquier valor predeterminado que indique una selección no válida */,
-        message: "Este campo es obligatorio.",
-      },
-      {
-        validation: (value: string | number) => value !== null && value !== undefined && value !== '',
-        message: "Seleccione una opción válida de la lista.",
-      },
-    ],
-  },
   tipo_obra: {
     rules: [
       {
