@@ -88,7 +88,7 @@ const { createFromData } =
     usePetition("ficha_tecnica/");
 const props = defineProps({
     idRow: {
-        type: Number,
+        type: String,
     },
     data: {
         type: Object,
@@ -142,7 +142,7 @@ const handleSubmit = async () => {
         formData.append("tipo_obra   ", formState.tipo_obra);
         formData.append("tipo_documento    ", formState.tipo_documento);
         if (data.documento instanceof File) {
-            formData.append("documento", data.documento);
+            formData.append("documento", formState.documento);
         }
 
         if (fileName.value !== "") {
@@ -155,7 +155,7 @@ const handleSubmit = async () => {
             await createFromData(formData)
                 .then(() => {
                     resetForm()
-                    window.location.reload()
+                    /* window.location.reload() */
                 });
             /* await createFromData(formState.value).then(() => window.location.reload()); */
         }

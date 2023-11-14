@@ -11,7 +11,7 @@
                     aria-controls="datosFinancieros">Datos financieros</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button :disabled="idRow === 0" class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                <button :disabled="idRow === '0'" class="nav-link" id="contact-tab" data-bs-toggle="tab"
                     data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"
                     @click="handleFichaTecnica()">Ficha técnica</button>
             </li>
@@ -91,7 +91,7 @@ import { addClickListener, removeClickListener } from '@/utils/listeners/clickLi
 const viewName = 'Cartera de Proyectos de Inversión'
 const { arrayData, getDatas, searchData } = usePetition("cartera_proyectos_inversion/");
 const searchTerm = ref("");
-const idRow = ref(0)
+const idRow = ref("")
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
@@ -100,10 +100,11 @@ const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_in
 /* const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
 ) */
 
-const handleRowClick = (id: any) => {
+const handleRowClick = (id: string) => {
     ; // Obtén el ID del registro seleccionado
     // Realiza las operaciones necesarias con el ID del registro seleccionado
-    idRow.value = parseInt(id)
+    idRow.value = id
+    console.log(idRow)
 };
 
 const handleClick = (event?: MouseEvent) => {
@@ -120,7 +121,7 @@ const handleClick = (event?: MouseEvent) => {
   const selected = document.querySelector('.selectedRow');
     if (selected) {
         selected.classList.remove('selectedRow');
-        idRow.value = 0
+        idRow.value = "0"
     }
 
 };
