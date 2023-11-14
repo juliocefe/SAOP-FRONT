@@ -104,7 +104,6 @@ const handleRowClick = (id: any) => {
     ; // Obtén el ID del registro seleccionado
     // Realiza las operaciones necesarias con el ID del registro seleccionado
     idRow.value = parseInt(id)
-    console.log('ID del registro seleccionado:', idRow.value);
 };
 
 const handleClick = (event?: MouseEvent) => {
@@ -144,7 +143,6 @@ const handleFichaTecnica = () => {
     getDatahandleFichaTecnica(idRow.value.toString()).then((result) => {
         arrayDataFichaTecnica.value = result
     })
-    console.log(arrayDataFichaTecnica.value);
     // if (true) {
     //     arrayDataDatosFinancieros = reactive<IFinancialData>(defaultValues);
     // }

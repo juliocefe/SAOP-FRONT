@@ -23,10 +23,5 @@ export const proyectoDeInversiones = [
         path: ':id/eliminar',
         name: 'eliminar-proyecto_de_inversion',
         component: () => import('@/views/ProyectoDeInversion/Delete.vue')
-    } ,
-    {
-        path: ':id/ficha_tecnica',
-        name: 'ficha_tecnica-proyecto_de_inversion',
-        component: () => import('@/views/ProyectoDeInversion/FichaTecnica.vue')
-    } 
+    },
 ]

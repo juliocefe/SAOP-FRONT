@@ -67,14 +67,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from "vue";
+import { ref, reactive, watch } from "vue";
 import AccionesCartera from "@/components/AccionesCarteraPoyectos.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
 import InputText from "@/components/InputText.vue";
 import TextAraComponent from "@/components/TextAraComponent.vue";
 import { useForm } from "@/composables/useForm";
 import { fichaTecnicaValidations } from "@/utils/validations/fichaTecnica";
-import { IFichaTecnica , defaultValues }  from "@/utils/models/fichaTecnica";
+import { IFichaTecnica, defaultValues } from "@/utils/models/fichaTecnica";
 import usePetition from "@/composables/usePetition";
 //Consultas para los selects
 
@@ -84,7 +84,7 @@ const { arrayData: arrayDataTipoDocumento, getDatas: getDatasTipoDocumento } =
     usePetition("cat_tipo_documento/");
 
 
-const { createFromData, updateFromData } =
+const { createFromData } =
     usePetition("ficha_tecnica/");
 const props = defineProps({
     idRow: {
@@ -101,8 +101,8 @@ const fileName = ref("");
 
 /* const { createData, updateData } = usePetition("ficha_tecnica/"); */
 
-var data:IFichaTecnica = reactive(defaultValues);
-const {formState, isValid, errors, showErrors } = useForm(
+var data: IFichaTecnica = reactive(defaultValues);
+const { formState, isValid, errors, showErrors } = useForm(
     data,
     fichaTecnicaValidations
 );
@@ -120,7 +120,6 @@ const handleSubmit = async () => {
     if (isValid.value) {
         const formData = new FormData();
         // Agregar campos del formulario
-        console.log('Data: ', formState);
         formData.append("clave_compromiso", formState.clave_compromiso);
         formData.append(
             "requerimiento_de_hacienda",
@@ -139,21 +138,17 @@ const handleSubmit = async () => {
         formData.append(
             "cartera_proyecto_inversion  ",
             formState.cartera_proyecto_inversion
-        ); data
-        console.log(formState.cartera_proyecto_inversion);
+        );
         formData.append("tipo_obra   ", formState.tipo_obra);
         formData.append("tipo_documento    ", formState.tipo_documento);
         if (data.documento instanceof File) {
             formData.append("documento", data.documento);
-            console.log("aqui Entro");
         }
 
         if (fileName.value !== "") {
             delete formState.documento;
-            console.log("delete Documento");
         }
         if (itemId.value) {
-            console.log('entro en if itemid.value: ', formState);
             /* await updateFromData(formData, itemId.value); */
         } else {
             console.log('entro en else itemid.value: ', formState);
@@ -167,7 +162,6 @@ const handleSubmit = async () => {
     } else {
         showErrors();
     }
-    showErrors()
 };
 
 const handleCancel = () => window.location.reload();
@@ -187,6 +181,7 @@ const updateFormData = () => {
         fileName.value = props.data.documento.split("/");
         itemId.value = props.data.cartera_proyecto_inversion;
         readOnlyView.value = true;
+        formState.value = props.data
     }
 };
 
@@ -207,14 +202,13 @@ watch(
     () => props.data,
     () => {
         updateFormData();
+        getDatasTipoObra({ page: 1, size: 100 });
+        getDatasTipoDocumento({ page: 1, size: 100 });
     },
     {
         deep: true,
     }
 );
 
-onMounted(() => {
-    getDatasTipoObra({ page: 1, size: 100 });
-    getDatasTipoDocumento({ page: 1, size: 100 });
-});
+
 </script>
