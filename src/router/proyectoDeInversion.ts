@@ -23,5 +23,5 @@ export const proyectoDeInversiones = [
         path: ':id/eliminar',
         name: 'eliminar-proyecto_de_inversion',
         component: () => import('@/views/ProyectoDeInversion/Delete.vue')
-    } 
+    },
 ]

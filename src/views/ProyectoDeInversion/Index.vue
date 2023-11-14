@@ -6,12 +6,14 @@
                     role="tab" aria-controls="home" aria-selected="true">Cartera de proyectos de inversión</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
-                    role="tab" aria-controls="profile" aria-selected="false">Datos financieros</button>
+                <button :disabled="!idRow" @click="handleDatosFinancieros()" class="nav-link" id="datosFinancieros-tab"
+                    data-bs-toggle="tab" data-bs-target="#datosFinancieros" type="button" role="tab"
+                    aria-controls="datosFinancieros">Datos financieros</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
-                    role="tab" aria-controls="contact" aria-selected="false">Ficha técnica</button>
+                <button :disabled="idRow === 0" class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                    data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"
+                    @click="handleFichaTecnica()">Ficha técnica</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -24,12 +26,7 @@
                             <div class="col-md-8">
                                 <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" />
                             </div>
-                            <div class="display-4 d-flex icon-actions py-2 col-md-4 d-flex justify-content-end">
-                                <i class="pl-5 ml-2 bi bi-calendar-date"></i>
-                                <i class="pl-5 ml-2 bi bi-bar-chart-steps"></i>
-                                <i class="pl-5 ml-2 bi bi-file-text-fill"></i>
-                                <i class="pl-5 ml-2 bi bi-folder-symlink-fill"></i>
-                            </div>
+                            <AccionesCartera />
                         </div>
                     </div>
                     <div class="d-flex px-2">
@@ -66,50 +63,97 @@
                         </div>
                     </div>
                     <DataTableComponent v-if="!arrayData.loading" rowId="clave" :columns="columns" :data="arrayData.data"
-                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true"
+                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true" :row-select="true"
                         :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDetail="handleDetail"
-                        @onDelete="handleDelete" @onCreate="handleCreate" />
+                        @onDelete="handleDelete" @onCreate="handleCreate" @onGetID="handleRowClick" />
                 </div>
             </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+            <div class="tab-pane fade " id="datosFinancieros" role="tabpanel" aria-labelledby="datosFinancieros-tab">
+                <DatosFinancieros v-if="idRow" :idRow="idRow" :data="arrayDataDatosFinancieros" />
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <FichaTecnica v-if="idRow" :idRow="idRow" :data="arrayDataFichaTecnica" />
+            </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
 import usePetition from "@/composables/usePetition";
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import router from '@/router'
 import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
-
+import AccionesCartera from '@/components/AccionesCarteraPoyectos.vue'
+import DatosFinancieros from '@/components/forms/DatosFinancieros.vue'
+import FichaTecnica from '@/components/forms/FichaTecnica.vue'
+import { addClickListener, removeClickListener } from '@/utils/listeners/clickListener';
 
 const viewName = 'Cartera de Proyectos de Inversión'
 const { arrayData, getDatas, searchData } = usePetition("cartera_proyectos_inversion/");
 const searchTerm = ref("");
+const idRow = ref(0)
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
+/* const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
+) */
 
-//Consultas para decorar
-const { arrayData: arrayDataPrioridad, getDatas: getDatasPrioridad } =
-  usePetition("cat_prioridad/");
+const handleRowClick = (id: any) => {
+    ; // Obtén el ID del registro seleccionado
+    // Realiza las operaciones necesarias con el ID del registro seleccionado
+    idRow.value = parseInt(id)
+};
+
+const handleClick = (event?: MouseEvent) => {
+  //solo aplica si se esta en la pantalla de datatable
+  const homeTab = document.getElementById('home');
+  if(homeTab && !homeTab.classList.contains('show')) {
+      return
+    }
+  // Verificar si el clic proviene del componente DataTable
+  const isDataTableClick = (event?.target as HTMLElement).closest('.datatable') !== null || (event?.target as HTMLElement).closest('.nav-item') !== null;
+  if (isDataTableClick) {
+    return;
+  }
+  const selected = document.querySelector('.selectedRow');
+    if (selected) {
+        selected.classList.remove('selectedRow');
+        idRow.value = 0
+    }
+
+};
+
+const arrayDataDatosFinancieros = ref()
+const arrayDataFichaTecnica = ref()
+
+const handleDatosFinancieros = () => {
+    let { getData: getDataDatosFinancieros } = usePetition(`informacion_financiera/`);
+    getDataDatosFinancieros(idRow.value.toString()).then((result) => {
+        arrayDataDatosFinancieros.value = result
+    })
+    // if (true) {
+    //     arrayDataDatosFinancieros = reactive<IFinancialData>(defaultValues);
+    // }
+}
+
+const handleFichaTecnica = () => {
+    let { getData: getDatahandleFichaTecnica } = usePetition(`ficha_tecnica/`);
+    getDatahandleFichaTecnica(idRow.value.toString()).then((result) => {
+        arrayDataFichaTecnica.value = result
+    })
+    // if (true) {
+    //     arrayDataDatosFinancieros = reactive<IFinancialData>(defaultValues);
+    // }
+}
+
 const {
-    arrayData: arrayDataEntidadFederativa,
-    getDatas: getDatasEntidadFederativa,
+    arrayData: arrayDataEntidadFederativa
 } = usePetition("cat_entidad_federativa/");
 const {
-    arrayData: arrayDataUnidadResponsable,
-    getDatas: getDatasUnidadResponsable,
+    arrayData: arrayDataUnidadResponsable
 } = usePetition("cat_unidad_responsable/");
-const { arrayData: arrayDataEstatusProyecto, getDatas: getDatasEstatusProyecto } =
-  usePetition("cat_estatus/");
-const { arrayData: arrayDataFase, getDatas: getDatasFase } =
-  usePetition("cat_fase/");
-const { arrayData: arrayDataPais, getDatas: getDatasPais } =
-  usePetition("cat_pais/");
 
 const handlePaginate = (page: number) => {
     if (searchTerm.value) {
@@ -120,6 +164,7 @@ const handlePaginate = (page: number) => {
 };
 
 const handleFilter = () => {
+
     let searchFilter = ""
     if (cbEntidad.value.length)
         searchFilter += cbEntidad.value
@@ -137,11 +182,10 @@ const handleFilter = () => {
 const cbEntidad = ref<string>('')
 const cbUnidad = ref<string>('')
 const inputSolicitud = ref<string>('')
-
 const columns = [
     { title: 'Entidad', data: 'entidad_federativa', align: 'left' },
     { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
-    { title: 'Proceso', data: 'proceso', align: 'left' },
+    { title: 'Proceso', data: '', align: 'left' },
     { title: 'No. de Solicitud', data: 'no_solicitud', align: 'left' },
     { title: 'Descripción del proyecto', data: 'descripcion', align: 'left' },
     { title: 'Prioridad', data: 'prioridad', align: 'left' },
@@ -169,56 +213,12 @@ const columns = [
 ]
 
 onMounted(async () => {
-    await getDatasEntidadFederativa({ page: 1, size: 100 });
-    await getDatasUnidadResponsable({ page: 1, size: 100 });
-    await getDatasPrioridad({ page: 1, size: 100 });
-    await getDatasFase({ page: 1, size: 100 });
-    await getDatasPais({ page: 1, size: 100 });
-    await getDatasEstatusProyecto({ page: 1, size: 100 });
-    await getDatas({ page: 1 }).then(() => {
-        arrayData.value.data.map((item: any) => {
-            // decorar entidades federativas
-            let entidadFederativa = arrayDataEntidadFederativa.value.data.find((entidad: any) => entidad.id == item.entidad_federativa)
-            item.entidad_federativa = entidadFederativa.descripcion_corta || '-'
-
-            // decorar unidades responsables
-            let unidadResponsable = arrayDataUnidadResponsable.value.data.find((unidad: any) => unidad.id == item.unidad_responsable)
-            item.unidad_responsable = unidadResponsable.descripcion_corta || '-'
-
-            // decorar prioridades
-            let prioridad = arrayDataPrioridad.value.data.find((prioridad: any) => prioridad.id == item.prioridad)
-            item.prioridad = prioridad.descripcion || '-'
-
-            // decorar estatus proyecto
-            let estatusProyecto = arrayDataEstatusProyecto.value.data.find((estatus: any) => estatus.id == item.estatus_proyecto)
-            item.estatus_proyecto = estatusProyecto.descripcion || '-'
-
-            // decorar fase
-            let fase = arrayDataFase.value.data.find((fase: any) => fase.id == item.fase)
-            item.fase = fase.descripcion || '-'
-
-            // decorar pais
-            let pais = arrayDataPais.value.data.find((pais: any) => pais.id == item.pais)
-            item.pais = pais.nombre_oficial || '-'
-        })
-        // arrayData.data.map((item: any) => {
-        // })
-        showView.value = true
-    })
+    await getDatas({ page: 1 }).then(() => { showView.value = true })
+    addClickListener(handleClick);
 })
+onBeforeUnmount(() => {
+  removeClickListener(handleClick);
+});
 
 
 </script>
-<style lang="scss" scoped>
-.icon-actions i {
-    cursor: pointer;
-    transition: transform 0.3s, font-size 0.2s;
-    opacity: 0.8;
-
-    &:hover {
-        transform: scale(1.1);
-        opacity: 1;
-        color: var(--primary-red);
-    }
-}
-</style>

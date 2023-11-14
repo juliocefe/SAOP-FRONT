@@ -6,13 +6,15 @@
             <thead>
                 <tr>
                     <th v-for="col in columns" class="text-center">{{ col.title }}</th>
-                    <th v-if="!props.hideActions" class="text-center" :class="{'fixed-actions-colum': props.fixedActions}">Acciones</th>
+                    <th v-if="!props.hideActions" class="text-center" :class="{ 'fixed-actions-colum': props.fixedActions }">
+                        Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="value in data" :key="value[rowId]">
+                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value[rowId])" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect}">
                     <td v-for="col in columns" class="text-left" v-html="render(value[col.data])"></td>
-                    <td v-if="!props.hideActions" class="text-center action_items" :class="{'fixed-actions-colum': props.fixedActions}">
+                    <td v-if="!props.hideActions" class="text-center action_items"
+                        :class="{ 'fixed-actions-colum': props.fixedActions }">
                         <button v-if="showEdit" class="btn btn-primary btn-sm active mr-2 mt-2 mb-2" data-placement="top"
                             title="Editar" @click="emit('onEdit', value[rowId])"><i class="bi bi-pencil"></i></button>
                         <button v-if="showDelete" class="btn btn-primary btn-sm active mr-2 mt-2 mb-2" data-placement="top"
@@ -25,19 +27,18 @@
         </DataTable>
         <nav aria-label="Page navigation" class="text-center" v-if="pagination.total > 0 && pagination.total_pages > 0">
             <div>Total de registros activos: <b>{{ pagination.total }}</b></div>
-            <div>Página <b>{{  pagination.page }}</b> de <b>{{  pagination.total_pages }}</b></div>
+            <div>Página <b>{{ pagination.page }}</b> de <b>{{ pagination.total_pages }}</b></div>
             <ul class="pagination">
-                <li class="page-item" :class="{disabled: pagination.total_pages <= 1}"><a class="page-link" href="#" @click.prevent @click="handlePage(pagination.previous_page)">Anterior</a></li>
-                <li class="page-item" 
-                    v-for="(item, index) in pagination.total_pages" 
-                    v-show="showPaginationNumbers(item)" 
-                    :class="{active : hasActiveClass(item), disabled: (pagination.total_pages > PAGINATION_MAX_PAGES && item === PAGINATION_DOTS)}" 
-                    :key="index" 
-                    @click.prevent 
-                    @click="handlePage(item)">
-                        <a :disabled="true" class="page-link" href="#">{{ pagination.total_pages > PAGINATION_MAX_PAGES && item === PAGINATION_DOTS? '...' : item }}</a>
+                <li class="page-item" :class="{ disabled: pagination.total_pages <= 1 }"><a class="page-link" href="#"
+                        @click.prevent @click="handlePage(pagination.previous_page)">Anterior</a></li>
+                <li class="page-item" v-for="(item, index) in pagination.total_pages" v-show="showPaginationNumbers(item)"
+                    :class="{ active: hasActiveClass(item), disabled: (pagination.total_pages > PAGINATION_MAX_PAGES && item === PAGINATION_DOTS) }"
+                    :key="index" @click.prevent @click="handlePage(item)">
+                    <a :disabled="true" class="page-link" href="#">{{ pagination.total_pages > PAGINATION_MAX_PAGES && item
+                        === PAGINATION_DOTS ? '...' : item }}</a>
                 </li>
-                <li class="page-item" :class="{disabled: pagination.total_pages <= 1}"><a class="page-link" href="#" @click.prevent @click="handlePage(pagination.next_page)">Siguiente</a></li>
+                <li class="page-item" :class="{ disabled: pagination.total_pages <= 1 }"><a class="page-link" href="#"
+                        @click.prevent @click="handlePage(pagination.next_page)">Siguiente</a></li>
             </ul>
         </nav>
     </div>
@@ -56,8 +57,39 @@ DataTable.use(DataTablesCore);
 
 const props = defineProps<IDatatable>()
 
-const emit = defineEmits(['onEdit', 'onDelete', 'onCreate', 'onDetail', 'onPaginate', 'onSubGroup'])
-const handlePage = (page:any) => emit('onPaginate', page)
+
+const emit = defineEmits(['onEdit', 'onDelete', 'onCreate', 'onDetail', 'onPaginate', 'onSubGroup', 'onGetID'])
+const handlePage = (page: any) => emit('onPaginate', page)
+
+const selectedRow = ref<string|null>("")
+
+const selectRow = (rowId: string) => {
+    if (selectedRow.value === rowId) {
+        selectedRow.value = null; // Deselect if the same row is clicked again
+    } else {
+        selectedRow.value = rowId;
+    }
+
+    const selected = document.querySelector('.selectedRow');
+    if (selected) {
+        selected.classList.remove('selectedRow');
+    }
+
+    // Obtener la fila correspondiente
+    const row = document.querySelector(`#row-${rowId}`);
+    if (row) {
+        // Agregar o quitar la clase según sea necesario
+        if (selectedRow.value === rowId) {
+            row.classList.add('selectedRow');
+        } else {
+            row.classList.remove('selectedRow');
+        }
+    }
+
+    emit('onGetID', rowId)
+}
+
+
 
 const hasActiveClass = (item: number) => {
     if (props.pagination.total_pages > PAGINATION_MAX_PAGES) {
@@ -66,17 +98,17 @@ const hasActiveClass = (item: number) => {
     return props.pagination.page === item
 }
 
-const showPaginationNumbers = (item:any) => {
-    let response = true 
+const showPaginationNumbers = (item: any) => {
+    let response = true
     if (props.pagination.total_pages > PAGINATION_MAX_PAGES) {
-        if ( (item > PAGINATION_DOTS && item <= props.pagination.total_pages - PAGINATION_OFFSET)) {
+        if ((item > PAGINATION_DOTS && item <= props.pagination.total_pages - PAGINATION_OFFSET)) {
             response = false
         }
-    } 
+    }
     return response
 }
 
-const OPTIONS = ref<any>({...DEFAULT_OPTIONS})
+const OPTIONS = ref<any>({ ...DEFAULT_OPTIONS })
 
 OPTIONS.value.columnDefs = [{
     'targets': [props.hideActions ? props.columns.length - 1 : props.columns.length],
@@ -102,18 +134,24 @@ div.dataTables_wrapper div.dataTables_paginate,
     border-color: #691C32;
 }
 
-    #data-table-component {
-        overflow-x: auto;
-    }
-.action_items{
+#data-table-component {
+    overflow-x: auto;
+}
+
+.action_items {
     display: flex !important;
     align-items: center;
 }
 
-.fixed-actions-colum{
+.fixed-actions-colum {
     position: sticky;
     right: 0;
     background-color: #fff;
     z-index: 1;
 }
-</style>
+
+.selectedRow {
+    background-color: #d0d0d0 !important;
+    color: #523e3e;
+    font-weight: 400;
+}</style>
