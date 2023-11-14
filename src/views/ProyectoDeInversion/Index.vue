@@ -107,13 +107,22 @@ const handleRowClick = (id: any) => {
     console.log('ID del registro seleccionado:', idRow.value);
 };
 
-const handleClick = (event: MouseEvent) => {
+const handleClick = (event?: MouseEvent) => {
+  //solo aplica si se esta en la pantalla de datatable
+  const homeTab = document.getElementById('home');
+  if(homeTab && !homeTab.classList.contains('show')) {
+      return
+    }
   // Verificar si el clic proviene del componente DataTable
-  const isDataTableClick = (event.target as HTMLElement).closest('.datatable') !== null;
-
+  const isDataTableClick = (event?.target as HTMLElement).closest('.datatable') !== null || (event?.target as HTMLElement).closest('.nav-item') !== null;
   if (isDataTableClick) {
     return;
   }
+  const selected = document.querySelector('.selectedRow');
+    if (selected) {
+        selected.classList.remove('selectedRow');
+        idRow.value = 0
+    }
 
 };
 

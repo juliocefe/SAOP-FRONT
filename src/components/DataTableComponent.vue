@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value[rowId])" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect, 'selectedRow': selectRow == value[rowId]}">
+                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value[rowId])" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect}">
                     <td v-for="col in columns" class="text-left" v-html="render(value[col.data])"></td>
                     <td v-if="!props.hideActions" class="text-center action_items"
                         :class="{ 'fixed-actions-colum': props.fixedActions }">
@@ -69,6 +69,23 @@ const selectRow = (rowId: string) => {
     } else {
         selectedRow.value = rowId;
     }
+
+    const selected = document.querySelector('.selectedRow');
+    if (selected) {
+        selected.classList.remove('selectedRow');
+    }
+
+    // Obtener la fila correspondiente
+    const row = document.querySelector(`#row-${rowId}`);
+    if (row) {
+        // Agregar o quitar la clase según sea necesario
+        if (selectedRow.value === rowId) {
+            row.classList.add('selectedRow');
+        } else {
+            row.classList.remove('selectedRow');
+        }
+    }
+
     emit('onGetID', rowId)
 }
 
@@ -134,6 +151,7 @@ div.dataTables_wrapper div.dataTables_paginate,
 }
 
 .selectedRow {
-    background-color: #d3d3d3;
-    font-weight: 500;
+    background-color: #d0d0d0 !important;
+    color: #523e3e;
+    font-weight: 400;
 }</style>

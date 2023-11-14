@@ -46,7 +46,7 @@
                 <strong style="font-size: 2rem;">Indicadores Financieros</strong>
                 <InputText :disabled="readOnlyView" v-model.trim="data.tasa_interna_de_retorno"
                     title="Tasa Interna de Retorno:" placeholder="0.00" name="tasa_interna_de_retorno"
-                    id="tasa_interna_de_retorno" :error="errors" class="mt-5" />
+                    id="tasa_interna_de_retorno" :error="errors" class="mt-5"/>
                 <InputText :disabled="readOnlyView" v-model.trim="data.tasa_de_rendimiento_inmediata"
                     title="Tasa de Rendimiento Inmediata:" placeholder="0.00" name="tasa_de_rendimiento_inmediata"
                     id="tasa_de_rendimiento_inmediata" :error="errors" />
@@ -102,9 +102,17 @@ const handleSubmit = async () => {
     data.cartera_proyecto_inversion = props.idRow!!
     if (isValid.value) {
         if (itemId.value) {
-            await updateData({...data}).then(() => window.location.reload());
+            await updateData({...data}).then(() => {
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1500);
+            });
         } else {
-            await createData(formState.value).then(() => window.location.reload());
+            await createData(formState.value).then(() => {
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1500);
+            });
         }
     } else {
         showErrors();
