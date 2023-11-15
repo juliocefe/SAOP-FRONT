@@ -82,7 +82,7 @@ import { YEARS } from "@/utils/constants/exampleYears";
 
 const props = defineProps({
     idRow: {
-        type: Number,
+        type: String,
     },
     data: {
         type: Object
