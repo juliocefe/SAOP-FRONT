@@ -11,7 +11,7 @@
                     aria-controls="datosFinancieros">Datos financieros</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button :disabled="idRow === 0" class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                <button :disabled="!idRow" class="nav-link" id="contact-tab" data-bs-toggle="tab"
                     data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"
                     @click="handleFichaTecnica()">Ficha técnica</button>
             </li>
@@ -19,7 +19,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <div v-if="showView">
-                    <h4 class="view-name">{{ viewName }}</h4>
+                    <h4 class="view-name">{{ viewName }} <span v-if="selectedProyect"> - {{ selectedProyect }}</span></h4>
                     <hr class="red">
                     <div class="row app-options-bar">
                         <div class="d-flex align-items-center buttons-component align-items-center">
@@ -91,7 +91,8 @@ import { addClickListener, removeClickListener } from '@/utils/listeners/clickLi
 const viewName = 'Cartera de Proyectos de Inversión'
 const { arrayData, getDatas, searchData } = usePetition("cartera_proyectos_inversion/");
 const searchTerm = ref("");
-const idRow = ref(0)
+const idRow = ref("")
+const selectedProyect = ref("")
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
@@ -100,10 +101,11 @@ const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_in
 /* const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
 ) */
 
-const handleRowClick = (id: any) => {
+const handleRowClick = (rowData: any) => {
     ; // Obtén el ID del registro seleccionado
     // Realiza las operaciones necesarias con el ID del registro seleccionado
-    idRow.value = parseInt(id)
+    idRow.value = rowData.clave
+    selectedProyect.value = rowData.nombre
 };
 
 const handleClick = (event?: MouseEvent) => {
@@ -120,7 +122,8 @@ const handleClick = (event?: MouseEvent) => {
   const selected = document.querySelector('.selectedRow');
     if (selected) {
         selected.classList.remove('selectedRow');
-        idRow.value = 0
+        idRow.value = ""
+        selectedProyect.value = ""
     }
 
 };
@@ -130,7 +133,7 @@ const arrayDataFichaTecnica = ref()
 
 const handleDatosFinancieros = () => {
     let { getData: getDataDatosFinancieros } = usePetition(`informacion_financiera/`);
-    getDataDatosFinancieros(idRow.value.toString()).then((result) => {
+    getDataDatosFinancieros(idRow.value).then((result) => {
         arrayDataDatosFinancieros.value = result
     })
     // if (true) {
@@ -140,7 +143,7 @@ const handleDatosFinancieros = () => {
 
 const handleFichaTecnica = () => {
     let { getData: getDatahandleFichaTecnica } = usePetition(`ficha_tecnica/`);
-    getDatahandleFichaTecnica(idRow.value.toString()).then((result) => {
+    getDatahandleFichaTecnica(idRow.value).then((result) => {
         arrayDataFichaTecnica.value = result
     })
     // if (true) {
@@ -149,10 +152,10 @@ const handleFichaTecnica = () => {
 }
 
 const {
-    arrayData: arrayDataEntidadFederativa
+    arrayData: arrayDataEntidadFederativa, getDatas: getDatasEntidadFederativa
 } = usePetition("cat_entidad_federativa/");
 const {
-    arrayData: arrayDataUnidadResponsable
+    arrayData: arrayDataUnidadResponsable, getDatas: getDatasUnidadResponsable
 } = usePetition("cat_unidad_responsable/");
 
 const handlePaginate = (page: number) => {
@@ -214,6 +217,8 @@ const columns = [
 
 onMounted(async () => {
     await getDatas({ page: 1 }).then(() => { showView.value = true })
+    getDatasEntidadFederativa({ page: 1, size: 100 });
+    getDatasUnidadResponsable({ page: 1, size: 100 });
     addClickListener(handleClick);
 })
 onBeforeUnmount(() => {

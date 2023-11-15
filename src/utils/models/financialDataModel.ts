@@ -10,7 +10,7 @@ export interface IFinancialData {
     tasa_interna_de_retorno: string|null;
     tasa_de_rendimiento_inmediata: string|null;
     tasa_de_descuento: string|null;
-    cartera_proyecto_inversion: Number|null;
+    cartera_proyecto_inversion: String|null;
     id: Number|null;
   }
   
