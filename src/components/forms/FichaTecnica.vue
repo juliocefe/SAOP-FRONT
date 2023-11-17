@@ -23,19 +23,26 @@
                 <InputText v-model="data.requerimiento_de_hacienda" title="Requerimiento de Hacienda:"
                     placeholder="Requerimiento" name="requerimiento_de_hacienda" id="requerimiento_de_hacienda"
                     :error="errors" class="col-sm-12" />
-                <SelectComponent v-model="data.tipo_documento" title="Tipo Documento:" placeholder="Tipo Documento"
-                    name="tipo_documento" id="tipo_documento" :error="errors" :options="arrayDataTipoDocumento.data"
-                    :optionText="'nombre'" class="col-sm-12" />
                 <InputText v-model="data.aforo" title="Aforo:" placeholder="Aforo" name="aforo" id="aforo" :error="errors"
                     class="col-sm-12" />
             </div>
             <div class="col-6">
-                <label for="nombre-operacion">Documento</label>
-                <input data-documento type="file" id="precidencial-prioridad" placeholder="" autocomplete="off"
-                    ref="fileInput" accept="application/pdf, image/*" @change="handleFileUpload" />
-                <small class="form-text text-muted ml-5" v-if="fileName">{{ fileName[fileName.length - 1] }}</small>
-                <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
-                    v-if="errors && errors.documento">{{ errors.documento }}</small>
+                <div class="col-sm-8 d-flex align-items-center">
+                    <SelectComponent v-model="data.tipo_documento" title="Tipo Documento:" placeholder="Tipo Documento"
+                        name="tipo_documento" id="tipo_documento" :error="errors" :options="arrayDataTipoDocumento.data"
+                        :optionText="'nombre'" class="col-sm-12" />
+                    <div class="form-group col-sm-12">
+                        <label for="">Documento</label>
+                        <input data-documento type="file" id="precidencial-prioridad" placeholder="" autocomplete="off"
+                            ref="fileInput" accept="application/pdf, image/*" @change="handleFileUpload" />
+                    </div>
+                </div>
+                <div class="col-8">
+                    <small class="form-text text-muted ml-4" v-if="fileName">{{ fileName[fileName.length - 1] }}</small>
+                    <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
+                        v-if="errors && errors.documento">{{ errors.documento }}</small>
+                </div>
+
             </div>
         </div>
         <div class="d-flex">
@@ -120,42 +127,40 @@ const handleSubmit = async () => {
     if (isValid.value) {
         const formData = new FormData();
         // Agregar campos del formulario
-        formData.append("clave_compromiso", formState.clave_compromiso);
+        formData.append("clave_compromiso", formState.value.clave_compromiso);
         formData.append(
             "requerimiento_de_hacienda",
             formState.requerimiento_de_hacienda
         );
-        formData.append("aforo", formState.aforo);
-        formData.append("situacion_actual", formState.situacion_actual);
+        formData.append("aforo", formState.value.aforo);
+        formData.append("situacion_actual", formState.value.situacion_actual);
         formData.append(
             "autorizacion_y_permisos",
-            formState.autorizacion_y_permisos
+            formState.value.autorizacion_y_permisos
         );
         formData.append(
             "alcance_del_proyecto ",
-            formState.alcance_del_proyecto
+            formState.value.alcance_del_proyecto
         );
         formData.append(
             "cartera_proyecto_inversion  ",
-            formState.cartera_proyecto_inversion
+            formState.value.cartera_proyecto_inversion
         );
-        formData.append("tipo_obra   ", formState.tipo_obra);
-        formData.append("tipo_documento    ", formState.tipo_documento);
+        formData.append("tipo_obra   ", formState.value.tipo_obra);
+        formData.append("tipo_documento    ", formState.value.tipo_documento);
         if (data.documento instanceof File) {
-            formData.append("documento", formState.documento);
+            formData.append("documento", formState.value.documento);
         }
 
         if (fileName.value !== "") {
-            delete formState.documento;
+            delete formState.value.documento;
         }
         if (itemId.value) {
             /* await updateFromData(formData, itemId.value); */
         } else {
-            console.log('entro en else itemid.value: ', formState);
             await createFromData(formData)
                 .then(() => {
-                    resetForm()
-                    /* window.location.reload() */
+                    window.location.reload()
                 });
             /* await createFromData(formState.value).then(() => window.location.reload()); */
         }
