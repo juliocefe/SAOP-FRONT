@@ -27,22 +27,17 @@
                     class="col-sm-12" />
             </div>
             <div class="col-6">
-                <div class="col-sm-8 d-flex align-items-center">
+                <div class="col-sm-12 flex-row align-items-center">
                     <SelectComponent v-model="data.tipo_documento" title="Tipo Documento:" placeholder="Tipo Documento"
                         name="tipo_documento" id="tipo_documento" :error="errors" :options="arrayDataTipoDocumento.data"
-                        :optionText="'nombre'" class="col-sm-12" />
-                    <div class="form-group col-sm-12">
+                        :optionText="'nombre'"/>
                         <label for="">Documento</label>
                         <input data-documento type="file" id="precidencial-prioridad" placeholder="" autocomplete="off"
                             ref="fileInput" accept="application/pdf, image/*" @change="handleFileUpload" />
-                    </div>
+                            <small class="form-text text-muted ml-4" v-if="fileName">{{ fileName[fileName.length - 1] }}</small>
+                            <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
+                                v-if="errors && errors.documento">{{ errors.documento }}</small>
                 </div>
-                <div class="col-8">
-                    <small class="form-text text-muted ml-4" v-if="fileName">{{ fileName[fileName.length - 1] }}</small>
-                    <small id="descripcion-nivel-small" class="form-text text-muted app-validation"
-                        v-if="errors && errors.documento">{{ errors.documento }}</small>
-                </div>
-
             </div>
         </div>
         <div class="d-flex">
