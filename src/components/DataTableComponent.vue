@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value[rowId])" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect}">
+                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value)" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect}">
                     <td v-for="col in columns" class="text-left" v-html="render(value[col.data])"></td>
                     <td v-if="!props.hideActions" class="text-center action_items"
                         :class="{ 'fixed-actions-colum': props.fixedActions }">
@@ -63,11 +63,12 @@ const handlePage = (page: any) => emit('onPaginate', page)
 
 const selectedRow = ref<string|null>("")
 
-const selectRow = (rowId: string) => {
-    if (selectedRow.value === rowId) {
+const selectRow = (row: any) => {
+    let selectedRowId = row[props.rowId]
+    if (selectedRow.value === selectedRowId) {
         selectedRow.value = null; // Deselect if the same row is clicked again
     } else {
-        selectedRow.value = rowId;
+        selectedRow.value = selectedRowId;
     }
 
     const selected = document.querySelector('.selectedRow');
@@ -76,17 +77,17 @@ const selectRow = (rowId: string) => {
     }
 
     // Obtener la fila correspondiente
-    const row = document.querySelector(`#row-${rowId}`);
-    if (row) {
+    const rowHtml = document.querySelector(`#row-${selectedRowId}`);
+    if (rowHtml) {
         // Agregar o quitar la clase según sea necesario
-        if (selectedRow.value === rowId) {
-            row.classList.add('selectedRow');
+        if (selectedRow.value === selectedRowId) {
+            rowHtml.classList.add('selectedRow');
         } else {
-            row.classList.remove('selectedRow');
+            rowHtml.classList.remove('selectedRow');
         }
     }
 
-    emit('onGetID', rowId)
+    emit('onGetID', row)
 }
 
 
