@@ -8,6 +8,15 @@
       >
         <div class="col-md-8">
           <button
+            title="Limpiar campos"
+            @click="resetForm()"
+            class="dt-button btn btn-primary active mr-4"
+            type="button"
+            :disabled="readOnlyView"
+          >
+            <i class="bi bi-eraser-fill"></i>
+          </button>
+          <button
             title="Cancelar"
             class="dt-button btn btn-primary active mr-4"
             type="button"
@@ -17,10 +26,9 @@
           >
             <span><b>Cancelar</b></span>
           </button>
-
           <button
             title="Crear"
-            class="dt-button btn btn-primary active"
+            class="dt-button btn btn-primary active mr-4"
             type="button"
             :disabled="!readOnlyView"
             v-if="props.data"
