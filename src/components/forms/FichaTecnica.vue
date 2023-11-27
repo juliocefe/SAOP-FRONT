@@ -16,26 +16,28 @@
           >
             <i class="bi bi-eraser-fill"></i>
           </button>
-          <button
-            title="Cancelar"
-            class="dt-button btn btn-primary active mr-4"
-            type="button"
-            :disabled="!readOnlyView"
-            v-if="props.data"
-            @click="handleCancel()"
-          >
-            <span><b>Cancelar</b></span>
-          </button>
-          <button
-            title="Crear"
-            class="dt-button btn btn-primary active mr-4"
-            type="button"
-            :disabled="!readOnlyView"
-            v-if="props.data"
-            @click="readOnlyView = false"
-          >
-            <span><b>Editar</b></span>
-          </button>
+          <span v-if="readOnlyView">
+            <button
+              title="Cancelar"
+              class="btn btn-secondary mr-4"
+              type="button"
+              :disabled="!readOnlyView"
+              v-if="props.data"
+              @click="handleCancel()"
+            >
+              <span><b>Cancelar</b></span>
+            </button>
+            <button
+              title="Crear"
+              class="dt-button btn btn-primary active mr-4"
+              type="button"
+              :disabled="!readOnlyView"
+              v-if="props.data"
+              @click="readOnlyView = false"
+            >
+              <span><b>Editar</b></span>
+            </button>
+          </span>
         </div>
         <AccionesCartera />
       </div>
