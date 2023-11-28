@@ -182,7 +182,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, nextTick } from "vue";
 import AccionesCartera from "@/components/AccionesCarteraPoyectos.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
 import InputText from "@/components/InputText.vue";
@@ -229,6 +229,7 @@ const handleFileUpload = (event: Event) => {
 };
 
 const handleSubmit = async () => {
+  console.log('hanlde')
   data.cartera_proyecto_inversion = props.idRow!!;
   if (isValid.value) {
     const formData = new FormData();
@@ -307,6 +308,9 @@ const resetForm = () => {
   data.tipo_obra = null;
   fileName.value = "";
   data.documento = null;
+  nextTick(() => {
+    errors.value = {}
+  })
 };
 
 watch(
