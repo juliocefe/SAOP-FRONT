@@ -5,10 +5,19 @@
         <div class="row app-options-bar">
             <div class="d-flex align-items-center buttons-component align-items-center">
                 <div class="col-md-8">
-                    <button title="Crear" class="dt-button btn btn-primary active" type="button" :disabled="!readOnlyView" v-if="props.data"
-                        @click="readOnlyView = false">
-                        <span><b>Editar</b></span>
+                    <button title="Limpiar campos" @click="resetForm()" class="dt-button btn btn-primary active mr-4" type="button" :disabled="readOnlyView">
+                        <i class="bi bi-eraser-fill"></i>
                     </button>
+                    <span v-if="readOnlyView">
+                        <button title="Cancelar" class="btn btn-secondary mr-4" type="button" :disabled="!readOnlyView"
+                            v-if="props.data" @click="handleCancel()">
+                            <span><b>Cancelar</b></span>
+                        </button>
+                        <button title="Crear" class="dt-button btn btn-primary active" type="button"
+                            :disabled="!readOnlyView" v-if="props.data" @click="readOnlyView = false">
+                            <span><b>Editar</b></span>
+                        </button>
+                    </span>
                 </div>
                 <AccionesCartera />
             </div>
@@ -46,7 +55,7 @@
                 <strong style="font-size: 2rem;">Indicadores Financieros</strong>
                 <InputText :disabled="readOnlyView" v-model.trim="data.tasa_interna_de_retorno"
                     title="Tasa Interna de Retorno:" placeholder="0.00" name="tasa_interna_de_retorno"
-                    id="tasa_interna_de_retorno" :error="errors" class="mt-5"/>
+                    id="tasa_interna_de_retorno" :error="errors" class="mt-5" />
                 <InputText :disabled="readOnlyView" v-model.trim="data.tasa_de_rendimiento_inmediata"
                     title="Tasa de Rendimiento Inmediata:" placeholder="0.00" name="tasa_de_rendimiento_inmediata"
                     id="tasa_de_rendimiento_inmediata" :error="errors" />
@@ -98,11 +107,11 @@ var data = reactive<IFinancialData>(defaultValues);
 const { formState, isValid, errors, showErrors } = useForm(data, financialDataValidations);
 const itemId = ref("");
 
-const handleSubmit = async () => {    
+const handleSubmit = async () => {
     data.cartera_proyecto_inversion = props.idRow!!
     if (isValid.value) {
         if (itemId.value) {
-            await updateData({...data}).then(() => {
+            await updateData({ ...data }).then(() => {
                 setTimeout(() => {
                     window.location.reload()
                 }, 1500);
@@ -159,7 +168,7 @@ const resetForm = () => {
 watch(
     () => props.data,
     () => {
-        updateFormData()  
+        updateFormData()
     },
     {
         deep: true,
