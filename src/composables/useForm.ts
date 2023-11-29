@@ -13,7 +13,7 @@ export const useForm = (initialForm: any, formValidation: any = {}) => {
         initialForm,
         () => {
             formState.value = initialForm;
-            //validateFields() <-- TODO: Revisar si es realmente necesario esto
+            validateFields()
         },
         {
             deep: true,
