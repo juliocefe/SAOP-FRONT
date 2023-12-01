@@ -264,11 +264,16 @@ const handleSubmit = async () => {
     }
     if (itemId.value) {
       await updateFromData(formData, itemId.value).then(() => {
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       });
     } else {
       await createFromData(formData).then(() => {
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+        
       });
     }
   } else {
