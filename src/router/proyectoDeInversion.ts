@@ -24,4 +24,9 @@ export const proyectoDeInversiones = [
         name: 'eliminar-proyecto_de_inversion',
         component: () => import('@/views/ProyectoDeInversion/Delete.vue')
     },
+    {
+        path: 'calendario-anual',
+        name: 'calendario-anual-proyecto_de_inversion',
+        component: () => import('@/views/ProyectoDeInversion/AnnualCalendar.vue')
+    },
 ]
