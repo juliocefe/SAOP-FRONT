@@ -52,9 +52,10 @@
                     <div class="col-md-6 col-sm-12">
                         <SelectComponent title="Año Base:" placeholder="Seleccione..." name="anio_base" id="anio_base"
                             class="mb-5" :options="YEARS" :optionText="'value'" />
-                        <SelectComponent title="Origen Recursos:" placeholder="Seleccione..." name="anio_base" id="anio_base"
-                            class="mb-5" :options="YEARS" :optionText="'value'" />
-                        <InputText title="RECURSOS:" placeholder="1.000" name="descripcion" id="descripcion" type="number" />
+                        <SelectComponent title="Origen Recursos:" placeholder="Seleccione..." name="anio_base"
+                            id="anio_base" class="mb-5" :options="YEARS" :optionText="'value'" />
+                        <InputText title="RECURSOS:" placeholder="1.000" name="descripcion" id="descripcion"
+                            type="number" />
                     </div>
                 </div>
                 <div class="modal-footer mt-3">
@@ -72,7 +73,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, onBeforeUnmount, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import DataTableComponent from '@/components/DataTableComponent.vue'
 import InputText from "@/components/InputText.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
