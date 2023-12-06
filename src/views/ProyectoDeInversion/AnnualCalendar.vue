@@ -39,6 +39,19 @@
                 :data="dataTableDataBeneficioAnual" :pagination="1" :hideActions="true" />
         </div>
         <div class="container">
+            <div class="d-row mt-4 mb-4 " v-if="HiddenButtosForms === false">
+                <span>
+                    <button title="Crear" class="dt-button btn btn-primary active mr-4 my-4" type="button" @click="HiddenButtosForms = true">
+                        <span><b>Crear</b></span>
+                    </button>
+                    <button title="Crear" class="dt-button btn btn-primary active mr-4 my-4" disabled type="button">
+                        <span><b>Editar</b></span>
+                    </button>
+                    <button title="Cancelar" class="btn btn-secondary mr-4 my-4" type="button" @click="handleCancel()">
+                        <span><b>Cancelar</b></span>
+                    </button>
+                </span>
+            </div>
             <form role="form" @submit.prevent="saveForm">
                 <div class="row justify-content-center">
                     <div class="col-md-4 col-sm-12">
@@ -58,15 +71,14 @@
                             type="number" />
                     </div>
                 </div>
-                <div class="modal-footer mt-3">
-                    <button type="button" class="btn btn-secondary" @click="handleCancel">
+                <div class="modal-footer mt-3" v-if="HiddenButtosForms">
+                    <button type="button" class="btn btn-secondary" @click="HiddenButtosForms = false">
                         Cancelar
                     </button>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
-
     </div>
 </template>
   
@@ -86,13 +98,14 @@ const router = useRouter();
 
 const viewName = "Calendario Anual Del Proyecto";
 
+const selectedRadiusInput = ref("1")
+const HiddenButtosForms = ref(false)
+
 const handleCancel = () => router.push({ name: "listar-proyecto_de_inversion" });
 const saveForm = () => {
     router.push({ name: "listar-proyecto_de_inversion" })
     console.log('Se guarda la info');
 }
-
-const selectedRadiusInput = ref("1")
 
 const dynamicColumns = ref([
     { title: "No. Solicitud", data: "id" },
