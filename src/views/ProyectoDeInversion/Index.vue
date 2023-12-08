@@ -190,15 +190,15 @@ const cbEntidad = ref<string>('')
 const cbUnidad = ref<string>('')
 const inputSolicitud = ref<string>('')
 const columns = [
-    { title: 'Entidad', data: 'entidad_federativa', align: 'left' },
-    { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
-    { title: 'Proceso', data: '', align: 'left' },
-    { title: 'No. de Solicitud', data: 'no_solicitud', align: 'left' },
-    { title: 'Descripción del proyecto', data: 'descripcion', align: 'left' },
-    { title: 'Prioridad', data: 'prioridad', align: 'left' },
+    /* { title: 'Entidad', data: 'entidad_federativa', align: 'left' }, */
     { title: 'Clave Cartera', data: 'clave', align: 'left' },
+    { title: 'No. de Solicitud', data: 'no_solicitud', align: 'left' },
+    { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
     { title: 'Nombre Proyecto', data: 'nombre', align: 'left' },
-    { title: 'Beneficios', data: 'beneficios', align: 'left' },
+    { title: 'Descripción del proyecto', data: 'descripcion', align: 'left' },
+    /* { title: 'Proceso', data: '', align: 'left' }, */
+   /*  { title: 'Prioridad', data: 'prioridad', align: 'left' }, */
+/*     { title: 'Beneficios', data: 'beneficios', align: 'left' },
     { title: 'Localización', data: 'municipio', align: 'left' },
     { title: 'Fecha Inicial', data: 'fecha_inicial', align: 'left' },
     { title: 'Fecha Final', data: 'fecha_final', align: 'left' },
@@ -216,7 +216,7 @@ const columns = [
     { title: 'Cto. Anual Equivalente', data: '', align: 'left' },
     { title: 'Tasa de Retorno', data: '', align: 'left' },
     { title: 'Tasa de Rendimiento Inmediata', data: '', align: 'left' },
-    { title: 'Tasa de Descuento', data: '', align: 'left' },
+    { title: 'Tasa de Descuento', data: '', align: 'left' }, */
 ]
 
 onMounted(async () => {
