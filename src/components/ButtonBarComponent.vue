@@ -4,6 +4,10 @@
             @click="emit('onCreate')">
             <span><i class="bi bi-plus"></i> <b>Crear</b></span>
         </button>
+        <button v-if="props.showCancel" title="cancelar" class="dt-button btn btn-secondary btn-cancelar" type="button"
+            @click="emit('onCancel')">
+            <span> <b>Cancelar</b></span>
+        </button>
         <span v-if="showSubactions">
             <button title="Exportar PDF" class="dt-button buttons-pdf buttons-html5 btn btn-light btn-pdf" type="button"
                 disabled @click="emit('onPdf')">
@@ -26,11 +30,15 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['onCopy', 'onPrint', 'onExcel', 'onPdf', 'onCreate']);
+const emit = defineEmits(['onCopy', 'onPrint', 'onExcel', 'onPdf', 'onCreate', 'onCancel']);
 const props = defineProps({
     showCreate: {
         type: Boolean,
         default: true
+    },
+    showCancel: {
+        type: Boolean,
+        default: false
     },
     showSubactions: {
         type: Boolean,
@@ -66,6 +74,9 @@ button {
     }
 
     .btn-crear {
+        width: 100%;
+    }
+    .btn-cancelar {
         width: 100%;
     }
 }

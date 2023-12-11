@@ -2,6 +2,14 @@
     <h4 class="view-name">{{ viewName }}</h4>
     <hr class="red" />
     <div class="container">
+        <div class="row app-options-bar">
+            <div class="d-flex align-items-center buttons-component align-items-center">
+                <div class="col-md-8">
+                    <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" @onCancel="handleCancel"
+                        :show-cancel="true" />
+                </div>
+            </div>
+        </div>
         <form class="form-inline justify-content-center" role="form">
             <div class="form-check form-check-inline col-md-2 col-sm-6">
                 <label class="form-check-label">
@@ -29,55 +37,17 @@
             </div>
         </form>
         <div class="container">
-            <DataTableComponent v-if="selectedRadiusInput === '1'" rowId="clave" :columns="dynamicColumns"
-                :data="dataTableDataRecursos" :pagination="1" :hideActions="true" />
-            <DataTableComponent v-if="selectedRadiusInput === '2'" rowId="clave" :columns="dynamicColumns"
-                :data="dataTableDataMeta" :pagination="1" :hideActions="true" />
-            <DataTableComponent v-if="selectedRadiusInput === '3'" rowId="clave" :columns="dynamicColumns"
-                :data="dataTableDataCostoAnual" :pagination="1" :hideActions="true" />
-            <DataTableComponent v-if="selectedRadiusInput === '4'" rowId="clave" :columns="dynamicColumns"
-                :data="dataTableDataBeneficioAnual" :pagination="1" :hideActions="true" />
-        </div>
-        <div class="container">
-            <div class="d-row mt-4 mb-4 " v-if="HiddenButtosForms === false">
-                <span>
-                    <button title="Crear" class="dt-button btn btn-primary active mr-4 my-4" type="button" @click="HiddenButtosForms = true">
-                        <span><b>Crear</b></span>
-                    </button>
-                    <button title="Crear" class="dt-button btn btn-primary active mr-4 my-4" disabled type="button">
-                        <span><b>Editar</b></span>
-                    </button>
-                    <button title="Cancelar" class="btn btn-secondary mr-4 my-4" type="button" @click="handleCancel()">
-                        <span><b>Cancelar</b></span>
-                    </button>
-                </span>
-            </div>
-            <form role="form" @submit.prevent="saveForm">
-                <div class="row justify-content-center">
-                    <div class="col-md-4 col-sm-12">
-                        <InputText title="No. Solicitud:" placeholder="No. Solicitud" name="clave" id="clave" />
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <InputText title="Clave del Proyecto:" placeholder="Clave" name="descripcion" id="descripcion" />
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-6 col-sm-12">
-                        <SelectComponent title="Año Base:" placeholder="Seleccione..." name="anio_base" id="anio_base"
-                            class="mb-5" :options="YEARS" :optionText="'value'" />
-                        <SelectComponent title="Origen Recursos:" placeholder="Seleccione..." name="anio_base"
-                            id="anio_base" class="mb-5" :options="YEARS" :optionText="'value'" />
-                        <InputText title="RECURSOS:" placeholder="1.000" name="descripcion" id="descripcion"
-                            type="number" />
-                    </div>
-                </div>
-                <div class="modal-footer mt-3" v-if="HiddenButtosForms">
-                    <button type="button" class="btn btn-secondary" @click="HiddenButtosForms = false">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </div>
-            </form>
+            <DataTableComponent v-if="selectedRadiusInput === '1'" rowId="id" :columns="dynamicColumns"
+                :data="dataTableDataRecursos" :pagination="paginate" :showDelete="true" :showEdit="true"
+                @onEdit="handleEdit" />
+            <DataTableComponent v-if="selectedRadiusInput === '2'" rowId="id" :columns="dynamicColumns"
+                :data="dataTableDataMeta" :pagination="paginate" :showDelete="true" :showEdit="true" @onEdit="handleEdit" />
+            <DataTableComponent v-if="selectedRadiusInput === '3'" rowId="id" :columns="dynamicColumns"
+                :data="dataTableDataCostoAnual" :pagination="paginate" :showDelete="true" :showEdit="true"
+                @onEdit="handleEdit" />
+            <DataTableComponent v-if="selectedRadiusInput === '4'" rowId="id" :columns="dynamicColumns"
+                :data="dataTableDataBeneficioAnual" :pagination="paginate" :showDelete="true" :showEdit="true"
+                @onEdit="handleEdit" />
         </div>
     </div>
 </template>
@@ -87,9 +57,7 @@
 import { onMounted, ref, onBeforeUnmount, watch } from "vue";
 import { useRouter } from "vue-router";
 import DataTableComponent from '@/components/DataTableComponent.vue'
-import InputText from "@/components/InputText.vue";
-import SelectComponent from "@/components/SelectComponent.vue";
-import { YEARS } from "@/utils/constants/exampleYears";
+import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
 
 
 
@@ -99,12 +67,22 @@ const router = useRouter();
 const viewName = "Calendario Anual Del Proyecto";
 
 const selectedRadiusInput = ref("1")
-const HiddenButtosForms = ref(false)
+const paginate = { "page_size": 10, "page": 1, "total": 1, "total_pages": 1, "previous_page": 1, "next_page": 1 }
 
 const handleCancel = () => router.push({ name: "listar-proyecto_de_inversion" });
-const saveForm = () => {
-    router.push({ name: "listar-proyecto_de_inversion" })
-    console.log('Se guarda la info');
+const handleCreate = () => {
+    router.push({
+        name: "crear-calendario-anual-proyecto_de_inversion",
+        query: { selectedRadius: selectedRadiusInput.value }
+    });
+};
+const handleEdit = (data: any) => {
+    console.log(data);
+    router.push({
+        name: 'editar-calendario-anual-proyecto_de_inversion',
+        params: { id: data },
+        query: { selectedRadius: selectedRadiusInput.value }
+    })
 }
 
 const dynamicColumns = ref([
@@ -151,6 +129,6 @@ watch(selectedRadiusInput, (newValue) => {
             break;
     }
 });
-onMounted(async () => { });
+onMounted(async () => { console.log("Hola"); });
 onBeforeUnmount(() => { });
 </script>

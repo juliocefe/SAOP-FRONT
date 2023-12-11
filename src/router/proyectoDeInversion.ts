@@ -27,6 +27,16 @@ export const proyectoDeInversiones = [
     {
         path: 'calendario-anual',
         name: 'calendario-anual-proyecto_de_inversion',
-        component: () => import('@/views/ProyectoDeInversion/AnnualCalendar.vue')
+        component: () => import('@/views/ProyectoDeInversion/AnnualCalendar/IndexAnnualCalendar.vue')
+    },
+    {
+        path: 'calendario-anual/crear',
+        name: 'crear-calendario-anual-proyecto_de_inversion',
+        component: () => import('@/views/ProyectoDeInversion/AnnualCalendar/Create.vue')
+    },
+    {
+        path: 'calendario-anual/:id/editar',
+        name: 'editar-calendario-anual-proyecto_de_inversion',
+        component: () => import('@/views/ProyectoDeInversion/AnnualCalendar/Create.vue')
     },
 ]
