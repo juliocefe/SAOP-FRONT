@@ -91,7 +91,6 @@ async function saveForm() {
 const titulo = ref("Crear Calendario Anual");
 
 onMounted(() => {
-  console.log(route.query.selectedRadius);
   itemId.value = route.params.id ? route.params.id.toString() : ""
   if (itemId.value) {
     titulo.value =  "Editar Calendario Anual"

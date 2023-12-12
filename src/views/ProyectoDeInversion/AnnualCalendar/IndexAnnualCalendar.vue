@@ -77,7 +77,6 @@ const handleCreate = () => {
     });
 };
 const handleEdit = (data: any) => {
-    console.log(data);
     router.push({
         name: 'editar-calendario-anual-proyecto_de_inversion',
         params: { id: data },
@@ -129,6 +128,6 @@ watch(selectedRadiusInput, (newValue) => {
             break;
     }
 });
-onMounted(async () => { console.log("Hola"); });
+onMounted(async () => { });
 onBeforeUnmount(() => { });
 </script>
