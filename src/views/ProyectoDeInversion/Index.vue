@@ -11,8 +11,8 @@
                     aria-controls="datosFinancieros">Datos financieros</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button :disabled="!idRow" class="nav-link" id="contact-tab" data-bs-toggle="tab"
-                    data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false"
+                <button :disabled="!idRow" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact"
+                    type="button" role="tab" aria-controls="contact" aria-selected="false"
                     @click="handleFichaTecnica()">Ficha técnica</button>
             </li>
         </ul>
@@ -26,7 +26,7 @@
                             <div class="col-md-8">
                                 <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" />
                             </div>
-                            <AccionesCartera />
+                            <AccionesCartera @onCalendar="handleCalendar" />
                         </div>
                     </div>
                     <div class="d-flex px-2">
@@ -63,9 +63,10 @@
                         </div>
                     </div>
                     <DataTableComponent v-if="!arrayData.loading" rowId="clave" :columns="columns" :data="arrayData.data"
-                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true" :row-select="true"
-                        :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit" @onDetail="handleDetail"
-                        @onDelete="handleDelete" @onCreate="handleCreate" @onGetID="handleRowClick" />
+                        :pagination="arrayData.pagination" :showDelete="true" :showEdit="true" :showDetail="true"
+                        :row-select="true" :fixed-actions="true" @onPaginate="handlePaginate" @onEdit="handleEdit"
+                        @onDetail="handleDetail" @onDelete="handleDelete" @onCreate="handleCreate"
+                        @onGetID="handleRowClick" />
                 </div>
             </div>
             <div class="tab-pane fade " id="datosFinancieros" role="tabpanel" aria-labelledby="datosFinancieros-tab">
@@ -95,6 +96,9 @@ const idRow = ref("")
 const selectedProyect = ref("")
 const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
+const handleCalendar = () => {
+    router.push({ name: 'calendario-anual-proyecto_de_inversion' })
+}
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })
 const handleDelete = (data: any) => router.push({ name: 'eliminar-proyecto_de_inversion', params: { id: data } })
@@ -109,17 +113,17 @@ const handleRowClick = (rowData: any) => {
 };
 
 const handleClick = (event?: MouseEvent) => {
-  //solo aplica si se esta en la pantalla de datatable
-  const homeTab = document.getElementById('home');
-  if(homeTab && !homeTab.classList.contains('show')) {
-      return
+    //solo aplica si se esta en la pantalla de datatable
+    const homeTab = document.getElementById('home');
+    if (homeTab && !homeTab.classList.contains('show')) {
+        return
     }
-  // Verificar si el clic proviene del componente DataTable
-  const isDataTableClick = (event?.target as HTMLElement).closest('.datatable') !== null || (event?.target as HTMLElement).closest('.nav-item') !== null;
-  if (isDataTableClick) {
-    return;
-  }
-  const selected = document.querySelector('.selectedRow');
+    // Verificar si el clic proviene del componente DataTable
+    const isDataTableClick = (event?.target as HTMLElement).closest('.datatable') !== null || (event?.target as HTMLElement).closest('.nav-item') !== null;
+    if (isDataTableClick) {
+        return;
+    }
+    const selected = document.querySelector('.selectedRow');
     if (selected) {
         selected.classList.remove('selectedRow');
         idRow.value = ""
@@ -186,15 +190,15 @@ const cbEntidad = ref<string>('')
 const cbUnidad = ref<string>('')
 const inputSolicitud = ref<string>('')
 const columns = [
-    { title: 'Entidad', data: 'entidad_federativa', align: 'left' },
-    { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
-    { title: 'Proceso', data: '', align: 'left' },
-    { title: 'No. de Solicitud', data: 'no_solicitud', align: 'left' },
-    { title: 'Descripción del proyecto', data: 'descripcion', align: 'left' },
-    { title: 'Prioridad', data: 'prioridad', align: 'left' },
+    /* { title: 'Entidad', data: 'entidad_federativa', align: 'left' }, */
     { title: 'Clave Cartera', data: 'clave', align: 'left' },
+    { title: 'No. de Solicitud', data: 'no_solicitud', align: 'left' },
+    { title: 'Unidad Responsable', data: 'unidad_responsable', align: 'left' },
     { title: 'Nombre Proyecto', data: 'nombre', align: 'left' },
-    { title: 'Beneficios', data: 'beneficios', align: 'left' },
+    { title: 'Descripción del proyecto', data: 'descripcion', align: 'left' },
+    /* { title: 'Proceso', data: '', align: 'left' }, */
+   /*  { title: 'Prioridad', data: 'prioridad', align: 'left' }, */
+/*     { title: 'Beneficios', data: 'beneficios', align: 'left' },
     { title: 'Localización', data: 'municipio', align: 'left' },
     { title: 'Fecha Inicial', data: 'fecha_inicial', align: 'left' },
     { title: 'Fecha Final', data: 'fecha_final', align: 'left' },
@@ -212,7 +216,7 @@ const columns = [
     { title: 'Cto. Anual Equivalente', data: '', align: 'left' },
     { title: 'Tasa de Retorno', data: '', align: 'left' },
     { title: 'Tasa de Rendimiento Inmediata', data: '', align: 'left' },
-    { title: 'Tasa de Descuento', data: '', align: 'left' },
+    { title: 'Tasa de Descuento', data: '', align: 'left' }, */
 ]
 
 onMounted(async () => {
@@ -222,7 +226,7 @@ onMounted(async () => {
     addClickListener(handleClick);
 })
 onBeforeUnmount(() => {
-  removeClickListener(handleClick);
+    removeClickListener(handleClick);
 });
 
 

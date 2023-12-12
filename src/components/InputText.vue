@@ -1,8 +1,8 @@
 <template>
-  <div :class="type == 'text' ? 'form-group' : 'form-check'">
-    <label v-if="type=='text'" class="control-label" :for="id">{{ title }}</label>
+  <div :class="type == 'text' || type == 'number' ? 'form-group' : 'form-check'">
+    <label v-if="type=='text' || type == 'number'" class="control-label" :for="id">{{ title }}</label>
     <input
-    :class="type == 'text' ? 'form-control' : 'form-check-input'"
+    :class="type == 'text' || type == 'number' ? 'form-control' : 'form-check-input'"
       :placeholder="placeholder"
       :value="modelValue"
       @input="$emit('update:modelValue', type == 'text' ? ($event.target as HTMLInputElement).value :($event.target as HTMLInputElement).checked )"
