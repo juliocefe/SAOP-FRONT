@@ -5,8 +5,8 @@
         <div class="row app-options-bar">
             <div class="d-flex align-items-center buttons-component align-items-center">
                 <div class="col-md-8">
-                    <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" @onCancel="handleCancel"
-                        :show-cancel="true" />
+                    <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" :show-custom-button="true"
+                        custom-label="Regresar" @onCustom="handleCancel" />
                 </div>
             </div>
         </div>
