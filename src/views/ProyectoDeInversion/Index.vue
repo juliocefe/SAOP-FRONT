@@ -26,7 +26,7 @@
                             <div class="col-md-8">
                                 <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" />
                             </div>
-                            <AccionesCartera @onCalendar="handleCalendar" />
+                            <AccionesCartera @onCalendar="handleCalendar"  @onHistory="handleHistory" @onContentAdmin="handleContentAdmin"/>
                         </div>
                     </div>
                     <div class="d-flex px-2">
@@ -98,6 +98,12 @@ const showView = ref(false)
 const handleCreate = () => router.push({ name: 'crear-proyecto_de_inversion' })
 const handleCalendar = () => {
     router.push({ name: 'calendario-anual-proyecto_de_inversion' })
+}
+const handleHistory = () => {
+    router.push({ name: 'historico-anual-proyecto_de_inversion' })
+}
+const handleContentAdmin = () => {
+    router.push({ name: 'administrador-contenido-proyecto_de_inversion' })
 }
 const handleEdit = (data: any) => router.push({ name: 'editar-proyecto_de_inversion', params: { id: data } })
 const handleDetail = (data: any) => router.push({ name: 'ver-proyecto_de_inversion', params: { id: data } })

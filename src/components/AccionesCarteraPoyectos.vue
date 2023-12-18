@@ -1,13 +1,13 @@
 <template>
     <div class="display-4 d-flex icon-actions py-2 col-md-4 d-flex justify-content-end">
         <i class="pl-5 ml-2 bi bi-calendar-date" @click="emit('onCalendar')"></i>
-        <i class="pl-5 ml-2 bi bi-bar-chart-steps"></i>
-        <i class="pl-5 ml-2 bi bi-file-text-fill"></i>
+        <i class="pl-5 ml-2 bi bi-bar-chart-steps" @click="emit('onHistory')"></i>
+        <i class="pl-5 ml-2 bi bi-file-text-fill" @click="emit('onContentAdmin')"></i>
         <i class="pl-5 ml-2 bi bi-folder-symlink-fill"></i>
     </div>
 </template>
 <script setup lang="ts">
-const emit = defineEmits(['onCalendar', 'onSteps', 'onFile', 'onFolder']);
+const emit = defineEmits(['onCalendar', 'onHistory', 'onContentAdmin', 'onFolder']);
 </script>
 <style lang="scss" scoped>
 .icon-actions i {

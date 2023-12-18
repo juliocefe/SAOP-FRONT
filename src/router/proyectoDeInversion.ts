@@ -39,4 +39,14 @@ export const proyectoDeInversiones = [
         name: 'editar-calendario-anual-proyecto_de_inversion',
         component: () => import('@/views/ProyectoDeInversion/AnnualCalendar/Create.vue')
     },
+    {
+        path: 'historico-anual',
+        name: 'historico-anual-proyecto_de_inversion',
+        component: () => import('@/views/ProyectoDeInversion/Historico/IndexHistorico.vue')
+    },
+    {
+        path: 'administrador-contenido',
+        name: 'administrador-contenido-proyecto_de_inversion',
+        component: () => import('@/views/ProyectoDeInversion/AdministradorContenido/IndexAdministradorContenido.vue')
+    },
 ]
