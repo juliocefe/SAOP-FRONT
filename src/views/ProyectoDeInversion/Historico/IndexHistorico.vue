@@ -5,129 +5,173 @@
         <div class="row app-options-bar">
             <div class="d-flex align-items-center buttons-component align-items-center">
                 <div class="col-md-8">
-                    <ButtonBarComponent @onCreate="handleCreate" :show-subactions="false" :show-custom-button="true"
-                        custom-label="Regresar" @onCustom="handleCancel" />
+                    <span>
+                        <button title="Cancelar" class="btn btn-secondary mr-4" type="button" @click="handleCancel()">
+                            <span><b>Cancelar</b></span>
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>
-        <form class="form-inline justify-content-center" role="form">
-            <div class="form-check form-check-inline col-md-2 col-sm-6">
-                <label class="form-check-label">
-                    <input type="radio" name="radio-01" value="1" class="form-check-input" v-model="selectedRadiusInput" />
-                    RECURSOS
-                </label>
+        <!-- Filtros de búsqueda -->
+        <div class="row align-items-end">
+            <div class="col-md-4 align-items-center">
+                <div><span class="font-weight-bold pr-2">No. Solicitud:</span></div>
+                <div><input class="form-control w-auto" placeholder="Buscar..." type="text" v-model="filtros.solicitud" />
+                </div>
             </div>
-            <div class="form-check form-check-inline col-md-2 col-sm-6">
-                <label class="form-check-label">
-                    <input type="radio" name="radio-01" value="2" class="form-check-input" v-model="selectedRadiusInput" />
-                    METAS
-                </label>
+
+            <div class="col-md-4 align-items-center">
+                <div><span class="font-weight-bold pr-2">Cve Cartera:</span></div>
+                <div><input class="form-control w-auto" placeholder="Buscar..." type="text" v-model="filtros.cartera" />
+                </div>
             </div>
-            <div class="form-check form-check-inline col-md-3 col-sm-6">
-                <label class="form-check-label">
-                    <input type="radio" name="radio-01" value="3" class="form-check-input" v-model="selectedRadiusInput" />
-                    COSTOS ANUALES
-                </label>
+
+            <div class="col-md-3  align-items-end">
+                <button title="Aplicar" class="btn btn-primary active mr-4" type="button" @click="aplicarFiltros">
+                    <span><b>Aplicar</b></span>
+                </button>
+                <button title="Limpiar campos" class="dt-button btn btn-secondary" type="button" @click="limpiarFiltros">
+                    <i class="bi bi-eraser-fill"></i>
+                </button>
             </div>
-            <div class="form-check form-check-inline col-md-3 col-sm-6">
-                <label class="form-check-label">
-                    <input type="radio" name="radio-01" value="4" class="form-check-input" v-model="selectedRadiusInput" />
-                    BENEFICIOS ANUALES
-                </label>
-            </div>
-        </form>
+        </div>
         <div class="container">
-            <DataTableComponent v-if="selectedRadiusInput === '1'" rowId="id" :columns="dynamicColumns"
-                :data="dataTableDataRecursos" :pagination="paginate" :showDelete="true" :showEdit="true"
-                @onEdit="handleEdit" />
-            <DataTableComponent v-if="selectedRadiusInput === '2'" rowId="id" :columns="dynamicColumns"
-                :data="dataTableDataMeta" :pagination="paginate" :showDelete="true" :showEdit="true" @onEdit="handleEdit" />
-            <DataTableComponent v-if="selectedRadiusInput === '3'" rowId="id" :columns="dynamicColumns"
-                :data="dataTableDataCostoAnual" :pagination="paginate" :showDelete="true" :showEdit="true"
-                @onEdit="handleEdit" />
-            <DataTableComponent v-if="selectedRadiusInput === '4'" rowId="id" :columns="dynamicColumns"
-                :data="dataTableDataBeneficioAnual" :pagination="paginate" :showDelete="true" :showEdit="true"
-                @onEdit="handleEdit" />
+            <DataTableComponent rowId="id" :columns="dynamicColumns" :data="dataTableDataHistorico" :pagination="paginate"
+                :hideActions="true" />
         </div>
     </div>
 </template>
-  
 
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount, watch } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
-import DataTableComponent from '@/components/DataTableComponent.vue'
-import ButtonBarComponent from '@/components/ButtonBarComponent.vue'
-
-
+import DataTableComponent from "@/components/DataTableComponent.vue";
 
 //const route = useRoute();
 const router = useRouter();
 
 const viewName = "Historico Anual Del Proyecto";
 
-const selectedRadiusInput = ref("1")
-const paginate = { "page_size": 10, "page": 1, "total": 1, "total_pages": 1, "previous_page": 1, "next_page": 1 }
 
-const handleCancel = () => router.push({ name: "listar-proyecto_de_inversion" });
-const handleCreate = () => {
-    router.push({
-        name: "crear-calendario-anual-proyecto_de_inversion",
-        query: { selectedRadius: selectedRadiusInput.value }
-    });
+const filtros = ref({
+    solicitud: '',
+    cartera: '',
+});
+
+const paginate = {
+    page_size: 10,
+    page: 1,
+    total: 1,
+    total_pages: 1,
+    previous_page: 1,
+    next_page: 1,
 };
-const handleEdit = (data: any) => {
-    router.push({
-        name: 'editar-calendario-anual-proyecto_de_inversion',
-        params: { id: data },
-        query: { selectedRadius: selectedRadiusInput.value }
-    })
-}
+
+const handleCancel = () =>
+    router.push({ name: "listar-proyecto_de_inversion" });
+
+
+const aplicarFiltros = () => {
+    // Lógica para aplicar los filtros
+    console.log('Aplicar filtros con valores:', filtros.value);
+};
+
+const limpiarFiltros = () => {
+    // Lógica para limpiar los filtros
+    console.log('Limpiar filtros');
+    filtros.value.solicitud = '';
+    filtros.value.cartera = '';
+};
 
 const dynamicColumns = ref([
-    { title: "No. Solicitud", data: "id" },
-    { title: "Año Base", data: "year" },
-    { title: "Origen Recursos", data: "origin" },
-    { title: "RECURSOS", data: "recurso" },
+  { title: "No. Solicitud", data: "id" },
+  { title: "Consecutivo", data: "consecutivo" },
+  { title: "Cve Cartera", data: "cveCartera" },
+  { title: "Nombre del Proyecto", data: "nombreProyecto" },
+  { title: "Tasa Descuentos", data: "tasaDescuentos" },
+  { title: "Comentarios", data: "comentarios" },
+  { title: "Fecha Inicial", data: "fechaInicial" },
+  { title: "Fecha Final", data: "fechaFinal" },
+  { title: "Años Anteriores", data: "aniosAnteriores" },
+  { title: "Años Posteriores", data: "aniosPosteriores" },
+  { title: "Fase", data: "fase" },
+  { title: "Entidad", data: "entidad" },
+  { title: "Unidad Responsable", data: "unidadResponsable" },
+  { title: "Factibilidad de la Obra", data: "factibilidadObra" },
+  { title: "Clave de Compromiso", data: "claveCompromiso" },
+  { title: "Requerimiento de Hacienda", data: "requerimientoHacienda" },
+  { title: "Aforo", data: "aforo" },
+  { title: "Situación Actual", data: "situacionActual" },
+  { title: "Autorización y Permisos", data: "autorizacionPermisos" },
+  { title: "Alcance Proyecto", data: "alcanceProyecto" },
+  { title: "Aportación Estatal", data: "aportacionEstatal" },
+  { title: "Ficha Técnica", data: "fichaTecnica" },
+  { title: "Estudio Costo-Beneficio", data: "estudioCostoBeneficio" },
+  { title: "Proyecto Ejecutivo", data: "proyectoEjecutivo" },
+  { title: "Tomo", data: "tomo" },
+  { title: "Fecha Tomo", data: "fechaTomo" },
 ]);
 
-const dataTableDataRecursos = ref([
-    { id: 1, year: '20/03/2020', origin: 'PRESUPUESTO DE EGRESOS', recurso: '1234124' },
-    { id: 2, year: '20/03/2022', origin: 'PRESUPUESTO DE EGRESOS', recurso: '5342345' },
-]);
-const dataTableDataMeta = ref([
-    { id: 1, year: '20/03/2020', origin: 'PRESUPUESTO DE EGRESOS', meta: '048219' },
-    { id: 2, year: '20/03/2022', origin: 'PRESUPUESTO DE EGRESOS', meta: '978543' },
-]);
-const dataTableDataCostoAnual = ref([
-    { id: 1, year: '20/03/2020', origin: 'PRESUPUESTO DE EGRESOS', costo_anual: '3248753' },
-    { id: 2, year: '20/03/2022', origin: 'PRESUPUESTO DE EGRESOS', costo_anual: '5432345' },
-]);
-const dataTableDataBeneficioAnual = ref([
-    { id: 1, year: '20/03/2020', origin: 'PRESUPUESTO DE EGRESOS', beneficio_anual: '234523' },
-    { id: 2, year: '20/03/2022', origin: 'PRESUPUESTO DE EGRESOS', beneficio_anual: '356346' },
+const dataTableDataHistorico = ref([
+  {
+    id: 1,
+    consecutivo: "001",
+    cveCartera: "CC001",
+    nombreProyecto: "Proyecto A",
+    tasaDescuentos: "10%",
+    comentarios: "Comentario 1",
+    fechaInicial: "01/01/2023",
+    fechaFinal: "31/12/2023",
+    aniosAnteriores: 2,
+    aniosPosteriores: 3,
+    fase: "Fase 1",
+    entidad: "Entidad 1",
+    unidadResponsable: "Unidad 1",
+    factibilidadObra: "Factible",
+    claveCompromiso: "CC123",
+    requerimientoHacienda: "RH456",
+    aforo: "Aforo 1",
+    situacionActual: "En progreso",
+    autorizacionPermisos: "Autorizado",
+    alcanceProyecto: "Completo",
+    aportacionEstatal: "25%",
+    fichaTecnica: "FT001",
+    estudioCostoBeneficio: "Positivo",
+    proyectoEjecutivo: "PE001",
+    tomo: "Tomo 1",
+    fechaTomo: "15/05/2023",
+  },
+  {
+    id: 2,
+    consecutivo: "002",
+    cveCartera: "CC002",
+    nombreProyecto: "Proyecto B",
+    tasaDescuentos: "15%",
+    comentarios: "Comentario 2",
+    fechaInicial: "01/04/2023",
+    fechaFinal: "30/11/2023",
+    aniosAnteriores: 1,
+    aniosPosteriores: 4,
+    fase: "Fase 2",
+    entidad: "Entidad 2",
+    unidadResponsable: "Unidad 2",
+    factibilidadObra: "No factible",
+    claveCompromiso: "CC456",
+    requerimientoHacienda: "RH789",
+    aforo: "Aforo 2",
+    situacionActual: "Pendiente",
+    autorizacionPermisos: "En revisión",
+    alcanceProyecto: "Parcial",
+    aportacionEstatal: "30%",
+    fichaTecnica: "FT002",
+    estudioCostoBeneficio: "Negativo",
+    proyectoEjecutivo: "PE002",
+    tomo: "Tomo 2",
+    fechaTomo: "20/06/2023",
+  },
 ]);
 
-watch(selectedRadiusInput, (newValue) => {
-    switch (newValue) {
-        case "1":
-            dynamicColumns.value[3].title = "RECURSOS";
-            dynamicColumns.value[3].data = "recurso";
-            break;
-        case "2":
-            dynamicColumns.value[3].title = "META";
-            dynamicColumns.value[3].data = "meta";
-            break;
-        case "3":
-            dynamicColumns.value[3].title = "COSTO ANUAL";
-            dynamicColumns.value[3].data = "costo_anual";
-            break;
-        case "4":
-            dynamicColumns.value[3].title = "BENEFICIO ANUAL";
-            dynamicColumns.value[3].data = "beneficio_anual";
-            break;
-    }
-});
 onMounted(async () => { });
 onBeforeUnmount(() => { });
 </script>
