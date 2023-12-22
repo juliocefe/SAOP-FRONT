@@ -16,7 +16,8 @@
             </div>
             <div>
                 <!-- Usar el modal con título personalizado -->
-                <Modal :title="modalTitle" >
+                <Modal :title="modalTitle" :saveButtonTitle="saveButtonTitle" :openButtonTittle="openButtonTittle"
+                    @onSaveButton="SaveData">
                     <p>Contenido del modal...</p>
                 </Modal>
             </div>
@@ -40,6 +41,11 @@ const viewName = "Administrador de Contenido";
 const paginate = { "page_size": 10, "page": 1, "total": 1, "total_pages": 1, "previous_page": 1, "next_page": 1 }
 
 const modalTitle = 'My Modal Title';
+const saveButtonTitle = 'Guardar';
+const openButtonTittle = 'Agregar';
+const SaveData = () => {
+    console.log('Se Cierra el modal con los datos guardados');
+};
 
 const handleCancel = () => router.push({ name: "listar-proyecto_de_inversion" });
 

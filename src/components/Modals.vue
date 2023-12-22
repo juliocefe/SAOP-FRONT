@@ -7,7 +7,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="gridSystemModalLabel">{{ title }}</h4>
-                        <button type="button" class="close" aria-label="Close" @click="closeModal">
+                        <button type="button" class="close" aria-label="Close" @click="toggleModal(false)">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -15,36 +15,30 @@
                         <slot></slot>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" @click="closeModal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="saveChanges">Save changes</button>
+                        <button type="button" class="btn btn-default" @click="toggleModal(false)">Close</button>
+                        <button type="button" class="btn btn-primary" @click="toggleModal(false), emit('onSaveButton')">{{
+                            saveButtonTitle }}</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <button type="button" class="btn btn-primary" @click="openModal" v-if="!isModalOpen">Open Modal</button>
+        <button type="button" class="btn btn-primary" @click="toggleModal(true)" v-if="!isModalOpen">{{ openButtonTittle
+        }}</button>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 
-const { title } = defineProps(['title']);
+const { title, saveButtonTitle, openButtonTittle } = defineProps(['title', 'saveButtonTitle', 'openButtonTittle']);
+const emit = defineEmits(['onSaveButton']);
 const isModalOpen = ref(false);
 
-const openModal = () => {
-    isModalOpen.value = true;
+const toggleModal = (open: boolean) => {
+    isModalOpen.value = open;
 };
 
-const closeModal = () => {
-    isModalOpen.value = false;
-};
-
-const saveChanges = () => {
-    isModalOpen.value = false;
-};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
