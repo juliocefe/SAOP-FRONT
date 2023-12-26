@@ -1,67 +1,149 @@
 <template>
-    <div>
-        <h4 class="view-name">{{ viewName }}</h4>
-        <hr class="red" />
-        <div class="container">
-            <div class="row app-options-bar">
-                <div class="d-flex align-items-center buttons-component align-items-center">
-                    <div class="col-md-8">
-                        <span>
-                            <button title="Cancelar" class="btn btn-secondary mr-4" type="button" @click="handleCancel">
-                                <span><b>Cancelar</b></span>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <!-- Usar el modal con título personalizado -->
-                <Modal :title="modalTitle" :saveButtonTitle="saveButtonTitle" :openButtonTittle="openButtonTittle"
-                    @onSaveButton="SaveData">
-                    <p>Contenido del modal...</p>
-                </Modal>
-            </div>
+  <div>
+    <h4 class="view-name">{{ viewName }}</h4>
+    <hr class="red" />
+    <div class="container">
+      <div class="row app-options-bar">
+        <div
+          class="d-flex btn-group align-items-center buttons-component align-items-center"
+        >
+          <div>
+            <span>
+              <button
+                title="Cancelar"
+                class="btn btn-secondary"
+                type="button"
+                @click="handleCancel"
+              >
+                <span><b>Cancelar</b></span>
+              </button>
+            </span>
+          </div>
+          <div>
+            <Modal
+              :title="modalTitle"
+              :saveButtonTitle="saveButtonTitle"
+              :openButtonTittle="openButtonTittle"
+              :large-modal="true"
+              @onSaveButton="SaveData"
+              class="col-md-6"
+            >
+              <div class="col-sm-12">
+                <label for="">Documento</label>
+                <input
+                  data-documento
+                  type="file"
+                  id="precidencial-prioridad"
+                  placeholder=""
+                  autocomplete="off"
+                  ref="fileInput"
+                  accept="application/pdf, image/*"
+                />
+              </div>
+              <TextAraComponent
+                :title="'Descripción:'"
+                :placeholder="'Ingresa una descripción...'"
+                :name="'situacion_actual'"
+                :id="'situacion_actual'"
+                class="col-sm-12"
+                v-model="data.descripcion"
+              />
+            </Modal>
+          </div>
         </div>
-        <div class="container">
-            <DataTableComponent rowId="id" :columns="dynamicColumns" :data="dataTableDataRecursos" :pagination="paginate" />
-        </div>
+      </div>
     </div>
+    <div class="container">
+      <DataTableComponent
+        rowId="id"
+        :columns="columnsTable"
+        :data="dataTable"
+        :pagination="paginate"
+      />
+    </div>
+  </div>
 </template>
-  
+
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import DataTableComponent from '@/components/DataTableComponent.vue'
-import Modal from '@/components/Modals.vue'
+import DataTableComponent from "@/components/DataTableComponent.vue";
+import Modal from "@/components/Modals.vue";
+/* import InputText from "@/components/InputText.vue"; */
+import TextAraComponent from "@/components/TextAraComponent.vue";
 
 const router = useRouter();
 
 const viewName = "Administrador de Contenido";
 
-const paginate = { "page_size": 10, "page": 1, "total": 1, "total_pages": 1, "previous_page": 1, "next_page": 1 }
-
-const modalTitle = 'My Modal Title';
-const saveButtonTitle = 'Guardar';
-const openButtonTittle = 'Agregar';
-const SaveData = () => {
-    console.log('Se Cierra el modal con los datos guardados');
+const paginate = {
+  page_size: 10,
+  page: 1,
+  total: 1,
+  total_pages: 1,
+  previous_page: 1,
+  next_page: 1,
 };
 
-const handleCancel = () => router.push({ name: "listar-proyecto_de_inversion" });
+const modalTitle = "My Modal Title";
+const saveButtonTitle = "Guardar";
+const openButtonTittle = "Agregar";
+const SaveData = () => {
+  console.log("Se Cierra el modal con los datos guardados: ", data.value);
+};
 
-const dynamicColumns = ref([
-    { title: "No. Solicitud", data: "id" },
-    { title: "Año Base", data: "year" },
-    { title: "Origen Recursos", data: "origin" },
-    { title: "RECURSOS", data: "recurso" },
+const handleCancel = () =>
+  router.push({ name: "listar-proyecto_de_inversion" });
+
+interface DataInterface {
+  document: File | null;
+  descripcion: string;
+}
+
+const data = ref<DataInterface>({
+  document: null,
+  descripcion: "",
+});
+
+const columnsTable = ref([
+  { title: "Documentación", data: "documentacion" },
+  { title: "Consecutivo", data: "consecutivo" },
+  { title: "Módulo", data: "modulo" },
+  { title: "Proceso", data: "proceso" },
+  { title: "Nombre", data: "nombre" },
+  { title: "Ruta", data: "ruta" },
+  { title: "Extensión", data: "extension" },
+  { title: "Descripción", data: "descripcion" },
+  { title: "Tipo de Documento", data: "tipo_documento" },
+  { title: "Nombre zip", data: "nombre_zip" },
 ]);
 
-const dataTableDataRecursos = ref([
-    { id: 1, year: '20/03/2020', origin: 'PRESUPUESTO DE EGRESOS', recurso: '1234124' },
-    { id: 2, year: '20/03/2022', origin: 'PRESUPUESTO DE EGRESOS', recurso: '5342345' },
+const dataTable = ref([
+  {
+    id: 1,
+    documentacion: "Document1",
+    consecutivo: "11",
+    modulo: "Module1",
+    proceso: "Process1",
+    nombre: "Name1",
+    ruta: "/path/to/file1",
+    extension: ".pdf",
+    descripcion: "Description1",
+    tipo_documento: "PDF",
+    nombre_zip: "Zip1",
+  },
+  {
+    id: 2,
+    documentacion: "Document2",
+    consecutivo: "12",
+    modulo: "Module2",
+    proceso: "Process2",
+    nombre: "Name2",
+    ruta: "/path/to/file2",
+    extension: ".jpg",
+    descripcion: "Description2",
+    tipo_documento: "Image",
+    nombre_zip: "Zip2",
+  },
 ]);
-
-onMounted(async () => { });
-onBeforeUnmount(() => { });
 </script>
-  
