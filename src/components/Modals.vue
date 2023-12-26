@@ -12,8 +12,8 @@
     >
       <div :class="['modal-dialog', sizeModal]" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title" id="gridSystemModalLabel">
+          <div class="custom-modal-header">
+            <h4 class="custom-modal-title">
               {{ props.title }}
             </h4>
             <button
@@ -31,10 +31,10 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-default"
+              class="btn btn-secondary"
               @click="toggleModal(false)"
             >
-              Close
+              Cerrar
             </button>
             <button
               type="button"
@@ -65,15 +65,15 @@ import { ref } from "vue";
 const props = defineProps({
   title: {
     type: String,
-    default: "My Modal Title",
+    default: "",
   },
   saveButtonTitle: {
     type: String,
-    default: "Save",
+    default: "Guardar",
   },
   openButtonTittle: {
     type: String,
-    default: "Open",
+    default: "Abrir",
   },
   largeModal: {
     type: Boolean,
@@ -90,4 +90,28 @@ const toggleModal = (open: boolean) => {
 const sizeModal = props.largeModal ? "modal-lg" : "";
 </script>
 
-<style scoped></style>
+<style scoped>
+.custom-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #545454;
+  background-color: #272829;
+}
+
+.custom-modal-title {
+  text-align: center;
+  color: white;
+  flex-grow: 1;
+}
+
+.custom-modal-header .close {
+  color: white;
+  cursor: pointer;
+}
+
+.custom-modal-header .close:hover {
+  color: #ccc;
+}
+</style>

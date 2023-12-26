@@ -38,6 +38,7 @@
                   autocomplete="off"
                   ref="fileInput"
                   accept="application/pdf, image/*"
+                  @change="handleFileUpload"
                 />
               </div>
               <TextAraComponent
@@ -59,6 +60,8 @@
         :columns="columnsTable"
         :data="dataTable"
         :pagination="paginate"
+        :show-delete="true"
+        :show-edit="true"
       />
     </div>
   </div>
@@ -85,9 +88,15 @@ const paginate = {
   next_page: 1,
 };
 
-const modalTitle = "My Modal Title";
+interface DataInterface {
+  document: File | null;
+  descripcion: string;
+}
+
+const modalTitle = "Subir Archivo";
 const saveButtonTitle = "Guardar";
 const openButtonTittle = "Agregar";
+
 const SaveData = () => {
   console.log("Se Cierra el modal con los datos guardados: ", data.value);
 };
@@ -95,10 +104,12 @@ const SaveData = () => {
 const handleCancel = () =>
   router.push({ name: "listar-proyecto_de_inversion" });
 
-interface DataInterface {
-  document: File | null;
-  descripcion: string;
-}
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files.length) {
+    data.value.document = target.files[0];
+  }
+};
 
 const data = ref<DataInterface>({
   document: null,
