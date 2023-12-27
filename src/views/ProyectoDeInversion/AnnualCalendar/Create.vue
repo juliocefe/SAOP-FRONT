@@ -5,19 +5,49 @@
     <form role="form" @submit.prevent="saveForm">
       <div class="row justify-content-center">
         <div class="col-md-4 col-sm-12">
-          <InputText title="No. Solicitud:" placeholder="No. Solicitud" name="clave" id="clave" />
+          <InputText
+            title="No. Solicitud:"
+            placeholder="No. Solicitud"
+            name="clave"
+            id="clave"
+          />
         </div>
         <div class="col-md-4 col-sm-12">
-          <InputText title="Clave del Proyecto:" placeholder="Clave" name="descripcion" id="descripcion" />
+          <InputText
+            title="Clave del Proyecto:"
+            placeholder="Clave"
+            name="descripcion"
+            id="descripcion"
+          />
         </div>
       </div>
       <div class="row justify-content-center">
         <div class="col-md-6 col-sm-12">
-          <SelectComponent title="Año Base:" placeholder="Seleccione..." name="anio_base" id="anio_base" class="mb-5"
-            :options="YEARS" :optionText="'value'" />
-          <SelectComponent title="Origen Recursos:" placeholder="Seleccione..." name="anio_base" id="anio_base"
-            class="mb-5" :options="YEARS" :optionText="'value'" />
-          <InputText :title="titleRadius" placeholder="1.000" name="descripcion" id="descripcion" type="number" />
+          <SelectComponent
+            title="Año Base:"
+            placeholder="Seleccione..."
+            name="anio_base"
+            id="anio_base"
+            class="mb-5"
+            :options="YEARS"
+            :optionText="'value'"
+          />
+          <SelectComponent
+            title="Origen Recursos:"
+            placeholder="Seleccione..."
+            name="anio_base"
+            id="anio_base"
+            class="mb-5"
+            :options="YEARS"
+            :optionText="'value'"
+          />
+          <InputText
+            :title="titleRadius"
+            placeholder="1.000"
+            name="descripcion"
+            id="descripcion"
+            type="number"
+          />
         </div>
       </div>
       <div class="modal-footer mt-3">
@@ -61,7 +91,6 @@ switch (route.query.selectedRadius) {
 }
 /* const readOnlyView = ref(false) */
 
-
 /* const data = ref<ProyectoDeInversion>({
   clave: "",
 }); */
@@ -84,17 +113,15 @@ async function saveForm() {
       /*  await createFromData(formData);
        router.push({ name: "listar-proyecto_de_inversion" }); */
     }
-  } catch (error) { }
-
+  } catch (error) {}
 }
 
 const titulo = ref("Crear Calendario Anual");
 
 onMounted(() => {
-  console.log(route.query.selectedRadius);
-  itemId.value = route.params.id ? route.params.id.toString() : ""
+  itemId.value = route.params.id ? route.params.id.toString() : "";
   if (itemId.value) {
-    titulo.value =  "Editar Calendario Anual"
+    titulo.value = "Editar Calendario Anual";
   }
   /*  const currentYear = new Date().getFullYear();
    data.value.ejercicio_presupuestal = currentYear.toString();
