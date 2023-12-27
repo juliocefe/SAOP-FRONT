@@ -93,9 +93,9 @@ interface DataInterface {
   descripcion: string;
 }
 
-const modalTitle = "Subir Archivo";
-const saveButtonTitle = "Guardar";
-const openButtonTittle = "Agregar";
+const modalTitle: string = "Subir Archivo";
+const saveButtonTitle: string = "Guardar";
+const openButtonTittle: string = "Agregar";
 
 const SaveData = () => {
   console.log("Se Cierra el modal con los datos guardados: ", data.value);
