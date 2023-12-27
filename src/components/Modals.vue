@@ -47,10 +47,9 @@
         </div>
       </div>
     </div>
-
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-primary active"
       @click="toggleModal(true)"
       v-if="!isModalOpen"
     >
