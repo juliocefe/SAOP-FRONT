@@ -38,7 +38,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary active"
               @click="toggleModal(false), emit('onSaveButton')"
             >
               {{ props.saveButtonTitle }}

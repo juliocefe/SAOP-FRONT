@@ -94,7 +94,7 @@ const filtros = ref({
 const paginate = {
   page_size: 10,
   page: 1,
-  total: 1,
+  total: 2,
   total_pages: 1,
   previous_page: 1,
   next_page: 1,
