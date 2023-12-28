@@ -82,7 +82,7 @@ const viewName = "Administrador de Contenido";
 const paginate = {
   page_size: 10,
   page: 1,
-  total: 1,
+  total: 2,
   total_pages: 1,
   previous_page: 1,
   next_page: 1,
@@ -93,9 +93,9 @@ interface DataInterface {
   descripcion: string;
 }
 
-const modalTitle = "Subir Archivo";
-const saveButtonTitle = "Guardar";
-const openButtonTittle = "Agregar";
+const modalTitle: string = "Subir Archivo";
+const saveButtonTitle: string = "Guardar";
+const openButtonTittle: string = "Agregar";
 
 const SaveData = () => {
   console.log("Se Cierra el modal con los datos guardados: ", data.value);
