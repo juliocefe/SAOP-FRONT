@@ -1,123 +1,193 @@
 <template>
-    <nav fixed="top" class="navbar navbar-expand-md navbar-dark bg-light sub-navbar navbar-fixed-top">
-        <div class="options-bar container">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <router-link class="nav-link" :to="{ name: 'table' }">
-                        Inicio
-                    </router-link>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" @click="toggleScheduleModuleMenu" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        Módulo de programación
-                    </a>
-                    <ul class="dropdown-menu catalogue-dropdown" v-show="showScheduleModuleMenu">
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-proyecto_de_inversion' }"
-                                @click="toggleScheduleModuleMenu">
-                                Cartera de inversión
-                            </router-link>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" @click="toggleCatalogueMenu" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        Catálogos
-                    </a>
-                    <ul class="dropdown-menu catalogue-dropdown" v-show="showCatalogueMenu">
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-tipo-obra' }"
-                                @click="toggleCatalogueMenu">
-                                Tipo de obras
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-prioridades' }"
-                                @click="toggleCatalogueMenu">
-                                Prioridades
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-niveles-area' }"
-                                @click="toggleCatalogueMenu">
-                                Niveles por area
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_tipoProyecto' }"
-                                @click="toggleCatalogueMenu">
-                                Tipo de proyectos
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_tipoDocumento' }"
-                                @click="toggleCatalogueMenu">
-                                Tipo de documentos
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-estatus-proyecto' }"
-                                @click="toggleCatalogueMenu">
-                                Estatus de proyecto
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-factibilidad-obra' }"
-                                @click="toggleCatalogueMenu">
-                                Factibilidad de obra
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_Fase' }"
-                                @click="toggleCatalogueMenu">
-                                Fase 
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_Pais' }"
-                                @click="toggleCatalogueMenu">
-                                País
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-entidad-federativa' }"
-                                @click="toggleCatalogueMenu">
-                                Entidad federativa
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link class="dropdown-item" :to="{ name: 'listar-cat_unidad_responsable' }"
-                                @click="toggleCatalogueMenu">
-                                Unidad Responsable
-                            </router-link>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" @click="toggleAccountMenu" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        Cuenta
-                    </a>
-                    <ul class="dropdown-menu account-dropdown" v-show="showAccountMenu">
-                        <li>
-                            <a class="dropdown-item btn" @click="handleLogout">
-                                Cerrar Sesión
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
+  <nav
+    fixed="top"
+    class="navbar navbar-expand-md navbar-dark bg-light sub-navbar navbar-fixed-top"
+  >
+    <div class="options-bar container">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{ name: 'table' }">
+            Inicio
+          </router-link>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            @click="toggleScheduleModuleMenu"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Módulo de programación
+          </a>
+          <ul
+            class="dropdown-menu catalogue-dropdown"
+            v-show="showScheduleModuleMenu"
+          >
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-proyecto_de_inversion' }"
+                @click="toggleScheduleModuleMenu"
+              >
+                Cartera de inversión
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'carga-masiva' }"
+                @click="toggleScheduleModuleMenu"
+              >
+                Carga Mavisa
+              </router-link>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            @click="toggleCatalogueMenu"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Catálogos
+          </a>
+          <ul
+            class="dropdown-menu catalogue-dropdown"
+            v-show="showCatalogueMenu"
+          >
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-tipo-obra' }"
+                @click="toggleCatalogueMenu"
+              >
+                Tipo de obras
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-prioridades' }"
+                @click="toggleCatalogueMenu"
+              >
+                Prioridades
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-niveles-area' }"
+                @click="toggleCatalogueMenu"
+              >
+                Niveles por area
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-cat_tipoProyecto' }"
+                @click="toggleCatalogueMenu"
+              >
+                Tipo de proyectos
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-cat_tipoDocumento' }"
+                @click="toggleCatalogueMenu"
+              >
+                Tipo de documentos
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-estatus-proyecto' }"
+                @click="toggleCatalogueMenu"
+              >
+                Estatus de proyecto
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-factibilidad-obra' }"
+                @click="toggleCatalogueMenu"
+              >
+                Factibilidad de obra
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-cat_Fase' }"
+                @click="toggleCatalogueMenu"
+              >
+                Fase
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-cat_Pais' }"
+                @click="toggleCatalogueMenu"
+              >
+                País
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-entidad-federativa' }"
+                @click="toggleCatalogueMenu"
+              >
+                Entidad federativa
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-cat_unidad_responsable' }"
+                @click="toggleCatalogueMenu"
+              >
+                Unidad Responsable
+              </router-link>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            @click="toggleAccountMenu"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Cuenta
+          </a>
+          <ul class="dropdown-menu account-dropdown" v-show="showAccountMenu">
+            <li>
+              <a class="dropdown-item btn" @click="handleLogout">
+                Cerrar Sesión
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
-import {
-    ref
-} from 'vue';
-import useAuthStore from '@/store/authenticationStore';
+import { ref } from "vue";
+import useAuthStore from "@/store/authenticationStore";
 
 const authStore = useAuthStore();
 const showAccountMenu = ref(false);
@@ -125,56 +195,59 @@ const showCatalogueMenu = ref(false);
 const showScheduleModuleMenu = ref(false);
 
 const toggleAccountMenu = () => {
-    showAccountMenu.value = !showAccountMenu.value
-}
+  showAccountMenu.value = !showAccountMenu.value;
+};
 
 const toggleCatalogueMenu = () => {
-    showCatalogueMenu.value = !showCatalogueMenu.value
-}
+  showCatalogueMenu.value = !showCatalogueMenu.value;
+};
 
 const toggleScheduleModuleMenu = () => {
-    showCatalogueMenu.value = !showCatalogueMenu.value
-}
+  showCatalogueMenu.value = !showCatalogueMenu.value;
+};
 
 const handleLogout = () => {
-    authStore.logout().then(response => {
-        if (response) {
-            window.location.href = '/saop/'
-        }
-    }).catch(error => {
-        console.error(error)
+  authStore
+    .logout()
+    .then((response) => {
+      if (response) {
+        window.location.href = "/saop/";
+      }
     })
-}
+    .catch((error) => {
+      console.error(error);
+    });
+};
 </script>
 
 <style lang="scss" scoped>
 nav {
-    justify-content: end;
+  justify-content: end;
 }
 
 .nav-link {
-    outline: none;
-    margin-left: 5px;
-    margin-right: 5px;
+  outline: none;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .exact-active-link {
-    color: #DDC9A3 !important;
-    font-weight: bold !important;
-    outline: none !important;
+  color: #ddc9a3 !important;
+  font-weight: bold !important;
+  outline: none !important;
 }
 
 .options-bar {
-    text-align: center;
+  text-align: center;
 
-    ul {
-        width: 100%;
-        justify-content: end;
-    }
+  ul {
+    width: 100%;
+    justify-content: end;
+  }
 }
 
 .catalogue-dropdown,
 .account-dropdown {
-    width: auto !important;
+  width: auto !important;
 }
 </style>
