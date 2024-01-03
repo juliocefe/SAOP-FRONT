@@ -8,9 +8,31 @@
     <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 col-xl-12">
       <hr class="red" />
     </div>
-
+    <!-- BOTONES -->
+    <Modal
+      title="Información de carga de archivo"
+      saveButtonTitle="Aceptar"
+      openButtonTittle="Info"
+      :large-modal="true"
+    >
+      <label>Reglas</label>
+      <small class="text-muted">
+        <div class="overflow-auto" style="max-height: 250px">
+          <ul
+            class="list-group list-group-item list-group-flush lh-sm overflow-auto"
+          >
+            <li class="lh-sm">
+              <b
+                >Las celdas del archivo excel deben contener exclusivamente
+                valores numéricos y no se permiten celdas vacías.</b
+              >
+            </li>
+          </ul>
+        </div>
+      </small>
+    </Modal>
     <div class="d-flex justify-content-center">
-      <!--DROPZONE-->
+      <!-- DROPZONE -->
       <DropZone
         v-if="!finishedProcess && !loadingData && !errorTypeDocument"
         class="disabled"
@@ -19,44 +41,25 @@
         :style="dropZoneStyle"
       />
     </div>
-    <!--BOTONES-->
-    <Modal title="Información de carga de archivo">
-      <template v-slot:body>
-        <div class="modal-body">
-          <label>Reglas</label>
-          <small class="text-muted">
-            <div class="overflow-auto" style="max-height: 250px">
-              <ul
-                class="list-group list-group-item list-group-flush lh-sm overflow-auto"
-              >
-                <li class="lh-sm">
-                  <b
-                    >Las celdas del archivo excel deben contener exclusivamente
-                    valores numéricos y no se permiten celdas vacías.</b
-                  >
-                </li>
-              </ul>
-            </div>
-          </small>
-        </div>
-      </template>
-    </Modal>
+    <!-- ALERTAS DE ERRORES -->
+    <AlertSection
+      :errorTypeDocument="errorTypeDocument"
+      :finishedProcess="finishedProcess"
+      :loadingData="loadingData"
+      :globalError="globalError"
+      :wrongData="wrongData"
+      @reset="reset"
+    ></AlertSection>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import DropZone from "@/components/DropZone.vue";
-//import AlertSection from "./AlertSection.vue";
-import router from "@/router";
 import Modal from "@/components/Modals.vue";
+import AlertSection from "./AlertSection.vue";
+import { scrollTop } from "@/utils/helpers/scrollHelper";
 
-/* Modal */
-const modalTitle: string = "Subir Archivo";
-const saveButtonTitle: string = "Guardar";
-const openButtonTittle: string = "Agregar";
-
-/* Upload file */
 const dropzoneFile = ref<any>("");
 const errorTypeDocument = ref<boolean>(false);
 const finishedProcess = ref(false);
@@ -64,87 +67,64 @@ const loadingData = ref(false);
 const globalError = ref(false);
 const wrongData = ref(false);
 
-/* onMounted(async () => {}); */
+const reset = () => {
+  dropzoneFile.value = "";
+  errorTypeDocument.value = false;
+  finishedProcess.value = false;
+  loadingData.value = false;
+  globalError.value = false;
+  wrongData.value = false;
+  scrollTop();
+};
 
-/* const dropZoneStyle = computed(() => {
+const dropZoneStyle = computed(() => {
   return {
-    pointerEvents: areOptionsSelected.value ? "auto" : "none",
-    opacity: areOptionsSelected.value ? "1" : "0.5",
+    pointerEvents:
+      finishedProcess.value || loadingData.value || errorTypeDocument.value
+        ? "none"
+        : "auto",
+    opacity:
+      finishedProcess.value || loadingData.value || errorTypeDocument.value
+        ? "0.5"
+        : "1",
   };
-}); */
+});
 
 const drop = async (e: any, type: string) => {
   dropzoneFile.value =
     type === "drop" ? e.dataTransfer.files[0] : e.target.files[0];
-
+  // Validación para asegurar que el archivo es un documento de hoja de cálculo
   const isSpreadsheet =
     dropzoneFile.value.type ===
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
   if (!isSpreadsheet) {
+    // Manejar el caso en el que el archivo no es una hoja de cálculo
     errorTypeDocument.value = true;
-    finishedProcess.value = false;
     return;
   }
 
+  console.log("File selected or dropped:", dropzoneFile.value);
+
+  // Simulación de la solicitud al backend
   errorTypeDocument.value = false;
   loadingData.value = true;
 
-  const formData = new FormData();
-  formData.append("file", dropzoneFile.value);
-  formData.append("anio", selectedOptions.value.anio);
+  console.log("Simulating backend request...");
 
-  const token = localStorage.getItem("sie-token");
+  // Simulación de la respuesta del backend
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulación de un retraso
+  console.log("Simulating backend response...");
 
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}carreteras_upload_excel/`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      }
-    );
+  // Simulación de la finalización del proceso
+  finishedProcess.value = true;
+  loadingData.value = false;
 
-    if (!response) return;
-
-    const json = await response.json();
-
-    if (response.status === 200 && json.error > 0 && json.errores_celdas) {
-      groupedErrorsRef.value = getErrors(json.errores_celdas);
-      selectedEstadoError.value = groupedErrorsRef.value[0]?.estado || "";
-      wrongData.value = true;
-
-      return;
-    } else if (response.status === 200 && json.error === 0 && json.data) {
-      jsonOriginal.value = json.data;
-      groupedDataRef.value = getData(json.data);
-      selectedEstadoData.value = groupedDataRef.value[0]?.estado || "";
-      typeDocument.value = json.documento_cargado;
-      return;
-    } else {
-      globalError.value = true;
-    }
-  } catch (error) {
-    globalError.value = true;
-  } finally {
-    finishedProcess.value = true;
-    loadingData.value = false;
-  }
+  console.log("Process finished!");
+  finishedProcess.value = false;
+  loadingData.value = false;
+  errorTypeDocument.value = false;
 };
-
-/* Grouped errors */
-const groupedErrorsRef = ref<
-  {
-    estado: string;
-    errors: {
-      red: any;
-      errors: { red: any; campo: string }[];
-    }[];
-  }[]
->([]);
 </script>
 
 <style scoped lang="scss">
