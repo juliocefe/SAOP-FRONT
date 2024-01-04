@@ -31,6 +31,81 @@
         </div>
       </small>
     </Modal>
+    <!-- DATOS CORRECTOS -->
+    <div
+      class="table-responsive"
+      v-if="
+        finishedProcess &&
+        !loadingData &&
+        !errorTypeDocument &&
+        !globalError &&
+        !wrongData
+      "
+    >
+      <table class="table">
+        <thead class="table-gob">
+          <tr>
+            <th v-for="col in columnsClasificacion" class="text-center">
+              {{ col.title }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="estadoData in datosDePrueba">
+            <template v-for="value in estadoData.data">
+              <tr>
+                <template v-for="col in columnsClasificacion">
+                  <td :class="getClass(value.clasificacion)">
+                    <template
+                      v-if="
+                        showInput(value.clasificacion, col.data) &&
+                        col.data !== 'total' &&
+                        col.data !== 'clasificacion'
+                      "
+                    >
+                      <input
+                        class="form-control"
+                        type="text"
+                        maxlength="15"
+                        v-model="value[col.data]"
+                        @copy="$event.preventDefault()"
+                        @paste="$event.preventDefault()"
+                        @cut="$event.preventDefault()"
+                        @focus="
+                          value[col.data] =
+                            value[col.data] === '-' ? '' : value[col.data]
+                        "
+                        @blur="
+                          () => {
+                            if (value[col.data] === '') {
+                              // Modifico aquí para asegurarme de que 'value[col.data]' sea una cadena
+                              value[col.data] = '-';
+                            } else if (value[col.data] === '-') {
+                              value[col.data] = '-';
+                            } else if (value[col.data] === '.') {
+                              value[col.data] = '0.00';
+                            } else {
+                              // Modifico aquí para convertir a cadena antes de parseFloat
+                              value[col.data] = parseFloat(
+                                String(value[col.data])
+                              ).toFixed(2);
+                            }
+                          }
+                        "
+                      />
+                    </template>
+                    <template v-else>
+                      {{ transformData(value, col.data) }}
+                    </template>
+                  </td>
+                </template>
+              </tr>
+            </template>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
     <div class="d-flex justify-content-center">
       <!-- DROPZONE -->
       <DropZone
@@ -40,6 +115,23 @@
         @change="drop($event, 'selected')"
         :style="dropZoneStyle"
       />
+    </div>
+    <!--BOTONES-->
+    <div
+      v-if="
+        finishedProcess &&
+        !loadingData &&
+        !errorTypeDocument &&
+        !globalError &&
+        !wrongData
+      "
+    >
+      <button class="btn btn-primary pull-right" @click="sendData">
+        Aprobar
+      </button>
+      <button class="btn btn-danger pull-right mr-2" @click="reset">
+        Restablecer
+      </button>
     </div>
     <!-- ALERTAS DE ERRORES -->
     <AlertSection
@@ -67,6 +159,149 @@ const loadingData = ref(false);
 const globalError = ref(false);
 const wrongData = ref(false);
 
+const columnsClasificacion = [
+  { data: "clasificacion", title: "Clasificación" },
+  { data: "carriles_mas4", title: "Más de 4 Carriles" },
+  { data: "carriles4", title: "4 Carriles" },
+  { data: "carriles2", title: "2 Carriles" },
+  { data: "revestidas", title: "Revestidas" },
+  { data: "terraceria", title: "Terracerias" },
+  { data: "total", title: "Total" },
+];
+
+interface DatosDePruebaItem {
+  clasificacion: string;
+  carriles_mas4: number;
+  carriles4: number;
+  carriles2: number;
+  revestidas: number;
+  terraceria: number;
+  total: number;
+  [key: string]: string | number;
+}
+
+interface DatosDePruebaEstado {
+  estado: string;
+  siglas: string;
+  data: DatosDePruebaItem[];
+}
+
+const datosDePrueba: DatosDePruebaEstado[] = [
+  {
+    estado: "Estado de Ejemplo 1",
+    siglas: "EE1",
+    data: [
+      {
+        clasificacion: "Categoría A",
+        carriles_mas4: 10,
+        carriles4: 20,
+        carriles2: 30,
+        revestidas: 40,
+        terraceria: 50,
+        total: 150,
+      },
+      // Agrega más datos de muestra según sea necesario...
+    ],
+  },
+  {
+    estado: "Estado de Ejemplo 2",
+    siglas: "EE2",
+    data: [
+      {
+        clasificacion: "Categoría B",
+        carriles_mas4: 15,
+        carriles4: 25,
+        carriles2: 35,
+        revestidas: 45,
+        terraceria: 55,
+        total: 175,
+      },
+      // Agrega más datos de muestra según sea necesario...
+    ],
+  },
+  // Agrega más estados de muestra según sea necesario...
+];
+
+const getClass = (clasificacion: string) => {
+  const clasificaciones = [
+    "RED FEDERAL DE CARRETERAS",
+    "RED ALIMENTADORA",
+    "RED RURAL",
+    "BRECHAS",
+  ];
+  const semiClasificaciones = [
+    "CARRETERAS LIBRES",
+    "CARRETERAS DE CUOTA CONCESIONADAS A:",
+  ];
+
+  return clasificaciones.includes(clasificacion)
+    ? "table-important"
+    : semiClasificaciones.includes(clasificacion)
+    ? "table-semi-important"
+    : "";
+};
+
+const showInput = (clasificacion: string, key: string) => {
+  const keysToDisableBrechas = ["carriles_mas4", "carriles4", "carriles2"];
+  const keysToDisableOther = [
+    "carriles_mas4_otras",
+    "carriles4_otras",
+    "carriles2_otras",
+  ];
+  const keysToDisableRedFederal = ["revestidas", "terraceria"];
+  const disabledClasificaciones = new Set([
+    "RED FEDERAL DE CARRETERAS",
+    "RED ALIMENTADORA",
+    "RED RURAL",
+    "CARRETERAS DE CUOTA CONCESIONADAS A:",
+    "TOTAL",
+  ]);
+
+  // Verificar si la clasificación es "BRECHAS"
+  if (clasificacion === "BRECHAS") {
+    return !keysToDisableBrechas.includes(key);
+  }
+
+  if (
+    clasificacion === "CARRETERAS LIBRES" ||
+    clasificacion === "CAPUFE" ||
+    clasificacion === "FONADIN" ||
+    clasificacion === "INSTITUCIONES FINANCIERAS" ||
+    clasificacion === "INICIATIVA PRIVADA" ||
+    clasificacion === "GOBIERNOS ESTATALES" ||
+    clasificacion === "ESTATALES DE CUOTA"
+  ) {
+    return !keysToDisableRedFederal.includes(key);
+  }
+
+  // Verificar si la clasificación está en disabledClasificaciones
+  // y la clave está en keysToDisableOther
+  return (
+    !disabledClasificaciones.has(clasificacion) &&
+    !keysToDisableOther.includes(key)
+  );
+};
+
+const transformData = (data: any, col: string) => {
+  const keysToNotChange = ["revestidas", "terraceria"];
+  if (
+    data.clasificacion === "RED FEDERAL DE CARRETERAS" ||
+    data.clasificacion === "CARRETERAS DE CUOTA CONCESIONADAS A:"
+  ) {
+    return !keysToNotChange.includes(col)
+      ? data[col].toLocaleString("es-MX", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      : "-";
+  } else {
+    return data[col].toLocaleString("es-MX", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+};
+
 const reset = () => {
   dropzoneFile.value = "";
   errorTypeDocument.value = false;
@@ -75,6 +310,10 @@ const reset = () => {
   globalError.value = false;
   wrongData.value = false;
   scrollTop();
+};
+
+const sendData = () => {
+  console.log("Se envian los datos");
 };
 
 const dropZoneStyle = computed(() => {
@@ -117,13 +356,19 @@ const drop = async (e: any, type: string) => {
   console.log("Simulating backend response...");
 
   // Simulación de la finalización del proceso
-  finishedProcess.value = true;
   loadingData.value = false;
 
   console.log("Process finished!");
-  finishedProcess.value = false;
-  loadingData.value = false;
-  errorTypeDocument.value = false;
+  finishedProcess.value = true;
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // Agregar un pequeño retraso si es necesario
+  /* finishedProcess.value = false;
+  errorTypeDocument.value = false; */
+
+  console.log("finishedProcess:", finishedProcess.value);
+  console.log("loadingData:", loadingData.value);
+  console.log("errorTypeDocument:", errorTypeDocument.value);
+  console.log("globalError:", globalError.value);
+  console.log("wrongData:", wrongData.value);
 };
 </script>
 
