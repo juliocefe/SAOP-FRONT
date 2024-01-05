@@ -63,7 +63,108 @@
                         col.data !== 'clasificacion'
                       "
                     >
+                      <SelectInputTable
+                        v-if="col.data === 'prioridad'"
+                        v-model="value[col.data]"
+                        name="prioridad"
+                        id="prioridad"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataPrioridad.data"
+                        :optionText="'tipo_prioridad'"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'factibilidad_obra'"
+                        v-model="value[col.data]"
+                        name="factibilidad_obra"
+                        id="factibilidad_obra"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataFactibilidad.data"
+                        optionText="descripcion"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'area'"
+                        v-model="value[col.data]"
+                        name="area"
+                        id="area"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataArea.data"
+                        optionText="nombre"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'tipo_proyecto'"
+                        v-model="value[col.data]"
+                        name="tipo_proyecto"
+                        id="tipo_proyecto"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataProyecto.data"
+                        optionText="descripcion"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'estatus_proyecto'"
+                        v-model="value[col.data]"
+                        name="estatus_proyecto"
+                        id="estatus_proyecto"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataEstatus.data"
+                        optionText="descripcion"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'cartera_estatus'"
+                        v-model="value[col.data]"
+                        name="cartera_estatus"
+                        id="cartera_estatus"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataEstatus.data"
+                        optionText="descripcion"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'entidad_federativa'"
+                        v-model="value[col.data]"
+                        name="entidad_federativa"
+                        id="entidad_federativa"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataEntidadFederativa.data"
+                        optionText="descripcion"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'unidad_responsable'"
+                        v-model="value[col.data]"
+                        name="unidad_responsable"
+                        id="unidad_responsable"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataUnidadResponsable.data"
+                        optionText="descripcion"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'fase'"
+                        v-model="value[col.data]"
+                        name="fase"
+                        id="fase"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataFase.data"
+                        optionText="descripcion"
+                      />
+                      <SelectInputTable
+                        v-if="col.data === 'tipo_obra'"
+                        v-model="value[col.data]"
+                        name="tipo_obra"
+                        id="tipo_obra"
+                        class="SelectComponent"
+                        :class="{ 'input-error': value[col.data] === '' }"
+                        :options="arrayDataTipoObra.data"
+                        optionText="descripcion"
+                      />
                       <input
+                        v-if="!excludedSelectData.includes(col.data)"
                         class="form-control"
                         type="text"
                         maxlength="15"
@@ -104,8 +205,42 @@
           </template>
         </tbody>
       </table>
+      <div class="d-flex flex-row">
+        <PaginationTable
+          :pagination="pagination"
+          @onPaginate="handlePaginate"
+          style="margin-top: auto; margin-bottom: auto"
+          class="mr-auto ml-auto"
+        />
+        <div class="form-group mr-5">
+          <label class="control-label" for="select-itemes">
+            Elementos por página
+          </label>
+          <select
+            v-model="itemsPerPage"
+            style="
+              width: 100px;
+              margin-left: auto;
+              margin-right: auto;
+              margin-top: auto;
+              margin-bottom: auto;
+            "
+            class="form-select form-control"
+            id="select-itemes"
+            name="select-itemes"
+          >
+            <option :value="7">7</option>
+            <option :value="10">10</option>
+            <option :value="15">15</option>
+            <option :value="20">20</option>
+            <option :value="25">25</option>
+            <option :value="50">50</option>
+            <option :value="100">100</option>
+            <option :value="1000">Todos</option>
+          </select>
+        </div>
+      </div>
     </div>
-
     <div class="d-flex justify-content-center">
       <!-- DROPZONE -->
       <DropZone
@@ -146,11 +281,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import DropZone from "@/components/DropZone.vue";
 import Modal from "@/components/Modals.vue";
 import AlertSection from "./AlertSection.vue";
+import PaginationTable from "@/components/TableInputs/Pagination.vue";
+import SelectInputTable from "@/components/TableInputs/SelectInput.vue";
 import { scrollTop } from "@/utils/helpers/scrollHelper";
+import usePetition from "@/composables/usePetition";
+
+/* PETICIONES */
+const { arrayData: arrayDataPrioridad, getDatas: getDatasPrioridad } =
+  usePetition("cat_prioridad/");
+const { arrayData: arrayDataFactibilidad, getDatas: getDatasFactibilidad } =
+  usePetition("cat_factibilidad/");
+const { arrayData: arrayDataArea, getDatas: getDatasArea } =
+  usePetition("cat_nivel_area/");
+const { arrayData: arrayDataProyecto, getDatas: getDatasProyecto } =
+  usePetition("cat_tipo_proyecto/");
+const { arrayData: arrayDataEstatus, getDatas: getDatasEstatus } =
+  usePetition("cat_estatus/");
+const {
+  arrayData: arrayDataEntidadFederativa,
+  getDatas: getDatasEntidadFederativa,
+} = usePetition("cat_entidad_federativa/");
+const {
+  arrayData: arrayDataUnidadResponsable,
+  getDatas: getDatasUnidadResponsable,
+} = usePetition("cat_unidad_responsable/");
+const { arrayData: arrayDataFase, getDatas: getDatasFase } =
+  usePetition("cat_fase/");
+const { arrayData: arrayDataTipoObra, getDatas: getDatasTipoObra } =
+  usePetition("cat_tipo_obra/");
+
+const excludedSelectData = [
+  "prioridad",
+  "factibilidad_obra",
+  "area",
+  "tipo_proyecto",
+  "estatus_proyecto",
+  "cartera_estatus",
+  "entidad_federativa",
+  "unidad_responsable",
+  "fase",
+  "tipo_obra",
+];
 
 const dropzoneFile = ref<any>("");
 const errorTypeDocument = ref<boolean>(false);
@@ -160,13 +335,29 @@ const globalError = ref(false);
 const wrongData = ref(false);
 
 const columnsClasificacion = [
-  { data: "clasificacion", title: "Clasificación" },
-  { data: "carriles_mas4", title: "Más de 4 Carriles" },
-  { data: "carriles4", title: "4 Carriles" },
-  { data: "carriles2", title: "2 Carriles" },
-  { data: "revestidas", title: "Revestidas" },
-  { data: "terraceria", title: "Terracerias" },
-  { data: "total", title: "Total" },
+  { data: "clave", title: "Clave" },
+  { data: "no_solicitud", title: "Número de Solicitud" },
+  { data: "nombre", title: "Nombre" },
+  { data: "descripcion", title: "Descripción" },
+  { data: "municipio", title: "Municipio" },
+  { data: "beneficios", title: "Beneficios" },
+  { data: "fecha_inicial", title: "Fecha Inicial" },
+  { data: "fecha_final", title: "Fecha Final" },
+  { data: "ejercicio_presupuestal", title: "Ejercicio Presupuestal" },
+  { data: "comentarios", title: "Comentarios" },
+  { data: "clave_compromiso", title: "Clave Compromiso" },
+  { data: "factibilidad_obra", title: "Factibilidad de la Obra" },
+  { data: "prioridad", title: "Prioridad" },
+  { data: "tipo_proyecto", title: "Tipo de Proyecto" },
+  { data: "estatus_proyecto", title: "Estatus del Proyecto" },
+  { data: "cartera_estatus", title: "Estatus de Cartera" },
+  { data: "pais", title: "País" },
+  { data: "entidad_federativa", title: "Entidad Federativa" },
+  { data: "fase", title: "Fase" },
+  { data: "tipo_obra", title: "Tipo de Obra" },
+  { data: "tipo_documento", title: "Tipo de Documento" },
+  { data: "unidad_responsable", title: "Unidad Responsable" },
+  { data: "area", title: "Área" },
 ];
 
 interface DatosDePruebaItem {
@@ -192,7 +383,30 @@ const datosDePrueba: DatosDePruebaEstado[] = [
     siglas: "EE1",
     data: [
       {
-        clasificacion: "Categoría A",
+        clasificacion: "Categoría A", // Agrega la propiedad "clasificacion" aquí
+        clave: "001",
+        no_solicitud: 1,
+        nombre: "Ejemplo 1",
+        descripcion: "Descripción 1",
+        municipio: "Municipio 1",
+        beneficios: "Beneficio 1",
+        fecha_inicial: "2022-01-01",
+        fecha_final: "2022-12-31",
+        ejercicio_presupuestal: 2022,
+        comentarios: "Comentario 1",
+        clave_compromiso: "CC001",
+        factibilidad_obra: "Factibilidad 1",
+        prioridad: "Alta",
+        tipo_proyecto: "Tipo 1",
+        estatus_proyecto: "En Progreso",
+        cartera_estatus: "Activa",
+        pais: "México",
+        entidad_federativa: "Estado 1",
+        fase: "Fase 1",
+        tipo_obra: "Obra Tipo 1",
+        tipo_documento: "Documento Tipo 1",
+        unidad_responsable: "Unidad 1",
+        area: "Área 1",
         carriles_mas4: 10,
         carriles4: 20,
         carriles2: 30,
@@ -208,7 +422,30 @@ const datosDePrueba: DatosDePruebaEstado[] = [
     siglas: "EE2",
     data: [
       {
-        clasificacion: "Categoría B",
+        clasificacion: "Categoría B", // Agrega la propiedad "clasificacion" aquí
+        clave: "002",
+        no_solicitud: 2,
+        nombre: "Ejemplo 2",
+        descripcion: "Descripción 2",
+        municipio: "Municipio 2",
+        beneficios: "Beneficio 2",
+        fecha_inicial: "2022-02-01",
+        fecha_final: "2022-11-30",
+        ejercicio_presupuestal: 2023,
+        comentarios: "Comentario 2",
+        clave_compromiso: "CC002",
+        factibilidad_obra: "Factibilidad 2",
+        prioridad: "Media",
+        tipo_proyecto: "Tipo 2",
+        estatus_proyecto: "Completado",
+        cartera_estatus: "Inactiva",
+        pais: "México",
+        entidad_federativa: "Estado 2",
+        fase: "Fase 2",
+        tipo_obra: "Obra Tipo 2",
+        tipo_documento: "Documento Tipo 2",
+        unidad_responsable: "Unidad 2",
+        area: "Área 2",
         carriles_mas4: 15,
         carriles4: 25,
         carriles2: 35,
@@ -221,6 +458,41 @@ const datosDePrueba: DatosDePruebaEstado[] = [
   },
   // Agrega más estados de muestra según sea necesario...
 ];
+
+const itemsPerPage = ref(7);
+const inicio = ref(0);
+
+watch(
+  () => itemsPerPage.value,
+  () => {
+    inicio.value = 0;
+  }
+);
+
+const handlePaginate = (page: number) => {
+  inicio.value = (page - 1) * Number(itemsPerPage.value);
+};
+
+const getPaginatedData = (data: any[]) => {
+  const fin = Number(inicio.value) + Number(itemsPerPage.value);
+  return data.slice(inicio.value, fin);
+};
+
+const pagination = computed(() => {
+  const data = datosDePrueba;
+  const paginatedData = getPaginatedData(data);
+  const totalPages = Math.ceil(data.length / itemsPerPage.value);
+  const currentPage = Math.floor(inicio.value / itemsPerPage.value) + 1;
+  return {
+    page_size: itemsPerPage.value,
+    page: Math.floor(inicio.value / itemsPerPage.value) + 1,
+    total: data.length,
+    total_pages: totalPages,
+    previous_page: Math.max(currentPage - 1, 1),
+    next_page: Math.min(currentPage + 1, totalPages),
+    data: paginatedData,
+  };
+});
 
 const getClass = (clasificacion: string) => {
   const clasificaciones = [
@@ -370,6 +642,20 @@ const drop = async (e: any, type: string) => {
   console.log("globalError:", globalError.value);
   console.log("wrongData:", wrongData.value);
 };
+
+onMounted(async () => {
+  // Realizar las llamadas a las funciones getDatas en el bloque onMounted
+  getDatasPrioridad({ page: 1, size: 100 });
+  getDatasFactibilidad({ page: 1, size: 100 });
+  getDatasArea({ page: 1, size: 100 });
+  getDatasProyecto({ page: 1, size: 100 });
+  getDatasEstatus({ page: 1, size: 100 });
+  getDatasEntidadFederativa({ page: 1, size: 100 });
+  getDatasUnidadResponsable({ page: 1, size: 100 });
+  getDatasFase({ page: 1, size: 100 });
+  getDatasTipoObra({ page: 1, size: 100 });
+  scrollTop();
+});
 </script>
 
 <style scoped lang="scss">
