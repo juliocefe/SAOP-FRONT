@@ -80,4 +80,8 @@ const emit = defineEmits(["update:modelValue", "onChange"]);
 .input-error {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #d0021ac0;
 }
+.form-control {
+  width: fit-content;
+  text-align: center;
+}
 </style>

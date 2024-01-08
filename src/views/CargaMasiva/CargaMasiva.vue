@@ -42,7 +42,7 @@
         !wrongData
       "
     >
-      <table class="table">
+      <table class="table table-responsive">
         <thead class="table-gob">
           <tr>
             <th v-for="col in columnsClasificacion" class="text-center">
@@ -158,7 +158,7 @@
                         v-model="value[col.data]"
                         name="tipo_obra"
                         id="tipo_obra"
-                        class="SelectComponent"
+                        class="SelectComponent px-auto"
                         :class="{ 'input-error': value[col.data] === '' }"
                         :options="arrayDataTipoObra.data"
                         optionText="descripcion"
@@ -384,29 +384,29 @@ const datosDePrueba: DatosDePruebaEstado[] = [
     data: [
       {
         clasificacion: "Categoría A", // Agrega la propiedad "clasificacion" aquí
-        clave: "001",
-        no_solicitud: 1,
-        nombre: "Ejemplo 1",
-        descripcion: "Descripción 1",
-        municipio: "Municipio 1",
-        beneficios: "Beneficio 1",
-        fecha_inicial: "2022-01-01",
-        fecha_final: "2022-12-31",
-        ejercicio_presupuestal: 2022,
-        comentarios: "Comentario 1",
-        clave_compromiso: "CC001",
-        factibilidad_obra: "Factibilidad 1",
-        prioridad: "Alta",
-        tipo_proyecto: "Tipo 1",
-        estatus_proyecto: "En Progreso",
-        cartera_estatus: "Activa",
-        pais: "México",
-        entidad_federativa: "Estado 1",
-        fase: "Fase 1",
-        tipo_obra: "Obra Tipo 1",
-        tipo_documento: "Documento Tipo 1",
-        unidad_responsable: "Unidad 1",
-        area: "Área 1",
+        clave: "54323",
+        no_solicitud: 432432,
+        nombre: "Test QA  001",
+        descripcion: "dfsgdsfg",
+        municipio: "CDMX",
+        beneficios: "sdfgdsfgdfs",
+        fecha_inicial: "2023-10-31T00:00:00",
+        fecha_final: "2023-11-11T00:00:00",
+        ejercicio_presupuestal: 2023,
+        comentarios: "sdgdsfgds",
+        clave_compromiso: "54324563",
+        factibilidad_obra: 3,
+        prioridad: 4,
+        tipo_proyecto: 1,
+        estatus_proyecto: 13,
+        cartera_estatus: 15,
+        pais: 1,
+        entidad_federativa: 3,
+        fase: 3,
+        tipo_obra: 1,
+        tipo_documento: 3,
+        unidad_responsable: 5,
+        area: 2,
         carriles_mas4: 10,
         carriles4: 20,
         carriles2: 30,
@@ -418,40 +418,40 @@ const datosDePrueba: DatosDePruebaEstado[] = [
     ],
   },
   {
-    estado: "Estado de Ejemplo 2",
-    siglas: "EE2",
+    estado: "Estado de Ejemplo 1",
+    siglas: "EE1",
     data: [
       {
-        clasificacion: "Categoría B", // Agrega la propiedad "clasificacion" aquí
-        clave: "002",
-        no_solicitud: 2,
-        nombre: "Ejemplo 2",
-        descripcion: "Descripción 2",
-        municipio: "Municipio 2",
-        beneficios: "Beneficio 2",
-        fecha_inicial: "2022-02-01",
-        fecha_final: "2022-11-30",
+        clasificacion: "Categoría A", // Agrega la propiedad "clasificacion" aquí
+        clave: "54323",
+        no_solicitud: 432432,
+        nombre: "Test QA  001",
+        descripcion: "dfsgdsfg",
+        municipio: "CDMX",
+        beneficios: "sdfgdsfgdfs",
+        fecha_inicial: "2023-10-31T00:00:00",
+        fecha_final: "2023-11-11T00:00:00",
         ejercicio_presupuestal: 2023,
-        comentarios: "Comentario 2",
-        clave_compromiso: "CC002",
-        factibilidad_obra: "Factibilidad 2",
-        prioridad: "Media",
-        tipo_proyecto: "Tipo 2",
-        estatus_proyecto: "Completado",
-        cartera_estatus: "Inactiva",
-        pais: "México",
-        entidad_federativa: "Estado 2",
-        fase: "Fase 2",
-        tipo_obra: "Obra Tipo 2",
-        tipo_documento: "Documento Tipo 2",
-        unidad_responsable: "Unidad 2",
-        area: "Área 2",
-        carriles_mas4: 15,
-        carriles4: 25,
-        carriles2: 35,
-        revestidas: 45,
-        terraceria: 55,
-        total: 175,
+        comentarios: "sdgdsfgds",
+        clave_compromiso: "54324563",
+        factibilidad_obra: 3,
+        prioridad: 4,
+        tipo_proyecto: 1,
+        estatus_proyecto: 13,
+        cartera_estatus: 15,
+        pais: 1,
+        entidad_federativa: 3,
+        fase: 3,
+        tipo_obra: 1,
+        tipo_documento: 3,
+        unidad_responsable: 5,
+        area: 2,
+        carriles_mas4: 10,
+        carriles4: 20,
+        carriles2: 30,
+        revestidas: 40,
+        terraceria: 50,
+        total: 150,
       },
       // Agrega más datos de muestra según sea necesario...
     ],
@@ -679,5 +679,9 @@ onMounted(async () => {
 .table-semi-important {
   background-color: #f2f2f2;
   color: #000;
+}
+.form-control {
+  width: fit-content;
+  text-align: center;
 }
 </style>
