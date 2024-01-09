@@ -6,6 +6,7 @@ import {
   cat_Unidad_Responsable,
   proyectoDeInversiones,
   cargaMasiva,
+  reportsRoutes,
 } from "@/router/exportFile.ts";
 import { isAuthenticated } from "@/utils/helpers/authenticationHelper";
 import { constructionTypesRoutes } from "./constructionTypesRoutes";
@@ -94,6 +95,11 @@ export const routes = [
         path: "carga-masiva",
         name: "cargamasiva",
         children: cargaMasiva,
+      },
+      {
+        path: "reportes",
+        name: "reportes",
+        children: reportsRoutes,
       },
     ],
     beforeEnter: () => {
