@@ -4,9 +4,87 @@
   <div
     class="d-flex flex-row app-options-bar align-items-center justify-content-between"
   >
-    <div></div>
-    <div v-if="selectedAnio">
+    <div>
+      <div v-if="!showReport">
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label for="startValue" class="control-label"
+              >Unidad Responsable:</label
+            >
+          </div>
+          <div class="col-md-4">
+            <input
+              type="number"
+              id="startValue"
+              class="form-control"
+              v-model="data.unidad_responsable.inicio"
+            />
+          </div>
+          <div class="col-md-4">
+            <input
+              type="number"
+              id="startValue"
+              class="form-control"
+              v-model="data.unidad_responsable.fin"
+            />
+          </div>
+        </div>
+        <div class="row align-items-center py-3">
+          <div class="col-md-4">
+            <label for="startValue" class="control-label">No. Solicitud:</label>
+          </div>
+          <div class="col-md-4">
+            <input
+              type="number"
+              id="startValue"
+              class="form-control"
+              v-model="data.no_solicitud.inicio"
+            />
+          </div>
+          <div class="col-md-4">
+            <input
+              type="number"
+              id="startValue"
+              class="form-control"
+              v-model="data.no_solicitud.fin"
+            />
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <label for="startValue" class="control-label">Cve. Cartera:</label>
+          </div>
+          <div class="col-md-4">
+            <input
+              type="number"
+              id="startValue"
+              class="form-control"
+              v-model="data.cve_cartera.inicio"
+            />
+          </div>
+          <div class="col-md-4">
+            <input
+              type="number"
+              id="startValue"
+              class="form-control"
+              v-model="data.cve_cartera.fin"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
       <button
+        title="Descargar"
+        class="btn btn-primary"
+        type="button"
+        @click="sendData"
+        :disabled="isButtonDisabled"
+      >
+        Aceptar
+      </button>
+      <button
+        v-if="showReport"
         title="Descargar"
         class="btn btn-primary"
         type="button"
@@ -17,10 +95,11 @@
     </div>
   </div>
   <TableReportComponent
-    v-if="arrayReporte.length > 0"
+    v-if="arrayReporte.length > 0 && showReport"
     :data="arrayReporte"
-    :dataBold="dataBold"
-    keyBold="Tipo Proyecto"
+    :dataBold="boldRows"
+    :keyBold="boldKey"
+    :columnBold="boldColumns"
   >
     <!--     <template v-slot:head>
       <tr class="table-gob">
@@ -32,7 +111,7 @@
   </TableReportComponent>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { scrollTop } from "@/utils/helpers/scrollHelper";
 /* import usePetition from "@/composables/usePetition"; */
 import TableReportComponent from "@/components/TableReportComponent.vue";
@@ -130,13 +209,44 @@ const arrayReporte = ref([
     "Tasa Descuento": 0.04,
   },
 ]);
+// Filas que se resaltarán: aquellas con un "Tipo Proyecto" igual a "Infraestructura"
+const boldRows = ref(["Infraestructura"]);
 
-const selectedAnio = ref("");
+// Clave que se utilizará para resaltar las filas: "Tipo Proyecto"
+const boldKey = ref("Tipo Proyecto");
+
+// Columnas que se resaltarán: aquellas relacionadas con el "Valor Presente Neto" y "Cto Anual Equivalente"
+const boldColumns = ref(["Valor Presente Neto", "Cto Anual Equivalente"]);
+
+const data = ref({
+  unidad_responsable: {
+    fin: "",
+    inicio: "",
+  },
+  no_solicitud: {
+    fin: "",
+    inicio: "",
+  },
+  cve_cartera: {
+    fin: "",
+    inicio: "",
+  },
+});
 const viewName = "Reporte cartera de inversion";
+const showReport = ref(false);
 
 /* const { getData } = usePetition("reporte_red_carretera_por_tipo_red/"); */
-
-const dataBold = ["TOTAL", "Desarrollo Social", "Educativo"];
+const isButtonDisabled = computed(() => {
+  // Check if any of the input fields is empty
+  return (
+    data.value.unidad_responsable.inicio === "" &&
+    data.value.unidad_responsable.fin === "" &&
+    data.value.no_solicitud.inicio === "" &&
+    data.value.no_solicitud.fin === "" &&
+    data.value.cve_cartera.inicio === "" &&
+    data.value.cve_cartera.fin === ""
+  );
+});
 
 const exportData = async () => {
   try {
@@ -147,6 +257,12 @@ const exportData = async () => {
   } catch (error) {
     showAlertError("No se pudo descargar el archivo");
   }
+};
+
+const sendData = () => {
+  showReport.value === true
+    ? (showReport.value = false)
+    : (showReport.value = true);
 };
 /* const handleSearch = async () => {
   const term = selectedAnio.value;
@@ -163,3 +279,5 @@ onMounted(async () => {
   scrollTop();
 });
 </script>
+
+<style scoped></style>
