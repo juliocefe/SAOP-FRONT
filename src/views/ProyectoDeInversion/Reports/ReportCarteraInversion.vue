@@ -75,6 +75,7 @@
     </div>
     <div>
       <button
+        v-if="!showReport"
         title="Descargar"
         class="btn btn-primary"
         type="button"
@@ -253,16 +254,22 @@ const exportData = async () => {
     /*     let queryParams = "excel=true";
     const nombre = obtenerNombre("REPORTE_1_1", getAnio); // Cambiar aquí
     await exportReport(selectedAnio.value, `${nombre}.xlsx`, queryParams); */
-    showAlertSuccess("Archivo descargado correctamente");
+
+    // Simulación de una demora de 1 segundo (1000 milisegundos)
+    setTimeout(() => {
+      showAlertSuccess("Archivo descargado correctamente");
+    }, 1000);
   } catch (error) {
     showAlertError("No se pudo descargar el archivo");
   }
 };
 
 const sendData = () => {
-  showReport.value === true
-    ? (showReport.value = false)
-    : (showReport.value = true);
+  // Simulación de una demora de 1 segundo (1000 milisegundos)
+  setTimeout(() => {
+    // Cambiar el valor de showReport después de la demora
+    showReport.value = !showReport.value;
+  }, 1000);
 };
 /* const handleSearch = async () => {
   const term = selectedAnio.value;
