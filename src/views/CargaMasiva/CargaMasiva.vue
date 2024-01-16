@@ -275,7 +275,7 @@
       :loadingData="loadingData"
       :globalError="globalError"
       :wrongData="wrongData"
-      @reset="reset"
+      :reset="reset"
     ></AlertSection>
   </div>
 </template>
