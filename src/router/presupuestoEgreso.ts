@@ -7,7 +7,7 @@ export const presupuestoEgreso = [
   {
     path: "crear",
     name: "crear-presupuestoEgreso",
-    component: () => import("@/views/ProyectoDeInversion/Create.vue"),
+    component: () => import("@/views/PresupuestoEgresos/Create.vue"),
   },
   {
     path: ":id/ver",
@@ -17,7 +17,7 @@ export const presupuestoEgreso = [
   {
     path: ":id/editar",
     name: "editar-presupuestoEgreso",
-    component: () => import("@/views/ProyectoDeInversion/Create.vue"),
+    component: () => import("@/views/PresupuestoEgresos/Create.vue"),
   },
   {
     path: ":id/eliminar",

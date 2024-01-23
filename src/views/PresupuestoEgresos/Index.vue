@@ -70,7 +70,7 @@
                   :show-subactions="false"
                 />
               </div>
-              <AccionesCartera
+              <AccionesPresupuestoEgreso
                 @onCalendar="handleCalendar"
                 @onHistory="handleHistory"
                 @onContentAdmin="handleContentAdmin"
@@ -186,7 +186,7 @@ import usePetition from "@/composables/usePetition";
 import DataTableComponent from "@/components/DataTableComponent.vue";
 import router from "@/router";
 import ButtonBarComponent from "@/components/ButtonBarComponent.vue";
-import AccionesCartera from "@/components/AccionesCarteraPoyectos.vue";
+import AccionesPresupuestoEgreso from "@/components/AccionesPresupuestoEgreso.vue";
 import DatosFinancieros from "@/components/forms/DatosFinancieros.vue";
 import FichaTecnica from "@/components/forms/FichaTecnica.vue";
 import {
@@ -202,7 +202,7 @@ const searchTerm = ref("");
 const idRow = ref("");
 const selectedProyect = ref("");
 const showView = ref(false);
-const handleCreate = () => router.push({ name: "crear-proyecto_de_inversion" });
+const handleCreate = () => router.push({ name: "crear-presupuestoEgreso" });
 const handleCalendar = () => {
   router.push({ name: "calendario-anual-proyecto_de_inversion" });
 };
@@ -216,7 +216,7 @@ const handleReport = () => {
   router.push({ name: "reporte-cartera-inversion" });
 };
 const handleEdit = (data: any) =>
-  router.push({ name: "editar-proyecto_de_inversion", params: { id: data } });
+  router.push({ name: "editar-presupuestoEgreso", params: { id: data } });
 const handleDetail = (data: any) =>
   router.push({ name: "ver-proyecto_de_inversion", params: { id: data } });
 const handleDelete = (data: any) =>
