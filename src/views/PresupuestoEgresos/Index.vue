@@ -99,21 +99,15 @@
               </select>
             </div>
             <div class="px-3" style="min-width: 210px !important">
-              <select
-                class="form-select form-control"
-                v-model="cbUnidad"
-                @change="handleFilter()"
-              >
-                <option value="">Unidad reponsable</option>
-                <option
-                  v-for="opt in arrayDataUnidadResponsable.data"
-                  :key="opt.value"
-                  :value="opt.clave"
-                >
-                  {{ opt.descripcion_corta }}
-                </option>
-              </select>
+              <input
+                class="form-control"
+                type="text"
+                v-model="inputPEF"
+                placeholder="PEF"
+                @keyup.enter="handleFilter()"
+              />
             </div>
+
             <div class="flex-grow-1 d-flex justify-content-end">
               <div class="form-group">
                 <div class="d-flex align-items-center form-group m-0">
@@ -134,22 +128,17 @@
             </div>
           </div>
           <DataTableComponent
-            v-if="!arrayData.loading"
             rowId="clave"
             :columns="columns"
-            :data="arrayData.data"
-            :pagination="arrayData.pagination"
+            :data="exampleData"
+            :pagination="paginate"
             :showDelete="true"
             :showEdit="true"
-            :showDetail="true"
-            :row-select="true"
+            :showDetail="false"
             :fixed-actions="true"
-            @onPaginate="handlePaginate"
             @onEdit="handleEdit"
-            @onDetail="handleDetail"
             @onDelete="handleDelete"
             @onCreate="handleCreate"
-            @onGetID="handleRowClick"
           />
         </div>
       </div>
@@ -195,13 +184,11 @@ import {
 } from "@/utils/listeners/clickListener";
 
 const viewName = "Presupuesto de Egreso de la Federacion";
-const { arrayData, getDatas, searchData } = usePetition(
-  "cartera_proyectos_inversion/"
-);
-const searchTerm = ref("");
+const { searchData } = usePetition("cartera_proyectos_inversion/");
+/* const searchTerm = ref(""); */
 const idRow = ref("");
 const selectedProyect = ref("");
-const showView = ref(false);
+const showView = ref(true);
 const handleCreate = () => router.push({ name: "crear-presupuestoEgreso" });
 const handleCalendar = () => {
   router.push({ name: "calendario-anual-proyecto_de_inversion" });
@@ -217,19 +204,17 @@ const handleReport = () => {
 };
 const handleEdit = (data: any) =>
   router.push({ name: "editar-presupuestoEgreso", params: { id: data } });
-const handleDetail = (data: any) =>
-  router.push({ name: "ver-proyecto_de_inversion", params: { id: data } });
 const handleDelete = (data: any) =>
   router.push({ name: "eliminar-proyecto_de_inversion", params: { id: data } });
 /* const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
 ) */
 
-const handleRowClick = (rowData: any) => {
+/* const handleRowClick = (rowData: any) => {
   // Obtén el ID del registro seleccionado
   // Realiza las operaciones necesarias con el ID del registro seleccionado
   idRow.value = rowData.clave;
   selectedProyect.value = rowData.nombre;
-};
+}; */
 
 const handleClick = (event?: MouseEvent) => {
   //solo aplica si se esta en la pantalla de datatable
@@ -278,72 +263,97 @@ const {
   arrayData: arrayDataEntidadFederativa,
   getDatas: getDatasEntidadFederativa,
 } = usePetition("cat_entidad_federativa/");
-const {
+/* const {
   arrayData: arrayDataUnidadResponsable,
   getDatas: getDatasUnidadResponsable,
-} = usePetition("cat_unidad_responsable/");
+} = usePetition("cat_unidad_responsable/"); */
 
-const handlePaginate = (page: number) => {
+/* const handlePaginate = (page: number) => {
   if (searchTerm.value) {
     searchData({ page: page, search: searchTerm.value });
   } else {
     getDatas({ page });
   }
-};
+}; */
 
 const handleFilter = () => {
   let searchFilter = "";
   if (cbEntidad.value.length) searchFilter += cbEntidad.value;
-  if (cbUnidad.value.length) {
+  /* if (cbUnidad.value.length) {
     if (searchFilter.length) searchFilter += " ,";
     searchFilter += cbEntidad.value;
-  }
+  } */
   if (inputSolicitud.value.length) {
     if (searchFilter.length) searchFilter += " ,";
     searchFilter += inputSolicitud.value;
   }
+  if (inputPEF.value.length) {
+    if (searchFilter.length) searchFilter += " ,";
+    searchFilter += inputPEF.value;
+  }
   searchData({ page: 1, search: searchFilter });
 };
 
+const inputPEF = ref<string>("");
 const cbEntidad = ref<string>("");
-const cbUnidad = ref<string>("");
+/* const cbUnidad = ref<string>(""); */
 const inputSolicitud = ref<string>("");
 const columns = [
-  /* { title: 'Entidad', data: 'entidad_federativa', align: 'left' }, */
-  { title: "Clave Cartera", data: "clave", align: "left" },
+  { title: "Entidad", data: "entidad_federativa", align: "left" },
   { title: "No. de Solicitud", data: "no_solicitud", align: "left" },
-  { title: "Unidad Responsable", data: "unidad_responsable", align: "left" },
-  { title: "Nombre Proyecto", data: "nombre", align: "left" },
-  { title: "Descripción del proyecto", data: "descripcion", align: "left" },
-  /* { title: 'Proceso', data: '', align: 'left' }, */
-  /*  { title: 'Prioridad', data: 'prioridad', align: 'left' }, */
-  /*     { title: 'Beneficios', data: 'beneficios', align: 'left' },
-    { title: 'Localización', data: 'municipio', align: 'left' },
-    { title: 'Fecha Inicial', data: 'fecha_inicial', align: 'left' },
-    { title: 'Fecha Final', data: 'fecha_final', align: 'left' },
-    { title: 'Fase', data: 'fase', align: 'left' },
-    { title: 'Ejercicio Ptal', data: 'ejercicio_presupuestal', align: 'left' },
-    { title: 'Comentarios', data: 'comentarios', align: 'left' },
-    { title: 'Estatus Proyecto', data: 'estatus_proyecto', align: 'left' },
-    { title: 'País', data: 'pais', align: 'left' },
-    { title: 'Año Base', data: '', align: 'left' },
-    { title: 'Inversión Total', data: '', align: 'left' },
-    { title: 'Valor Presente Neto', data: '', align: 'left' },
-    { title: 'Gastos Estimación Operación', data: '', align: 'left' },
-    { title: 'Otros Costos', data: '', align: 'left' },
-    { title: 'Financiamiento Adicional', data: '', align: 'left' },
-    { title: 'Cto. Anual Equivalente', data: '', align: 'left' },
-    { title: 'Tasa de Retorno', data: '', align: 'left' },
-    { title: 'Tasa de Rendimiento Inmediata', data: '', align: 'left' },
-    { title: 'Tasa de Descuento', data: '', align: 'left' }, */
+  { title: "Clave Clave PEF", data: "clave", align: "left" },
+  { title: "Descripción PEF", data: "descripcion_pef", align: "left" },
+  { title: "Ubicacion", data: "ubicacion", align: "left" },
+  { title: "Beneficios", data: "descripcion_beneficios", align: "left" },
+  { title: "Transito Esperado", data: "transito_esperado", align: "left" },
+  { title: "Impacto Ambiental", data: "impacto_ambiental", align: "left" },
+  { title: "Longitud", data: "longitud", align: "left" },
+  { title: "Fecha", data: "fecha", align: "left" },
 ];
 
+const paginate = {
+  page_size: 10,
+  page: 1,
+  total: 2,
+  total_pages: 1,
+  previous_page: 1,
+  next_page: 1,
+};
+
+const exampleData = ref([
+  {
+    entidad_federativa: "Ciudad de México",
+    no_solicitud: 12345,
+    clave: "ABC123",
+    descripcion_pef: "Descripción del PEF 1",
+    ubicacion: "Ubicación 1",
+    descripcion_beneficios: "Beneficios 1",
+    transito_esperado: "Tránsito Esperado 1",
+    impacto_ambiental: "Impacto Ambiental 1",
+    longitud: "Longitud 1",
+    fecha: "2024-01-24",
+  },
+  {
+    entidad_federativa: "Jalisco",
+    no_solicitud: 67890,
+    clave: "DEF456",
+    descripcion_pef: "Descripción del PEF 2",
+    ubicacion: "Ubicación 2",
+    descripcion_beneficios: "Beneficios 2",
+    transito_esperado: "Tránsito Esperado 2",
+    impacto_ambiental: "Impacto Ambiental 2",
+    longitud: "Longitud 2",
+    fecha: "2024-01-25",
+  },
+  // Agrega más datos según sea necesario
+]);
+
 onMounted(async () => {
-  await getDatas({ page: 1 }).then(() => {
+  /* await getDatas({ page: 1 }).then(() => {
     showView.value = true;
-  });
+  }); */
   getDatasEntidadFederativa({ page: 1, size: 100 });
-  getDatasUnidadResponsable({ page: 1, size: 100 });
+  /* getDatasUnidadResponsable({ page: 1, size: 100 }); */
   addClickListener(handleClick);
 });
 onBeforeUnmount(() => {

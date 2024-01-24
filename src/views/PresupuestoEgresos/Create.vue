@@ -5,7 +5,7 @@
     <form role="form" @submit.prevent="saveProyectoDeInversion">
       <div class="row">
         <InputText
-          v-model.trim="data.no_solicitud"
+          v-model.trim="data.noSolicitud"
           title="Número de Solicitud:"
           placeholder="Número de Solicitud"
           name="no_solicitud"
@@ -26,7 +26,7 @@
           :optionText="'nombre_oficial'"
         />
         <SelectComponent
-          v-model="data.entidad_federativa"
+          v-model="data.entidad"
           title="Entidad Federativa:"
           placeholder="Entidad Federativa"
           name="entidad_federativa"
@@ -37,7 +37,7 @@
         />
         <SelectComponent
           :disabled="readOnlyView === true"
-          v-model="data.cartera_estatus"
+          v-model="data.estatus"
           title="Estatus:"
           placeholder="Estatus"
           name="cartera_estatus"
@@ -51,7 +51,7 @@
         <div class="form-group col-sm-4">
           <label for="nombre-operacion">Fecha</label>
           <input
-            v-model="data.fecha_inicial"
+            v-model="data.fecha"
             type="date"
             class="form-control"
             id="fecha_inicial"
@@ -67,7 +67,7 @@
           > -->
         </div>
         <InputText
-          v-model="data.municipio"
+          v-model="data.meta"
           title="Meta:"
           placeholder="Meta"
           name="municipio"
@@ -75,7 +75,7 @@
           class="col-sm-4"
         />
         <InputText
-          v-model="data.municipio"
+          v-model="data.ubicacion"
           title="Ubicacion:"
           placeholder="Ubicacion"
           name="municipio"
@@ -85,7 +85,7 @@
       </div>
       <div class="row">
         <TextAraComponent
-          v-model="data.descripcion"
+          v-model="data.descripcionPEF"
           :title="'Descripción:'"
           :placeholder="'Ingresa una descripción...'"
           :name="'descripcion'"
@@ -103,7 +103,7 @@
           class="col-sm-12"
         />
         <TextAraComponent
-          v-model="data.beneficios"
+          v-model="data.impactoAmbiental"
           :title="'Impacto Ambiental:'"
           :placeholder="'Ingresa el impacto ambiental...'"
           :name="'beneficios'"
@@ -111,7 +111,7 @@
           class="col-sm-12"
         />
         <TextAraComponent
-          v-model="data.beneficios"
+          v-model="data.transitoEsperado"
           title="Transito esperado:"
           :placeholder="'Ingresa el transito esperado...'"
           :name="'beneficios'"
@@ -141,16 +141,15 @@ import InputText from "@/components/InputText.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
 import TextAraComponent from "@/components/TextAraComponent.vue";
 import usePetition from "@/composables/usePetition";
-import ProyectoDeInversion from "@/utils/models/ProyectoDeInversion";
-import { simpleDate } from "@/utils/helpers/dateHelper";
+/* import { simpleDate } from "@/utils/helpers/dateHelper"; */
 
 const route = useRoute();
 const router = useRouter();
 const itemId = ref("");
 const readOnlyView = ref(false);
-const { getData /* createFromData, updateFromData */ } = usePetition(
+/* const { getData , createFromData, updateFromData } = usePetition(
   "cartera_proyectos_inversion/"
-);
+); */
 
 //Consultas para los selects
 const { arrayData: arrayDataEstatus, getDatas: getDatasEstatus } =
@@ -161,31 +160,34 @@ const {
   arrayData: arrayDataEntidadFederativa,
   getDatas: getDatasEntidadFederativa,
 } = usePetition("cat_entidad_federativa/");
-const data = ref<ProyectoDeInversion>({
-  clave: "",
-  no_solicitud: "",
-  nombre: "",
-  descripcion: "",
-  municipio: "",
+
+interface MiInterfaz {
+  entidad?: string | undefined;
+  pais?: string | undefined;
+  estatus?: string | undefined;
+  meta?: string | undefined;
+  noSolicitud?: number | string | undefined;
+  clavePEF?: string | undefined;
+  descripcionPEF?: string | undefined;
+  ubicacion?: string | undefined;
+  beneficios?: string | undefined;
+  transitoEsperado?: string | undefined;
+  impactoAmbiental?: string | undefined;
+  longitud?: number | string | undefined;
+  fecha?: string | undefined; // Cambiado a string para ser compatible con input type="date"
+}
+
+const data = ref<MiInterfaz>({
+  entidad: "",
+  noSolicitud: "",
+  clavePEF: "",
+  descripcionPEF: "",
+  ubicacion: "",
   beneficios: "",
-  fecha_inicial: "",
-  fecha_final: "",
-  ejercicio_presupuestal: "",
-  comentarios: "",
-  clave_compromiso: "",
-  factibilidad_obra: "",
-  prioridad: "",
-  tipo_proyecto: "",
-  estatus_proyecto: "",
-  cartera_estatus: "",
-  pais: 1,
-  entidad_federativa: "",
-  fase: "",
-  tipo_obra: "",
-  tipo_documento: "",
-  unidad_responsable: "",
-  area: "",
-  documento: null,
+  transitoEsperado: "",
+  impactoAmbiental: "",
+  longitud: "",
+  fecha: "",
 });
 
 /* const { formState, isValid, errors, showErrors } = useForm(
@@ -213,7 +215,6 @@ async function saveProyectoDeInversion() {
 } */
 
 const titulo = ref("Crear Presupuesto de Egreso de la Federacion");
-const fileName = ref("");
 
 onMounted(() => {
   itemId.value = route.params.id ? route.params.id.toString() : "";
@@ -221,7 +222,9 @@ onMounted(() => {
     ? "Editar Presupuesto de Egreso de la Federacion"
     : "Crear Presupuesto de Egreso de la Federacion";
   if (itemId.value) {
-    getData(itemId.value)
+    data.value.beneficios = "Beneficios de ejemplo";
+    data.value.noSolicitud = 123;
+    /* getData(itemId.value)
       .then((response: any) => {
         data.value.clave = response.clave;
         data.value.no_solicitud = response.no_solicitud;
@@ -250,7 +253,7 @@ onMounted(() => {
       })
       .catch(() => {
         router.push({ name: "listar-proyecto_de_inversion" });
-      });
+      }); */
   }
   getDatasEstatus({ page: 1, size: 100 });
   getDatasPais({ page: 1, size: 100 });
