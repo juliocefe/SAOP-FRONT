@@ -98,16 +98,25 @@
                 </option>
               </select>
             </div>
-            <div class="px-3" style="min-width: 210px !important">
-              <input
-                class="form-control"
-                type="text"
-                v-model="inputPEF"
-                placeholder="PEF"
-                @keyup.enter="handleFilter()"
-              />
-            </div>
 
+            <div class="flex-grow-1 d-flex justify-content-start">
+              <div class="form-group">
+                <div class="d-flex align-items-center form-group m-0">
+                  <div>
+                    <span class="font-weight-bold pr-2">PEF: </span>
+                  </div>
+                  <div>
+                    <input
+                      class="form-control"
+                      type="text"
+                      v-model="inputPEF"
+                      placeholder="PEF"
+                      @keyup.enter="handleFilter()"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="flex-grow-1 d-flex justify-content-end">
               <div class="form-group">
                 <div class="d-flex align-items-center form-group m-0">
@@ -205,7 +214,7 @@ const handleReport = () => {
 const handleEdit = (data: any) =>
   router.push({ name: "editar-presupuestoEgreso", params: { id: data } });
 const handleDelete = (data: any) =>
-  router.push({ name: "eliminar-proyecto_de_inversion", params: { id: data } });
+  router.push({ name: "eliminar-presupuestoEgreso", params: { id: data } });
 /* const handleFichaTecnica = () => router.push({ name: 'ficha_tecnica-proyecto_de_inversion', params: { id: idRow.value } }
 ) */
 

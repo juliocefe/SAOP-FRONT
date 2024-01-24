@@ -36,7 +36,6 @@
           :optionText="'descripcion'"
         />
         <SelectComponent
-          :disabled="readOnlyView === true"
           v-model="data.estatus"
           title="Estatus:"
           placeholder="Estatus"
@@ -146,7 +145,7 @@ import usePetition from "@/composables/usePetition";
 const route = useRoute();
 const router = useRouter();
 const itemId = ref("");
-const readOnlyView = ref(false);
+/* const readOnlyView = ref(false); */
 /* const { getData , createFromData, updateFromData } = usePetition(
   "cartera_proyectos_inversion/"
 ); */
@@ -203,10 +202,10 @@ async function saveProyectoDeInversion() {
     // Agregar campos del formulario
     if (itemId.value) {
       /*  await updateFromData(formData, itemId.value); */
-      router.push({ name: "listar-proyecto_de_inversion" });
+      router.push({ name: "listar-presupuestoEgreso" });
     } else {
       /* await createFromData(formData); */
-      router.push({ name: "listar-proyecto_de_inversion" });
+      router.push({ name: "listar-presupuestoEgreso" });
     }
   } catch (error) {}
 } /* else {
@@ -223,7 +222,17 @@ onMounted(() => {
     : "Crear Presupuesto de Egreso de la Federacion";
   if (itemId.value) {
     data.value.beneficios = "Beneficios de ejemplo";
-    data.value.noSolicitud = 123;
+    data.value.noSolicitud = "123";
+    data.value.pais = "1";
+    data.value.entidad = "2";
+    data.value.estatus = "13";
+    data.value.meta = "Meta de ejemplo";
+    data.value.fecha = "2024-01-24";
+    data.value.ubicacion = "Ubicación de ejemplo";
+    data.value.descripcionPEF = "Descripción PEF de ejemplo";
+    data.value.impactoAmbiental = "Impacto Ambiental de ejemplo";
+    data.value.transitoEsperado = "Tránsito Esperado de ejemplo";
+    data.value.longitud = "Longitud de ejemplo";
     /* getData(itemId.value)
       .then((response: any) => {
         data.value.clave = response.clave;
