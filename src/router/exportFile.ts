@@ -6,3 +6,4 @@ export { cat_Unidad_Responsable } from "@/router/cat_Unidad_Responsable";
 export { proyectoDeInversiones } from "@/router/proyectoDeInversion";
 export { cargaMasiva } from "@/router/CargaMasiva";
 export { reportsRoutes } from "@/router/reports";
+export { presupuestoEgreso } from "@/router/presupuestoEgreso";

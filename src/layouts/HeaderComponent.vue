@@ -43,6 +43,15 @@
                 Carga Mavisa
               </router-link>
             </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-presupuestoEgreso' }"
+                @click="toggleScheduleModuleMenu"
+              >
+                Presupuesto de Egreso
+              </router-link>
+            </li>
           </ul>
         </li>
         <li class="nav-item dropdown">

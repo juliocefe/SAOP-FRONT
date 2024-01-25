@@ -7,6 +7,7 @@ import {
   proyectoDeInversiones,
   cargaMasiva,
   reportsRoutes,
+  presupuestoEgreso,
 } from "@/router/exportFile.ts";
 import { isAuthenticated } from "@/utils/helpers/authenticationHelper";
 import { constructionTypesRoutes } from "./constructionTypesRoutes";
@@ -100,6 +101,11 @@ export const routes = [
         path: "reportes",
         name: "reportes",
         children: reportsRoutes,
+      },
+      {
+        path: "presupuestoEgreso",
+        name: "presupuestoEgreso",
+        children: presupuestoEgreso,
       },
     ],
     beforeEnter: () => {
