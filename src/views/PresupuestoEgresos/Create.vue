@@ -187,6 +187,7 @@ const data = ref<MiInterfaz>({
   impactoAmbiental: "",
   longitud: "",
   fecha: "",
+  pais: "1",
 });
 
 /* const { formState, isValid, errors, showErrors } = useForm(
