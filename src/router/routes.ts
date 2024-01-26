@@ -19,7 +19,7 @@ import { feasibilityRoutes } from "./feasibilityRoutes";
 
 export const routes = [
   {
-    path: "/saop/",
+    path: "/",
     component: () => import("@/layouts/LayoutComponent.vue"),
     children: [
       {
