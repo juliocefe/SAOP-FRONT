@@ -168,6 +168,15 @@
                 Unidad Responsable
               </router-link>
             </li>
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'listar-Publicacion' }"
+                @click="toggleCatalogueMenu"
+              >
+                Conceptos de Obra
+              </router-link>
+            </li>
           </ul>
         </li>
         <li class="nav-item dropdown">
