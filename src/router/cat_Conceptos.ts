@@ -1,6 +1,11 @@
 export const cat_Conceptos = [
   {
     path: "",
+    name: "listar-Conceptos",
+    component: () => import("@/views/Cat_Conceptos/Index.vue"),
+  },
+  {
+    path: "",
     name: "listar-Publicacion",
     component: () => import("@/views/Cat_Conceptos/Publicacion/Index.vue"),
   },

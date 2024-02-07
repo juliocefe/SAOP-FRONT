@@ -171,7 +171,7 @@
             <li>
               <router-link
                 class="dropdown-item"
-                :to="{ name: 'listar-Publicacion' }"
+                :to="{ name: 'listar-Conceptos' }"
                 @click="toggleCatalogueMenu"
               >
                 Conceptos de Obra
