@@ -7,3 +7,4 @@ export { proyectoDeInversiones } from "@/router/proyectoDeInversion";
 export { cargaMasiva } from "@/router/CargaMasiva";
 export { reportsRoutes } from "@/router/reports";
 export { presupuestoEgreso } from "@/router/presupuestoEgreso";
+export { cat_Conceptos } from "@/router/cat_Conceptos";

@@ -151,30 +151,6 @@
           />
         </div>
       </div>
-      <div
-        class="tab-pane fade"
-        id="datosFinancieros"
-        role="tabpanel"
-        aria-labelledby="datosFinancieros-tab"
-      >
-        <DatosFinancieros
-          v-if="idRow"
-          :idRow="idRow"
-          :data="arrayDataDatosFinancieros"
-        />
-      </div>
-      <div
-        class="tab-pane fade"
-        id="contact"
-        role="tabpanel"
-        aria-labelledby="contact-tab"
-      >
-        <FichaTecnica
-          v-if="idRow"
-          :idRow="idRow"
-          :data="arrayDataFichaTecnica"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -185,8 +161,6 @@ import DataTableComponent from "@/components/DataTableComponent.vue";
 import router from "@/router";
 import ButtonBarComponent from "@/components/ButtonBarComponent.vue";
 import AccionesPresupuestoEgreso from "@/components/AccionesPresupuestoEgreso.vue";
-import DatosFinancieros from "@/components/forms/DatosFinancieros.vue";
-import FichaTecnica from "@/components/forms/FichaTecnica.vue";
 import {
   addClickListener,
   removeClickListener,
@@ -245,9 +219,6 @@ const handleClick = (event?: MouseEvent) => {
     selectedProyect.value = "";
   }
 };
-
-const arrayDataDatosFinancieros = ref();
-const arrayDataFichaTecnica = ref();
 
 /* const handleDatosFinancieros = () => {
   let { getData: getDataDatosFinancieros } = usePetition(

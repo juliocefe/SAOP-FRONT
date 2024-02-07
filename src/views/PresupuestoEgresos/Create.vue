@@ -5,6 +5,7 @@
     <form role="form" @submit.prevent="saveProyectoDeInversion">
       <div class="row">
         <InputText
+          :disabled="itemId !== ''"
           v-model.trim="data.noSolicitud"
           title="Número de Solicitud:"
           placeholder="Número de Solicitud"
