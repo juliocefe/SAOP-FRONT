@@ -18,6 +18,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
+          :disabled="idRow === ''"
           class="nav-link"
           id="libro_tab-tab"
           data-bs-toggle="tab"
@@ -32,6 +33,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
+          :disabled="idRow === ''"
           class="nav-link"
           id="temas_tab-tab"
           data-bs-toggle="tab"
@@ -46,6 +48,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
+          :disabled="idRow === ''"
           class="nav-link"
           id="parte_tab-tab"
           data-bs-toggle="tab"
@@ -364,7 +367,7 @@ const handleClick = (event?: MouseEvent) => {
 //Catalogo libros
 const handleLibros = () => {
   // Llama a la API para obtener la información
-  getDatasLibro({ page: 1 }).then(() => {
+  searchDataLibro({ page: 1, search: idRow.value }).then(() => {
     // Realiza las operaciones necesarias con la información obtenida
     // Puedes asignar los resultados aqui
   });
@@ -381,7 +384,7 @@ const handlePaginateLibro = (page: number) => {
 //Catalogo Temas
 const handleTemas = () => {
   // Llama a la API para obtener la información
-  getDatasTemas({ page: 1 }).then(() => {
+  searchDataTemas({ page: 1, search: idRow.value }).then(() => {
     // Realiza las operaciones necesarias con la información obtenida
     // Puedes asignar los resultados aqui
   });
@@ -398,7 +401,7 @@ const handlePaginateTemas = (page: number) => {
 //Catalogo Parte
 const handleParte = () => {
   // Llama a la API para obtener la información
-  getDatasParte({ page: 1 }).then(() => {
+  searchDataParte({ page: 1, search: idRow.value }).then(() => {
     // Realiza las operaciones necesarias con la información obtenida
     // Puedes asignar los resultados aqui
   });
@@ -462,7 +465,6 @@ const columnsParte = [
   { title: "Libro", data: "libro", align: "center" },
   { title: "Tema", data: "tema", align: "center" },
   { title: "Parte", data: "id", align: "center" },
-  { title: "Parte", data: "parte", align: "center" },
   { title: "Descripción de Parte", data: "descripcion", align: "left" },
 ];
 
