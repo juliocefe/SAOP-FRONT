@@ -72,10 +72,8 @@ const selectRow = (row: any) => {
     }
 
     const selected = props.prefix ?  document.querySelector(`.${props.prefix} .selectedRow`) : document.querySelector('.selectedRow');
-    console.log(selected)
     if (selected) {
         selected.classList.remove('selectedRow');
-        console.log('x')
     }
 
     // Obtener la fila correspondiente
