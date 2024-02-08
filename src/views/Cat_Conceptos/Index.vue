@@ -18,6 +18,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
+          :disabled="idRow === ''"
           class="nav-link"
           id="libro_tab-tab"
           data-bs-toggle="tab"
@@ -32,6 +33,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
+          :disabled="idRow === ''"
           class="nav-link"
           id="temas_tab-tab"
           data-bs-toggle="tab"
@@ -42,6 +44,21 @@
           @click="handleTemas()"
         >
           Temas
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          :disabled="idRow === ''"
+          class="nav-link"
+          id="parte_tab-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#parte_tab"
+          type="button"
+          role="tab"
+          aria-controls="parte_tab"
+          @click="handleParte()"
+        >
+          Parte
         </button>
       </li>
     </ul>
@@ -223,6 +240,46 @@
           @onGetID="handleRowClick"
         />
       </div>
+      <div
+        class="tab-pane fade"
+        id="parte_tab"
+        role="tabpanel"
+        aria-labelledby="parte_tab-tab"
+      >
+        <h4 class="view-name">
+          <span>{{ selectedProyect }} - </span>
+          {{ viewName }}
+        </h4>
+        <hr class="red" />
+        <div class="row app-options-bar">
+          <div
+            class="d-flex align-items-center buttons-component align-items-center"
+          >
+            <div class="col-md-8">
+              <ButtonBarComponent
+                @onCreate="handleCreate"
+                :show-subactions="false"
+              />
+            </div>
+          </div>
+        </div>
+        <DataTableComponent
+          v-if="!arrayDataParte.loading && idRow"
+          rowId="clave"
+          :columns="columnsParte"
+          :data="arrayDataParte.data"
+          :pagination="arrayDataParte.pagination"
+          :showDelete="true"
+          :showEdit="true"
+          :row-select="true"
+          :fixed-actions="true"
+          @onPaginate="handlePaginateParte"
+          @onEdit="handleEdit"
+          @onDelete="handleDelete"
+          @onCreate="handleCreate"
+          @onGetID="handleRowClick"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -240,6 +297,15 @@ import {
 const viewName = ref("Conceptos de Obra");
 /* Consultas  */
 const {
+  arrayData: arrayDataEntidadFederativa,
+  getDatas: getDatasEntidadFederativa,
+} = usePetition("cat_entidad_federativa/");
+const {
+  arrayData: arrayDataUnidadResponsable,
+  getDatas: getDatasUnidadResponsable,
+} = usePetition("cat_unidad_responsable/");
+
+const {
   arrayData: arrayDataPublicacion,
   getDatas: getDatasPublicacion,
   searchData: searchDataPublicacion,
@@ -254,6 +320,11 @@ const {
   getDatas: getDatasTemas,
   searchData: searchDataTemas,
 } = usePetition("cat_tema/");
+const {
+  arrayData: arrayDataParte,
+  getDatas: getDatasParte,
+  searchData: searchDataParte,
+} = usePetition("cat_parte/");
 
 const searchTerm = ref("");
 const idRow = ref("");
@@ -296,7 +367,7 @@ const handleClick = (event?: MouseEvent) => {
 //Catalogo libros
 const handleLibros = () => {
   // Llama a la API para obtener la información
-  getDatasLibro({ page: 1 }).then(() => {
+  searchDataLibro({ page: 1, search: idRow.value }).then(() => {
     // Realiza las operaciones necesarias con la información obtenida
     // Puedes asignar los resultados aqui
   });
@@ -313,7 +384,7 @@ const handlePaginateLibro = (page: number) => {
 //Catalogo Temas
 const handleTemas = () => {
   // Llama a la API para obtener la información
-  getDatasTemas({ page: 1 }).then(() => {
+  searchDataTemas({ page: 1, search: idRow.value }).then(() => {
     // Realiza las operaciones necesarias con la información obtenida
     // Puedes asignar los resultados aqui
   });
@@ -327,14 +398,22 @@ const handlePaginateTemas = (page: number) => {
   }
 };
 
-const {
-  arrayData: arrayDataEntidadFederativa,
-  getDatas: getDatasEntidadFederativa,
-} = usePetition("cat_entidad_federativa/");
-const {
-  arrayData: arrayDataUnidadResponsable,
-  getDatas: getDatasUnidadResponsable,
-} = usePetition("cat_unidad_responsable/");
+//Catalogo Parte
+const handleParte = () => {
+  // Llama a la API para obtener la información
+  searchDataParte({ page: 1, search: idRow.value }).then(() => {
+    // Realiza las operaciones necesarias con la información obtenida
+    // Puedes asignar los resultados aqui
+  });
+  viewName.value = "Parte";
+};
+const handlePaginateParte = (page: number) => {
+  if (searchTerm.value) {
+    searchDataParte({ page: page, search: searchTerm.value });
+  } else {
+    getDatasParte({ page });
+  }
+};
 
 const handlePaginate = (page: number) => {
   if (searchTerm.value) {
@@ -380,6 +459,13 @@ const columnsTemas = [
   { title: "Tema", data: "id", align: "center" },
   { title: "Tema", data: "tema", align: "center" },
   { title: "Descripción de Tema", data: "descripcion", align: "left" },
+];
+const columnsParte = [
+  { title: "Publicacion", data: "publicacion", align: "center" },
+  { title: "Libro", data: "libro", align: "center" },
+  { title: "Tema", data: "tema", align: "center" },
+  { title: "Parte", data: "id", align: "center" },
+  { title: "Descripción de Parte", data: "descripcion", align: "left" },
 ];
 
 onMounted(async () => {
