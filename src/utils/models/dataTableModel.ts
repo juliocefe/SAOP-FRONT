@@ -8,5 +8,6 @@ export interface IDatatable {
     showDetail?: boolean,
     hideActions?:boolean,
     fixedActions?:boolean,
-    rowSelect?:boolean
+    rowSelect?:boolean,
+    prefix?:string 
 }

@@ -229,7 +229,6 @@ const handleFileUpload = (event: Event) => {
 };
 
 const handleSubmit = async () => {
-  console.log('hanlde')
   data.cartera_proyecto_inversion = props.idRow!!;
   if (isValid.value) {
     const formData = new FormData();
