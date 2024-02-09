@@ -11,14 +11,14 @@
           role="tab"
           aria-controls="home"
           aria-selected="true"
-          @click="viewName = 'Publicacion'"
+          @click="handlePublicacion()"
         >
           Publicacion
         </button>
       </li>
       <li class="nav-item" role="presentation">
         <button
-          :disabled="idRow === ''"
+          :disabled="publicacionId === ''"
           class="nav-link"
           id="libro_tab-tab"
           data-bs-toggle="tab"
@@ -33,7 +33,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
-          :disabled="idRow === ''"
+          :disabled="libroId === ''"
           class="nav-link"
           id="temas_tab-tab"
           data-bs-toggle="tab"
@@ -48,7 +48,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button
-          :disabled="idRow === ''"
+          :disabled="temaId === ''"
           class="nav-link"
           id="parte_tab-tab"
           data-bs-toggle="tab"
@@ -63,6 +63,45 @@
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
+      <h4 class="view-name">
+        {{ viewName }}
+      </h4>
+      <hr class="red" />
+      <div class="row app-options-bar">
+        <div
+          class="d-flex align-items-center buttons-component align-items-center"
+        >
+          <div class="col-md-8">
+            <ButtonBarComponent
+              @onCreate="handleCreate"
+              :show-subactions="false"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="d-flex px-2">
+        <div class="pr-3 col-md-1" style="font-size: 30px">
+          <i class="px-2 bi bi-funnel-fill"></i>
+        </div>
+        <div class="flex-grow-1 d-flex justify-content-end">
+          <div class="form-group">
+            <div class="d-flex align-items-center form-group m-0">
+              <div>
+                <span class="font-weight-bold pr-2">No. Solicitud: </span>
+              </div>
+              <div>
+                <input
+                  class="form-control w-auto"
+                  placeholder="Buscar..."
+                  type="text"
+                  v-model="inputSolicitud"
+                  @keyup.enter="handleFilter()"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div
         class="tab-pane fade show active"
         id="home"
@@ -70,81 +109,9 @@
         aria-labelledby="home-tab"
       >
         <div v-if="showView">
-          <h4 class="view-name">
-            <span v-if="selectedProyect">{{ selectedProyect }} - </span>
-            {{ viewName }}
-          </h4>
-          <hr class="red" />
-          <div class="row app-options-bar">
-            <div
-              class="d-flex align-items-center buttons-component align-items-center"
-            >
-              <div class="col-md-8">
-                <ButtonBarComponent
-                  @onCreate="handleCreate"
-                  :show-subactions="false"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="d-flex px-2">
-            <div class="pr-3 col-md-1" style="font-size: 30px">
-              <i class="px-2 bi bi-funnel-fill"></i>
-            </div>
-            <div class="px-3" style="min-width: 210px !important">
-              <select
-                class="form-select form-control"
-                v-model="cbEntidad"
-                @change="handleFilter()"
-              >
-                <option selected value="">Entidad</option>
-                <option
-                  v-for="opt in arrayDataEntidadFederativa.data"
-                  :key="opt.value"
-                  :value="opt.descripcion_corta"
-                >
-                  {{ opt.descripcion_corta }}
-                </option>
-              </select>
-            </div>
-            <div class="px-3" style="min-width: 210px !important">
-              <select
-                class="form-select form-control"
-                v-model="cbUnidad"
-                @change="handleFilter()"
-              >
-                <option value="">Unidad reponsable</option>
-                <option
-                  v-for="opt in arrayDataUnidadResponsable.data"
-                  :key="opt.value"
-                  :value="opt.clave"
-                >
-                  {{ opt.descripcion_corta }}
-                </option>
-              </select>
-            </div>
-            <div class="flex-grow-1 d-flex justify-content-end">
-              <div class="form-group">
-                <div class="d-flex align-items-center form-group m-0">
-                  <div>
-                    <span class="font-weight-bold pr-2">No. Solicitud: </span>
-                  </div>
-                  <div>
-                    <input
-                      class="form-control w-auto"
-                      placeholder="Buscar..."
-                      type="text"
-                      v-model="inputSolicitud"
-                      @keyup.enter="handleFilter()"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <DataTableComponent
             v-if="!arrayDataPublicacion.loading"
-            rowId="clave"
+            rowId="id"
             :columns="columns"
             :data="arrayDataPublicacion.data"
             :pagination="arrayDataPublicacion.pagination"
@@ -152,11 +119,12 @@
             :showEdit="true"
             :row-select="true"
             :fixed-actions="true"
+            :prefix="publicacionPrefix"
             @onPaginate="handlePaginate"
             @onEdit="handleEdit"
             @onDelete="handleDelete"
             @onCreate="handleCreate"
-            @onGetID="handleRowClick"
+            @onGetID="(data) => publicacionId = data.id"
           />
         </div>
       </div>
@@ -166,26 +134,9 @@
         role="tabpanel"
         aria-labelledby="libro_tab-tab"
       >
-        <h4 class="view-name">
-          <span>{{ selectedProyect }} - </span>
-          {{ viewName }}
-        </h4>
-        <hr class="red" />
-        <div class="row app-options-bar">
-          <div
-            class="d-flex align-items-center buttons-component align-items-center"
-          >
-            <div class="col-md-8">
-              <ButtonBarComponent
-                @onCreate="handleCreate"
-                :show-subactions="false"
-              />
-            </div>
-          </div>
-        </div>
         <DataTableComponent
-          v-if="!arrayDataLibro.loading && idRow"
-          rowId="clave"
+          v-if="!arrayDataLibro.loading && publicacionId"
+          rowId="id"
           :columns="columnsLibro"
           :data="arrayDataLibro.data"
           :pagination="arrayDataLibro.pagination"
@@ -193,11 +144,12 @@
           :showEdit="true"
           :row-select="true"
           :fixed-actions="true"
+          :prefix="libroPrefix"
           @onPaginate="handlePaginateLibro"
           @onEdit="handleEdit"
           @onDelete="handleDelete"
           @onCreate="handleCreate"
-          @onGetID="handleRowClick"
+          @onGetID="(data) => libroId = data.id"
         />
       </div>
       <div
@@ -206,25 +158,8 @@
         role="tabpanel"
         aria-labelledby="temas_tab-tab"
       >
-        <h4 class="view-name">
-          <span>{{ selectedProyect }} - </span>
-          {{ viewName }}
-        </h4>
-        <hr class="red" />
-        <div class="row app-options-bar">
-          <div
-            class="d-flex align-items-center buttons-component align-items-center"
-          >
-            <div class="col-md-8">
-              <ButtonBarComponent
-                @onCreate="handleCreate"
-                :show-subactions="false"
-              />
-            </div>
-          </div>
-        </div>
         <DataTableComponent
-          v-if="!arrayDataTemas.loading && idRow"
+          v-if="!arrayDataTemas.loading && libroId"
           rowId="clave"
           :columns="columnsTemas"
           :data="arrayDataTemas.data"
@@ -233,11 +168,12 @@
           :showEdit="true"
           :row-select="true"
           :fixed-actions="true"
+          :prefix="temaPrefix"
           @onPaginate="handlePaginateTemas"
           @onEdit="handleEdit"
           @onDelete="handleDelete"
           @onCreate="handleCreate"
-          @onGetID="handleRowClick"
+          @onGetID="(data) => temaId = data.id"
         />
       </div>
       <div
@@ -246,23 +182,6 @@
         role="tabpanel"
         aria-labelledby="parte_tab-tab"
       >
-        <h4 class="view-name">
-          <span>{{ selectedProyect }} - </span>
-          {{ viewName }}
-        </h4>
-        <hr class="red" />
-        <div class="row app-options-bar">
-          <div
-            class="d-flex align-items-center buttons-component align-items-center"
-          >
-            <div class="col-md-8">
-              <ButtonBarComponent
-                @onCreate="handleCreate"
-                :show-subactions="false"
-              />
-            </div>
-          </div>
-        </div>
         <DataTableComponent
           v-if="!arrayDataParte.loading && idRow"
           rowId="clave"
@@ -294,7 +213,8 @@ import {
   removeClickListener,
 } from "@/utils/listeners/clickListener";
 
-const viewName = ref("Conceptos de Obra");
+const viewName = ref("Publicaciones");
+const selectedCat = ref("cat_publicacion/");
 /* Consultas  */
 const {
   arrayData: arrayDataEntidadFederativa,
@@ -325,6 +245,14 @@ const {
   getDatas: getDatasParte,
   searchData: searchDataParte,
 } = usePetition("cat_parte/");
+
+
+const publicacionPrefix = 'publicacion'
+const publicacionId = ref("")
+const libroPrefix = 'libro'
+const libroId = ref("")
+const temaPrefix = 'tema'
+const temaId = ref("")
 
 const searchTerm = ref("");
 const idRow = ref("");
@@ -363,15 +291,16 @@ const handleClick = (event?: MouseEvent) => {
     selectedProyect.value = "";
   }
 };
-
+//Catalogo publicacion
+const handlePublicacion = () => {
+  viewName.value = "Publicaciones";
+  selectedCat.value = "cat_publicacion/"
+};
 //Catalogo libros
 const handleLibros = () => {
-  // Llama a la API para obtener la información
-  searchDataLibro({ page: 1, search: idRow.value }).then(() => {
-    // Realiza las operaciones necesarias con la información obtenida
-    // Puedes asignar los resultados aqui
-  });
+  searchDataLibro({ page: 1, search: publicacionId.value })
   viewName.value = "Libros";
+  selectedCat.value = "cat_libro/"
 };
 const handlePaginateLibro = (page: number) => {
   if (searchTerm.value) {
@@ -383,12 +312,9 @@ const handlePaginateLibro = (page: number) => {
 
 //Catalogo Temas
 const handleTemas = () => {
-  // Llama a la API para obtener la información
-  searchDataTemas({ page: 1, search: idRow.value }).then(() => {
-    // Realiza las operaciones necesarias con la información obtenida
-    // Puedes asignar los resultados aqui
-  });
+  searchDataTemas({ page: 1, search: idRow.value })
   viewName.value = "Temas";
+  selectedCat.value = "cat_tema/"
 };
 const handlePaginateTemas = (page: number) => {
   if (searchTerm.value) {
@@ -400,12 +326,9 @@ const handlePaginateTemas = (page: number) => {
 
 //Catalogo Parte
 const handleParte = () => {
-  // Llama a la API para obtener la información
-  searchDataParte({ page: 1, search: idRow.value }).then(() => {
-    // Realiza las operaciones necesarias con la información obtenida
-    // Puedes asignar los resultados aqui
-  });
+  searchDataParte({ page: 1, search: idRow.value })
   viewName.value = "Parte";
+  selectedCat.value = "cat_parte/"
 };
 const handlePaginateParte = (page: number) => {
   if (searchTerm.value) {

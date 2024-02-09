@@ -1,7 +1,7 @@
   
   
 <template>
-    <div id="data-table-component">
+    <div id="data-table-component" :class="prefix">
         <DataTable class="table table-hover table-bordered" :options="OPTIONS">
             <thead>
                 <tr>
@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value)" :id="`row-${value[rowId]}`" :class="{ 'pointer': props.rowSelect}">
+                <tr v-for="value in data" :key="value[rowId]" @click="selectRow(value)" :id="`row-${prefix || ''}${value[rowId]}`" :class="{ 'pointer': props.rowSelect}">
                     <td v-for="col in columns" class="text-left" v-html="render(value[col.data])"></td>
                     <td v-if="!props.hideActions" class="text-center action_items"
                         :class="{ 'fixed-actions-colum': props.fixedActions }">
@@ -71,13 +71,13 @@ const selectRow = (row: any) => {
         selectedRow.value = selectedRowId;
     }
 
-    const selected = document.querySelector('.selectedRow');
+    const selected = props.prefix ?  document.querySelector(`.${props.prefix} .selectedRow`) : document.querySelector('.selectedRow');
     if (selected) {
         selected.classList.remove('selectedRow');
     }
 
     // Obtener la fila correspondiente
-    const rowHtml = document.querySelector(`#row-${selectedRowId}`);
+    const rowHtml = document.querySelector(`#row-${props.prefix || ''}${selectedRowId}`);
     if (rowHtml) {
         // Agregar o quitar la clase según sea necesario
         if (selectedRow.value === selectedRowId) {
