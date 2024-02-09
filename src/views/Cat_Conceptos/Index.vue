@@ -124,7 +124,7 @@
             @onEdit="handleEdit"
             @onDelete="handleDelete"
             @onCreate="handleCreate"
-            @onGetID="(data) => publicacionId = data.id"
+            @onGetID="(data) => (publicacionId = data.id)"
           />
         </div>
       </div>
@@ -149,7 +149,7 @@
           @onEdit="handleEdit"
           @onDelete="handleDelete"
           @onCreate="handleCreate"
-          @onGetID="(data) => libroId = data.id"
+          @onGetID="(data) => (libroId = data.id)"
         />
       </div>
       <div
@@ -160,7 +160,7 @@
       >
         <DataTableComponent
           v-if="!arrayDataTemas.loading && libroId"
-          rowId="clave"
+          rowId="id"
           :columns="columnsTemas"
           :data="arrayDataTemas.data"
           :pagination="arrayDataTemas.pagination"
@@ -173,7 +173,7 @@
           @onEdit="handleEdit"
           @onDelete="handleDelete"
           @onCreate="handleCreate"
-          @onGetID="(data) => temaId = data.id"
+          @onGetID="(data) => (temaId = data.id)"
         />
       </div>
       <div
@@ -183,8 +183,8 @@
         aria-labelledby="parte_tab-tab"
       >
         <DataTableComponent
-          v-if="!arrayDataParte.loading && idRow"
-          rowId="clave"
+          v-if="!arrayDataParte.loading && temaId"
+          rowId="id"
           :columns="columnsParte"
           :data="arrayDataParte.data"
           :pagination="arrayDataParte.pagination"
@@ -192,11 +192,12 @@
           :showEdit="true"
           :row-select="true"
           :fixed-actions="true"
+          :prefix="partePrefix"
           @onPaginate="handlePaginateParte"
           @onEdit="handleEdit"
           @onDelete="handleDelete"
           @onCreate="handleCreate"
-          @onGetID="handleRowClick"
+          @onGetID="(data) => (parteId = data.id)"
         />
       </div>
     </div>
@@ -216,15 +217,6 @@ import {
 const viewName = ref("Publicaciones");
 const selectedCat = ref("cat_publicacion/");
 /* Consultas  */
-const {
-  arrayData: arrayDataEntidadFederativa,
-  getDatas: getDatasEntidadFederativa,
-} = usePetition("cat_entidad_federativa/");
-const {
-  arrayData: arrayDataUnidadResponsable,
-  getDatas: getDatasUnidadResponsable,
-} = usePetition("cat_unidad_responsable/");
-
 const {
   arrayData: arrayDataPublicacion,
   getDatas: getDatasPublicacion,
@@ -246,13 +238,14 @@ const {
   searchData: searchDataParte,
 } = usePetition("cat_parte/");
 
-
-const publicacionPrefix = 'publicacion'
-const publicacionId = ref("")
-const libroPrefix = 'libro'
-const libroId = ref("")
-const temaPrefix = 'tema'
-const temaId = ref("")
+const publicacionPrefix = "publicacion";
+const publicacionId = ref("");
+const libroPrefix = "libro";
+const libroId = ref("");
+const temaPrefix = "tema";
+const temaId = ref("");
+const partePrefix = "parte";
+const parteId = ref("");
 
 const searchTerm = ref("");
 const idRow = ref("");
@@ -263,13 +256,6 @@ const handleEdit = (data: any) =>
   router.push({ name: "editar-proyecto_de_inversion", params: { id: data } });
 const handleDelete = (data: any) =>
   router.push({ name: "eliminar-proyecto_de_inversion", params: { id: data } });
-
-const handleRowClick = (rowData: any) => {
-  // Obtén el ID del registro seleccionado
-  // Realiza las operaciones necesarias con el ID del registro seleccionado
-  idRow.value = rowData.id;
-  selectedProyect.value = rowData.id;
-};
 
 const handleClick = (event?: MouseEvent) => {
   //solo aplica si se esta en la pantalla de datatable
@@ -294,13 +280,19 @@ const handleClick = (event?: MouseEvent) => {
 //Catalogo publicacion
 const handlePublicacion = () => {
   viewName.value = "Publicaciones";
-  selectedCat.value = "cat_publicacion/"
+  selectedCat.value = "cat_publicacion/";
+  libroId.value = "";
+  temaId.value = "";
+  parteId.value = "";
 };
 //Catalogo libros
 const handleLibros = () => {
-  searchDataLibro({ page: 1, search: publicacionId.value })
+  if (viewName.value !== "Libros" && libroId.value === "") {
+    searchDataLibro({ page: 1, search: publicacionId.value });
+  }
   viewName.value = "Libros";
-  selectedCat.value = "cat_libro/"
+  selectedCat.value = "cat_libro/";
+  temaId.value = "";
 };
 const handlePaginateLibro = (page: number) => {
   if (searchTerm.value) {
@@ -312,9 +304,11 @@ const handlePaginateLibro = (page: number) => {
 
 //Catalogo Temas
 const handleTemas = () => {
-  searchDataTemas({ page: 1, search: idRow.value })
+  if (viewName.value !== "Temas" && temaId.value === "") {
+    searchDataTemas({ page: 1, search: temaId.value });
+  }
   viewName.value = "Temas";
-  selectedCat.value = "cat_tema/"
+  selectedCat.value = "cat_tema/";
 };
 const handlePaginateTemas = (page: number) => {
   if (searchTerm.value) {
@@ -326,9 +320,9 @@ const handlePaginateTemas = (page: number) => {
 
 //Catalogo Parte
 const handleParte = () => {
-  searchDataParte({ page: 1, search: idRow.value })
+  searchDataParte({ page: 1, search: temaId.value });
   viewName.value = "Parte";
-  selectedCat.value = "cat_parte/"
+  selectedCat.value = "cat_parte/";
 };
 const handlePaginateParte = (page: number) => {
   if (searchTerm.value) {
@@ -395,8 +389,6 @@ onMounted(async () => {
   await getDatasPublicacion({ page: 1 }).then(() => {
     showView.value = true;
   });
-  getDatasEntidadFederativa({ page: 1, size: 100 });
-  getDatasUnidadResponsable({ page: 1, size: 100 });
   addClickListener(handleClick);
 });
 onBeforeUnmount(() => {
