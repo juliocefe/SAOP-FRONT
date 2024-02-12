@@ -126,9 +126,24 @@
               openButtonTittle="Crear"
               :large-modal="true"
               @onCloseModal="modal = false"
-              @onSave="savePublicacion"
+              @onSave="saveForm"
             >
-              <PublicacionForm @update-data="dataPublicacionForm" />
+              <PublicacionForm
+                v-if="viewName === 'Publicaciones'"
+                @update-data="dataPublicacionForm"
+              />
+              <LibroForm
+                v-if="viewName === 'Libros'"
+                @update-data="dataLibroForm"
+              />
+              <TemaForm
+                v-if="viewName === 'Temas'"
+                @update-data="dataTemaForm"
+              />
+              <ParteForm
+                v-if="viewName === 'Parte'"
+                @update-data="dataParteForm"
+              />
             </Modal>
           </div>
         </div>
@@ -290,6 +305,12 @@ import TituloForm from "@/components/forms/Titulo.vue";
 import CapituloForm from "@/components/forms/Capitulo.vue";
 import PublicacionForm from "@/components/forms/Publicacion.vue";
 import { IPublicacion } from "@/utils/models/cat_publicaciones";
+import LibroForm from "@/components/forms/Libro.vue";
+import { ILibro } from "@/utils/models/cat_libros";
+import TemaForm from "@/components/forms/Tema.vue";
+import { ITema } from "@/utils/models/cat_temas";
+import ParteForm from "@/components/forms/Parte.vue";
+import { IParte } from "@/utils/models/cat_partes";
 import router from "@/router";
 /* import Modal from "@/components/Modals.vue"; */
 import Modal from "@/components/ModalWithoutButton.vue";
@@ -308,22 +329,25 @@ const {
   arrayData: arrayDataPublicacion,
   getDatas: getDatasPublicacion,
   searchData: searchDataPublicacion,
-  createData,
+  createData: createDataPublicacion,
 } = usePetition("cat_publicacion/");
 const {
   arrayData: arrayDataLibro,
   getDatas: getDatasLibro,
   searchData: searchDataLibro,
+  createData: createDataLibro,
 } = usePetition("cat_libro/");
 const {
   arrayData: arrayDataTemas,
   getDatas: getDatasTemas,
   searchData: searchDataTemas,
+  createData: createDataTemas,
 } = usePetition("cat_tema/");
 const {
   arrayData: arrayDataParte,
   getDatas: getDatasParte,
   searchData: searchDataParte,
+  createData: createDataParte,
 } = usePetition("cat_parte/");
 const {
   arrayData: arrayDataTitulo,
@@ -502,17 +526,68 @@ const modal = ref(false);
     console.log(dynamicComponent);
   }
 }; */
-
-const savedPublicacionData = ref<IPublicacion | null>(null);
+//Publicacion
+const savedPublicacionData = ref<IPublicacion>({
+  descripcion: "",
+  tipo: "",
+});
 const dataPublicacionForm = (dataPublicacion: IPublicacion) => {
   savedPublicacionData.value = dataPublicacion;
 };
+//Libros
+const savedLibroData = ref<ILibro>({
+  descripcion: "",
+  libro: "",
+  publicacion: "",
+});
+const dataLibroForm = (dataLibro: ILibro) => {
+  savedLibroData.value = dataLibro;
+};
+//Temas
+const savedTemaData = ref<ITema>({
+  descripcion: "",
+  libro: "",
+  publicacion: "",
+  tema: "",
+});
+const dataTemaForm = (dataTema: ITema) => {
+  savedTemaData.value = dataTema;
+};
+//Partes
+const savedParteData = ref<IParte>({
+  descripcion: "",
+  libro: "",
+  publicacion: "",
+  tema: "",
+});
+const dataParteForm = (dataParte: IParte) => {
+  savedParteData.value = dataParte;
+};
 
-const savePublicacion = async () => {
-  console.log(savedPublicacionData.value);
-  console.log(savedPublicacionData.value?.descripcion);
-  console.log(savedPublicacionData.value?.tipo);
-  await createData(savedPublicacionData.value);
+const saveForm = async () => {
+  console.log(publicacionId.value);
+  switch (viewName.value) {
+    case "Publicaciones":
+      await createDataPublicacion(savedPublicacionData.value);
+      break;
+    case "Libros":
+      savedLibroData.value.publicacion = `${publicacionId.value}`;
+      await createDataLibro(savedLibroData.value);
+      break;
+    case "Temas":
+      savedTemaData.value.publicacion = `${publicacionId.value}`;
+      savedTemaData.value.libro = `${libroId.value}`;
+      await createDataTemas(savedTemaData.value);
+      break;
+    case "Parte":
+      savedParteData.value.publicacion = `${publicacionId.value}`;
+      savedParteData.value.libro = `${libroId.value}`;
+      savedParteData.value.tema = `${temaId.value}`;
+      await createDataParte(savedParteData.value);
+      break;
+    default:
+      console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
+  }
 };
 
 //Colunas
