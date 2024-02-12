@@ -102,16 +102,33 @@
           class="d-flex align-items-center buttons-component align-items-center"
         >
           <div class="col-md-8">
-            <Modal
+            <ButtonBarComponent
+              @onCreate="modal = true"
+              :show-subactions="false"
+            />
+            <!-- <Modal
               :title="`Agregar ${viewName}`"
               saveButtonTitle="Aceptar"
               openButtonTittle="Crear"
               :large-modal="true"
               iconClasses="bi bi-plus"
               @onSaveButton="saveActionTrigger"
-              >
-              <component :is="dynamicComponent" :saveTrigger="modal"></component>
-              <!-- < /> -->
+            >
+              <component
+                :is="dynamicComponent"
+                :saveTrigger="modal"
+              ></component>
+            </Modal> -->
+            <Modal
+              v-if="modal"
+              :title="`Agregar ${viewName}`"
+              saveButtonTitle="Aceptar"
+              openButtonTittle="Crear"
+              :large-modal="true"
+              @onCloseModal="modal = false"
+              @onSave="savePublicacion"
+            >
+              <PublicacionForm @update-data="dataPublicacionForm" />
             </Modal>
           </div>
         </div>
@@ -268,10 +285,14 @@
 import { onMounted, ref, onBeforeUnmount, shallowRef } from "vue";
 import usePetition from "@/composables/usePetition";
 import DataTableComponent from "@/components/DataTableComponent.vue";
+import ButtonBarComponent from "@/components/ButtonBarComponent.vue";
 import TituloForm from "@/components/forms/Titulo.vue";
 import CapituloForm from "@/components/forms/Capitulo.vue";
+import PublicacionForm from "@/components/forms/Publicacion.vue";
+import { IPublicacion } from "@/utils/models/cat_publicaciones";
 import router from "@/router";
-import Modal from "@/components/Modals.vue";
+/* import Modal from "@/components/Modals.vue"; */
+import Modal from "@/components/ModalWithoutButton.vue";
 import {
   addClickListener,
   removeClickListener,
@@ -287,6 +308,7 @@ const {
   arrayData: arrayDataPublicacion,
   getDatas: getDatasPublicacion,
   searchData: searchDataPublicacion,
+  createData,
 } = usePetition("cat_publicacion/");
 const {
   arrayData: arrayDataLibro,
@@ -332,8 +354,11 @@ const idRow = ref("");
 const selectedProyect = ref("");
 const showView = ref(false);
 const handleCreate = () => router.push({ name: "crear-proyecto_de_inversion" });
-const handleEdit = (data: any) =>
-  router.push({ name: "editar-proyecto_de_inversion", params: { id: data } });
+const handleEdit = (data: any) => {
+  modal.value = true;
+  console.log(data);
+  /* router.push({ name: "editar-proyecto_de_inversion", params: { id: data } }) */
+};
 const handleDelete = (data: any) =>
   router.push({ name: "eliminar-proyecto_de_inversion", params: { id: data } });
 
@@ -364,6 +389,7 @@ const handlePublicacion = () => {
   libroId.value = "";
   temaId.value = "";
   parteId.value = "";
+  dynamicComponent = shallowRef(PublicacionForm);
 };
 //Catalogo libros
 const handleLibros = () => {
@@ -414,7 +440,7 @@ const handlePaginateParte = (page: number) => {
 
 //Catalogo titulo
 const handleTitulo = () => {
-  searchDataTitulo({ page: 1});
+  searchDataTitulo({ page: 1 });
   viewName.value = "Titulo";
   selectedCat.value = "cat_titulo/";
   dynamicComponent.value = TituloForm;
@@ -468,10 +494,26 @@ const cbUnidad = ref<string>("");
 const inputSolicitud = ref<string>("");
 
 const modal = ref(false);
-const saveActionTrigger = () => {
+/* const saveActionTrigger = () => {
   modal.value = !modal.value;
-  console.log(modal.value)
-}
+  console.log(modal.value);
+  if (viewName.value === "Publicaciones") {
+    console.log(`ViewName: ${viewName.value}`);
+    console.log(dynamicComponent);
+  }
+}; */
+
+const savedPublicacionData = ref<IPublicacion | null>(null);
+const dataPublicacionForm = (dataPublicacion: IPublicacion) => {
+  savedPublicacionData.value = dataPublicacion;
+};
+
+const savePublicacion = async () => {
+  console.log(savedPublicacionData.value);
+  console.log(savedPublicacionData.value?.descripcion);
+  console.log(savedPublicacionData.value?.tipo);
+  await createData(savedPublicacionData.value);
+};
 
 //Colunas
 const columns = [
