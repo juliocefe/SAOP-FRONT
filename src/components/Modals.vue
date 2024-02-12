@@ -28,7 +28,7 @@
           <div class="modal-body">
             <slot></slot>
           </div>
-          <div class="modal-footer">
+          <div v-if="!hideActions" class="modal-footer">
             <button
               type="button"
               class="btn btn-secondary"
@@ -51,9 +51,8 @@
       type="button"
       class="btn btn-primary active"
       @click="toggleModal(true)"
-      v-if="!isModalOpen"
     >
-      {{ props.openButtonTittle }}
+    <span><i :class="iconClasses"></i> <b>{{ props.openButtonTittle }}</b></span>
     </button>
   </div>
 </template>
@@ -77,6 +76,13 @@ const props = defineProps({
   largeModal: {
     type: Boolean,
     default: false,
+  },
+  hideActions: {
+    type: Boolean,
+    default: false,
+  },
+  iconClasses: {
+    type: String,
   },
 });
 const emit = defineEmits(["onSaveButton"]);

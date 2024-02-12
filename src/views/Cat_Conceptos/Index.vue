@@ -61,6 +61,36 @@
           Parte
         </button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button
+          :disabled="parteId === ''"
+          class="nav-link"
+          id="titulo_tab-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#titulo_tab"
+          type="button"
+          role="tab"
+          aria-controls="titulo_tab"
+          @click="handleTitulo()"
+        >
+          Titulo
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          :disabled="tituloId === ''"
+          class="nav-link"
+          id="capitulo_tab-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#capitulo_tab"
+          type="button"
+          role="tab"
+          aria-controls="capitulo_tab"
+          @click="handleCapitulo()"
+        >
+          Capitulo
+        </button>
+      </li>
     </ul>
     <div class="tab-content" id="myTabContent">
       <h4 class="view-name">
@@ -72,10 +102,17 @@
           class="d-flex align-items-center buttons-component align-items-center"
         >
           <div class="col-md-8">
-            <ButtonBarComponent
-              @onCreate="handleCreate"
-              :show-subactions="false"
-            />
+            <Modal
+              :title="`Agregar ${viewName}`"
+              saveButtonTitle="Aceptar"
+              openButtonTittle="Crear"
+              :large-modal="true"
+              iconClasses="bi bi-plus"
+              @onSaveButton="saveActionTrigger"
+              >
+              <component :is="dynamicComponent" :saveTrigger="modal"></component>
+              <!-- < /> -->
+            </Modal>
           </div>
         </div>
       </div>
@@ -87,7 +124,7 @@
           <div class="form-group">
             <div class="d-flex align-items-center form-group m-0">
               <div>
-                <span class="font-weight-bold pr-2">No. Solicitud: </span>
+                <span class="font-weight-bold pr-2">Buscar: </span>
               </div>
               <div>
                 <input
@@ -200,19 +237,48 @@
           @onGetID="(data) => (parteId = data.id)"
         />
       </div>
+      <div
+        class="tab-pane fade"
+        id="titulo_tab"
+        role="tabpanel"
+        aria-labelledby="titulo_tab-tab"
+      >
+        <DataTableComponent
+          v-if="!arrayDataParte.loading && parteId"
+          rowId="id"
+          :columns="columnsTitulo"
+          :data="arrayDataTitulo.data"
+          :pagination="arrayDataTitulo.pagination"
+          :showDelete="true"
+          :showEdit="true"
+          :row-select="true"
+          :fixed-actions="true"
+          :prefix="tituloPrefix"
+          @onPaginate="handlePaginateTitulo"
+          @onEdit="handleEdit"
+          @onDelete="handleDelete"
+          @onCreate="handleCreate"
+          @onGetID="(data) => (tituloId = data.id)"
+        />
+      </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount } from "vue";
+import { onMounted, ref, onBeforeUnmount, shallowRef } from "vue";
 import usePetition from "@/composables/usePetition";
 import DataTableComponent from "@/components/DataTableComponent.vue";
+import TituloForm from "@/components/forms/Titulo.vue";
+import CapituloForm from "@/components/forms/Capitulo.vue";
 import router from "@/router";
-import ButtonBarComponent from "@/components/ButtonBarComponent.vue";
+import Modal from "@/components/Modals.vue";
 import {
   addClickListener,
   removeClickListener,
 } from "@/utils/listeners/clickListener";
+
+// forms
+var dynamicComponent = shallowRef(CapituloForm);
 
 const viewName = ref("Publicaciones");
 const selectedCat = ref("cat_publicacion/");
@@ -237,6 +303,16 @@ const {
   getDatas: getDatasParte,
   searchData: searchDataParte,
 } = usePetition("cat_parte/");
+const {
+  arrayData: arrayDataTitulo,
+  getDatas: getDatasTitulo,
+  searchData: searchDataTitulo,
+} = usePetition("cat_titulo/");
+const {
+  arrayData: arrayDataCapitulo,
+  getDatas: getDatasCapitulo,
+  searchData: searchDataCapitulo,
+} = usePetition("cat_capitulo/");
 
 const publicacionPrefix = "publicacion";
 const publicacionId = ref("");
@@ -246,6 +322,10 @@ const temaPrefix = "tema";
 const temaId = ref("");
 const partePrefix = "parte";
 const parteId = ref("");
+const tituloPrefix = "titulo";
+const tituloId = ref("");
+const capituloPrefix = "capitulo";
+const capituloId = ref("");
 
 const searchTerm = ref("");
 const idRow = ref("");
@@ -332,6 +412,35 @@ const handlePaginateParte = (page: number) => {
   }
 };
 
+//Catalogo titulo
+const handleTitulo = () => {
+  searchDataTitulo({ page: 1});
+  viewName.value = "Titulo";
+  selectedCat.value = "cat_titulo/";
+  dynamicComponent.value = TituloForm;
+};
+const handlePaginateTitulo = (page: number) => {
+  if (searchTerm.value) {
+    searchDataTitulo({ page: page, search: searchTerm.value });
+  } else {
+    getDatasTitulo({ page });
+  }
+};
+
+//Catalogo capitulo
+const handleCapitulo = () => {
+  searchDataCapitulo({ page: 1, search: temaId.value });
+  viewName.value = "Capitulo";
+  selectedCat.value = "cat_capitulo/";
+};
+const handlePaginateCapitulo = (page: number) => {
+  if (searchTerm.value) {
+    searchDataCapitulo({ page: page, search: searchTerm.value });
+  } else {
+    getDatasCapitulo({ page });
+  }
+};
+
 const handlePaginate = (page: number) => {
   if (searchTerm.value) {
     searchDataPublicacion({ page: page, search: searchTerm.value });
@@ -358,6 +467,12 @@ const cbEntidad = ref<string>("");
 const cbUnidad = ref<string>("");
 const inputSolicitud = ref<string>("");
 
+const modal = ref(false);
+const saveActionTrigger = () => {
+  modal.value = !modal.value;
+  console.log(modal.value)
+}
+
 //Colunas
 const columns = [
   { title: "Publicacion", data: "id", align: "center" },
@@ -383,6 +498,14 @@ const columnsParte = [
   { title: "Tema", data: "tema", align: "center" },
   { title: "Parte", data: "id", align: "center" },
   { title: "Descripción de Parte", data: "descripcion", align: "left" },
+];
+const columnsTitulo = [
+  { title: "Publicacion", data: "publicacion", align: "center" },
+  { title: "Libro", data: "libro", align: "center" },
+  { title: "Tema", data: "tema", align: "center" },
+  { title: "Parte", data: "parte", align: "center" },
+  { title: "Titulo", data: "id", align: "center" },
+  { title: "Descripción titulo", data: "descripcion", align: "left" },
 ];
 
 onMounted(async () => {
