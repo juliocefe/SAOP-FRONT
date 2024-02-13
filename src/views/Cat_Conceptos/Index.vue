@@ -73,7 +73,7 @@
           aria-controls="titulo_tab"
           @click="handleTitulo()"
         >
-          Titulo
+          Titulos
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -136,8 +136,9 @@
                 :existingData="existingParteData"
               />
               <TituloForm
-                v-if="viewName === 'Titulo'"
+                v-if="viewName === 'Titulos'"
                 @update-data="dataTituloForm"
+                :existingData="existingTituloData"
               />
               <CapituloForm
                 v-if="viewName === 'Capitulo'"
@@ -385,8 +386,10 @@ const {
 const {
   arrayData: arrayDataTitulo,
   getDatas: getDatasTitulo,
+  getData: getDataTitulo,
   searchData: searchDataTitulo,
   createData: createDataTitulo,
+  updateData: updateDataTitulo,
 } = usePetition("cat_titulo/");
 const {
   arrayData: arrayDataCapitulo,
@@ -421,6 +424,7 @@ const existingPublicacionData = ref<IPublicacion | null>(null);
 const existingLibroData = ref<ILibro | null>(null);
 const existingTemaData = ref<ITema | null>(null);
 const existingParteData = ref<ITema | null>(null);
+const existingTituloData = ref<ITema | null>(null);
 const handleEdit = (data: any) => {
   switch (viewName.value) {
     case "Publicaciones":
@@ -449,6 +453,13 @@ const handleEdit = (data: any) => {
     case "Parte":
       getDataParte(data).then((response: any) => {
         existingParteData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    case "Titulos":
+      getDataTitulo(data).then((response: any) => {
+        existingTituloData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
         isEditing.value = true;
         modal.value = true;
       });
@@ -539,7 +550,7 @@ const handlePaginateParte = (page: number) => {
 //Catalogo titulo
 const handleTitulo = () => {
   searchDataTitulo({ page: 1, search: parteId.value });
-  viewName.value = "Titulo";
+  viewName.value = "Titulos";
   selectedCat.value = "cat_titulo/";
 };
 const handlePaginateTitulo = (page: number) => {
@@ -653,6 +664,7 @@ const saveForm = async () => {
       if (isEditing.value) {
         // Llama a la función correspondiente para editar los datos existentes
         await updateDataPublicacion(savedPublicacionData.value);
+        await searchDataPublicacion({ page: 1, search: parteId.value });
       } else {
         // Llama a la función correspondiente para crear nuevos datos
         await createDataPublicacion(savedPublicacionData.value);
@@ -662,6 +674,7 @@ const saveForm = async () => {
       savedLibroData.value.publicacion = `${publicacionId.value}`;
       if (isEditing.value) {
         await updateDataLibro(savedLibroData.value);
+        await searchDataLibro({ page: 1, search: parteId.value });
       } else {
         await createDataLibro(savedLibroData.value);
       }
@@ -671,6 +684,7 @@ const saveForm = async () => {
       savedTemaData.value.libro = `${libroId.value}`;
       if (isEditing.value) {
         await updateDataTemas(savedTemaData.value);
+        await searchDataTemas({ page: 1, search: parteId.value });
       } else {
         await createDataTemas(savedTemaData.value);
       }
@@ -681,16 +695,22 @@ const saveForm = async () => {
       savedParteData.value.tema = `${temaId.value}`;
       if (isEditing.value) {
         await updateDataParte(savedParteData.value);
+        await searchDataParte({ page: 1, search: parteId.value });
       } else {
         await createDataParte(savedParteData.value);
       }
       break;
-    case "Titulo":
+    case "Titulos":
       savedTituloData.value.publicacion = `${libroId.value}`;
       savedTituloData.value.libro = `${libroId.value}`;
       savedTituloData.value.tema = `${temaId.value}`;
       savedTituloData.value.parte = `${parteId.value}`;
-      await createDataTitulo(savedTituloData.value);
+      if (isEditing.value) {
+        await updateDataTitulo(savedTituloData.value);
+        await searchDataTitulo({ page: 1, search: parteId.value });
+      } else {
+        await createDataTitulo(savedTituloData.value);
+      }
       break;
     case "Capitulo":
       savedCapituloData.value.publicacion = `${libroId.value}`;
