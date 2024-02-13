@@ -73,7 +73,7 @@
           aria-controls="titulo_tab"
           @click="handleTitulo()"
         >
-          Titulo
+          Titulos
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -106,19 +106,6 @@
               @onCreate="modal = true"
               :show-subactions="false"
             />
-            <!-- <Modal
-              :title="`Agregar ${viewName}`"
-              saveButtonTitle="Aceptar"
-              openButtonTittle="Crear"
-              :large-modal="true"
-              iconClasses="bi bi-plus"
-              @onSaveButton="saveActionTrigger"
-            >
-              <component
-                :is="dynamicComponent"
-                :saveTrigger="modal"
-              ></component>
-            </Modal> -->
             <Modal
               v-if="modal"
               :title="`Agregar ${viewName}`"
@@ -147,6 +134,15 @@
                 v-if="viewName === 'Parte'"
                 @update-data="dataParteForm"
                 :existingData="existingParteData"
+              />
+              <TituloForm
+                v-if="viewName === 'Titulos'"
+                @update-data="dataTituloForm"
+                :existingData="existingTituloData"
+              />
+              <CapituloForm
+                v-if="viewName === 'Capitulo'"
+                @update-data="dataCapituloForm"
               />
             </Modal>
             <Modal
@@ -300,7 +296,7 @@
         aria-labelledby="titulo_tab-tab"
       >
         <DataTableComponent
-          v-if="!arrayDataParte.loading && parteId"
+          v-if="!arrayDataTitulo.loading && parteId"
           rowId="id"
           :columns="columnsTitulo"
           :data="arrayDataTitulo.data"
@@ -315,6 +311,30 @@
           @onDelete="handleDelete"
           @onCreate="handleCreate"
           @onGetID="(data) => (tituloId = data.id)"
+        />
+      </div>
+      <div
+        class="tab-pane fade"
+        id="capitulo_tab"
+        role="tabpanel"
+        aria-labelledby="capitulo_tab-tab"
+      >
+        <DataTableComponent
+          v-if="!arrayDataCapitulo.loading && parteId"
+          rowId="id"
+          :columns="columnsCapitulo"
+          :data="arrayDataCapitulo.data"
+          :pagination="arrayDataCapitulo.pagination"
+          :showDelete="true"
+          :showEdit="true"
+          :row-select="true"
+          :fixed-actions="true"
+          :prefix="capituloPrefix"
+          @onPaginate="handlePaginateCapitulo"
+          @onEdit="handleEdit"
+          @onDelete="handleDelete"
+          @onCreate="handleCreate"
+          @onGetID="(data) => (capituloId = data.id)"
         />
       </div>
     </div>
@@ -335,6 +355,8 @@ import TemaForm from "@/components/forms/Tema.vue";
 import { ITema } from "@/utils/models/cat_temas";
 import ParteForm from "@/components/forms/Parte.vue";
 import { IParte } from "@/utils/models/cat_partes";
+import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
+import { ICapitulo, defaultValues as defaultValuesCapitulo } from "@/utils/models/cat_capitulos";
 import router from "@/router";
 /* import Modal from "@/components/Modals.vue"; */
 import Modal from "@/components/ModalWithoutButton.vue";
@@ -388,12 +410,16 @@ const {
 const {
   arrayData: arrayDataTitulo,
   getDatas: getDatasTitulo,
+  getData: getDataTitulo,
   searchData: searchDataTitulo,
+  createData: createDataTitulo,
+  updateData: updateDataTitulo,
 } = usePetition("cat_titulo/");
 const {
   arrayData: arrayDataCapitulo,
   getDatas: getDatasCapitulo,
   searchData: searchDataCapitulo,
+  createData: createDataCapitulo,
 } = usePetition("cat_capitulo/");
 
 const publicacionPrefix = "publicacion";
@@ -425,6 +451,7 @@ const existingPublicacionData = ref<IPublicacion | null>(null);
 const existingLibroData = ref<ILibro | null>(null);
 const existingTemaData = ref<ITema | null>(null);
 const existingParteData = ref<ITema | null>(null);
+const existingTituloData = ref<ITema | null>(null);
 const handleEdit = (data: any) => {
   switch (viewName.value) {
     case "Publicaciones":
@@ -453,6 +480,13 @@ const handleEdit = (data: any) => {
     case "Parte":
       getDataParte(data).then((response: any) => {
         existingParteData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    case "Titulos":
+      getDataTitulo(data).then((response: any) => {
+        existingTituloData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
         isEditing.value = true;
         modal.value = true;
       });
@@ -582,9 +616,8 @@ const handlePaginateParte = (page: number) => {
 //Catalogo titulo
 const handleTitulo = () => {
   searchDataTitulo({ page: 1, search: parteId.value });
-  viewName.value = "Titulo";
+  viewName.value = "Titulos";
   selectedCat.value = "cat_titulo/";
-  dynamicComponent.value = TituloForm;
 };
 const handlePaginateTitulo = (page: number) => {
   if (searchTerm.value) {
@@ -595,7 +628,7 @@ const handlePaginateTitulo = (page: number) => {
 };
 //Catalogo capitulo
 const handleCapitulo = () => {
-  searchDataCapitulo({ page: 1, search: capituloId.value });
+  searchDataCapitulo({ page: 1, search: tituloId.value });
   viewName.value = "Capitulo";
   selectedCat.value = "cat_capitulo/";
 };
@@ -677,6 +710,16 @@ const savedParteData = ref<IParte>({
 const dataParteForm = (dataParte: IParte) => {
   savedParteData.value = dataParte;
 };
+//Titulos
+const savedTituloData = ref<ITitulo>(defaultValuesTitulo);
+const dataTituloForm = (dataTitulo: ITitulo) => {
+  savedTituloData.value = dataTitulo;
+};
+//Capitulos
+const savedCapituloData = ref<ICapitulo>(defaultValuesCapitulo);
+const dataCapituloForm = (dataCapitulo: ICapitulo) => {
+  savedCapituloData.value = dataCapitulo;
+};
 
 const saveForm = async () => {
   switch (viewName.value) {
@@ -684,6 +727,7 @@ const saveForm = async () => {
       if (isEditing.value) {
         // Llama a la función correspondiente para editar los datos existentes
         await updateDataPublicacion(savedPublicacionData.value);
+        await searchDataPublicacion({ page: 1, search: parteId.value });
       } else {
         // Llama a la función correspondiente para crear nuevos datos
         await createDataPublicacion(savedPublicacionData.value);
@@ -693,6 +737,7 @@ const saveForm = async () => {
       savedLibroData.value.publicacion = `${publicacionId.value}`;
       if (isEditing.value) {
         await updateDataLibro(savedLibroData.value);
+        await searchDataLibro({ page: 1, search: parteId.value });
       } else {
         await createDataLibro(savedLibroData.value);
       }
@@ -702,6 +747,7 @@ const saveForm = async () => {
       savedTemaData.value.libro = `${libroId.value}`;
       if (isEditing.value) {
         await updateDataTemas(savedTemaData.value);
+        await searchDataTemas({ page: 1, search: parteId.value });
       } else {
         await createDataTemas(savedTemaData.value);
       }
@@ -712,9 +758,30 @@ const saveForm = async () => {
       savedParteData.value.tema = `${temaId.value}`;
       if (isEditing.value) {
         await updateDataParte(savedParteData.value);
+        await searchDataParte({ page: 1, search: parteId.value });
       } else {
         await createDataParte(savedParteData.value);
       }
+      break;
+    case "Titulos":
+      savedTituloData.value.publicacion = `${libroId.value}`;
+      savedTituloData.value.libro = `${libroId.value}`;
+      savedTituloData.value.tema = `${temaId.value}`;
+      savedTituloData.value.parte = `${parteId.value}`;
+      if (isEditing.value) {
+        await updateDataTitulo(savedTituloData.value);
+        await searchDataTitulo({ page: 1, search: parteId.value });
+      } else {
+        await createDataTitulo(savedTituloData.value);
+      }
+      break;
+    case "Capitulo":
+      savedCapituloData.value.publicacion = `${libroId.value}`;
+      savedCapituloData.value.libro = `${libroId.value}`;
+      savedCapituloData.value.tema = `${temaId.value}`;
+      savedCapituloData.value.parte = `${parteId.value}`;
+      savedCapituloData.value.titulo = `${tituloId.value}`;
+      await createDataCapitulo(savedCapituloData.value);
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
@@ -774,6 +841,16 @@ const columnsTitulo = [
   { title: "Parte", data: "parte", align: "center" },
   { title: "Titulo", data: "id", align: "center" },
   { title: "Descripción titulo", data: "descripcion", align: "left" },
+];
+const columnsCapitulo = [
+  { title: "Publicacion", data: "publicacion", align: "center" },
+  { title: "Libro", data: "libro", align: "center" },
+  { title: "Tema", data: "tema", align: "center" },
+  { title: "Parte", data: "parte", align: "center" },
+  { title: "Titulo", data: "titulo", align: "center" },
+  { title: "Capitulo", data: "id", align: "center" },
+  { title: "Escalatoria", data: "tipo_escalatoria", align: "center" },
+  { title: "Descripción capitulo", data: "descripcion", align: "left" },
 ];
 
 onMounted(async () => {
