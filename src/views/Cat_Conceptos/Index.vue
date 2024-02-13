@@ -135,6 +135,10 @@
                 v-if="viewName === 'Titulo'"
                 @update-data="dataTituloForm"
               />
+              <CapituloForm
+                v-if="viewName === 'Capitulo'"
+                @update-data="dataCapituloForm"
+              />
             </Modal>
           </div>
         </div>
@@ -284,6 +288,30 @@
           @onGetID="(data) => (tituloId = data.id)"
         />
       </div>
+      <div
+        class="tab-pane fade"
+        id="capitulo_tab"
+        role="tabpanel"
+        aria-labelledby="capitulo_tab-tab"
+      >
+        <DataTableComponent
+          v-if="!arrayDataCapitulo.loading && parteId"
+          rowId="id"
+          :columns="columnsCapitulo"
+          :data="arrayDataCapitulo.data"
+          :pagination="arrayDataCapitulo.pagination"
+          :showDelete="true"
+          :showEdit="true"
+          :row-select="true"
+          :fixed-actions="true"
+          :prefix="capituloPrefix"
+          @onPaginate="handlePaginateCapitulo"
+          @onEdit="handleEdit"
+          @onDelete="handleDelete"
+          @onCreate="handleCreate"
+          @onGetID="(data) => (capituloId = data.id)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -303,6 +331,7 @@ import { ITema } from "@/utils/models/cat_temas";
 import ParteForm from "@/components/forms/Parte.vue";
 import { IParte } from "@/utils/models/cat_partes";
 import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
+import { ICapitulo, defaultValues as defaultValuesCapitulo } from "@/utils/models/cat_capitulos";
 import router from "@/router";
 /* import Modal from "@/components/Modals.vue"; */
 import Modal from "@/components/ModalWithoutButton.vue";
@@ -351,6 +380,7 @@ const {
   arrayData: arrayDataCapitulo,
   getDatas: getDatasCapitulo,
   searchData: searchDataCapitulo,
+  createData: createDataCapitulo,
 } = usePetition("cat_capitulo/");
 
 const publicacionPrefix = "publicacion";
@@ -471,7 +501,7 @@ const handlePaginateTitulo = (page: number) => {
 
 //Catalogo capitulo
 const handleCapitulo = () => {
-  searchDataCapitulo({ page: 1, search: temaId.value });
+  searchDataCapitulo({ page: 1 });
   viewName.value = "Capitulo";
   selectedCat.value = "cat_capitulo/";
 };
@@ -560,6 +590,11 @@ const savedTituloData = ref<ITitulo>(defaultValuesTitulo);
 const dataTituloForm = (dataTitulo: ITitulo) => {
   savedTituloData.value = dataTitulo;
 };
+//Capitulos
+const savedCapituloData = ref<ICapitulo>(defaultValuesCapitulo);
+const dataCapituloForm = (dataCapitulo: ICapitulo) => {
+  savedCapituloData.value = dataCapitulo;
+};
 
 const saveForm = async () => {
   console.log(publicacionId.value);
@@ -588,6 +623,14 @@ const saveForm = async () => {
       savedTituloData.value.tema = `${temaId.value}`;
       savedTituloData.value.parte = `${parteId.value}`;
       await createDataTitulo(savedTituloData.value);
+      break;
+    case "Capitulo":
+      savedCapituloData.value.publicacion = `${libroId.value}`;
+      savedCapituloData.value.libro = `${libroId.value}`;
+      savedCapituloData.value.tema = `${temaId.value}`;
+      savedCapituloData.value.parte = `${parteId.value}`;
+      savedCapituloData.value.titulo = `${tituloId.value}`;
+      await createDataCapitulo(savedCapituloData.value);
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
@@ -627,6 +670,16 @@ const columnsTitulo = [
   { title: "Parte", data: "parte", align: "center" },
   { title: "Titulo", data: "id", align: "center" },
   { title: "Descripción titulo", data: "descripcion", align: "left" },
+];
+const columnsCapitulo = [
+  { title: "Publicacion", data: "publicacion", align: "center" },
+  { title: "Libro", data: "libro", align: "center" },
+  { title: "Tema", data: "tema", align: "center" },
+  { title: "Parte", data: "parte", align: "center" },
+  { title: "Titulo", data: "titulo", align: "center" },
+  { title: "Capitulo", data: "id", align: "center" },
+  { title: "Escalatoria", data: "tipo_escalatoria", align: "center" },
+  { title: "Descripción capitulo", data: "descripcion", align: "left" },
 ];
 
 onMounted(async () => {
