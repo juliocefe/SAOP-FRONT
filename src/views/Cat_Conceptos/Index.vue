@@ -149,6 +149,26 @@
                 :existingData="existingParteData"
               />
             </Modal>
+            <Modal
+              v-if="modalDelete"
+              :title="`Eliminar ${viewName}`"
+              saveButtonTitle="Eliminar"
+              :large-modal="true"
+              @onCloseModal="modalDelete = false"
+              @onSave="deleteForm"
+            >
+              <div class="card">
+                <div class="card-body text-center">
+                  <h5 class="card-title">¿Estás Seguro?</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">
+                    La actividad institucional se dará de baja permanentemente.
+                  </h6>
+                  <p class="card-text">
+                    {{ dataDelete.descripcion }}
+                  </p>
+                </div>
+              </div>
+            </Modal>
           </div>
         </div>
       </div>
@@ -336,6 +356,7 @@ const {
   searchData: searchDataPublicacion,
   createData: createDataPublicacion,
   updateData: updateDataPublicacion,
+  deleteData: deleteDataPublicacion,
 } = usePetition("cat_publicacion/");
 const {
   arrayData: arrayDataLibro,
@@ -344,6 +365,7 @@ const {
   searchData: searchDataLibro,
   createData: createDataLibro,
   updateData: updateDataLibro,
+  deleteData: deleteDataLibro,
 } = usePetition("cat_libro/");
 const {
   arrayData: arrayDataTemas,
@@ -352,6 +374,7 @@ const {
   searchData: searchDataTemas,
   createData: createDataTemas,
   updateData: updateDataTemas,
+  deleteData: deleteDataTemas,
 } = usePetition("cat_tema/");
 const {
   arrayData: arrayDataParte,
@@ -360,6 +383,7 @@ const {
   searchData: searchDataParte,
   createData: createDataParte,
   updateData: updateDataParte,
+  deleteData: deleteDataParte,
 } = usePetition("cat_parte/");
 const {
   arrayData: arrayDataTitulo,
@@ -390,6 +414,9 @@ const idRow = ref("");
 const selectedProyect = ref("");
 const showView = ref(false);
 const isEditing = ref(false);
+const isDeleting = ref(false);
+const modal = ref(false);
+const modalDelete = ref(false);
 
 const handleCreate = () => router.push({ name: "crear-proyecto_de_inversion" });
 
@@ -434,8 +461,50 @@ const handleEdit = (data: any) => {
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
   }
 };
-const handleDelete = (data: any) =>
-  router.push({ name: "eliminar-proyecto_de_inversion", params: { id: data } });
+const dataDelete = ref({
+  descripcion: "",
+  id: "",
+});
+const handleDelete = (data: any) => {
+  switch (viewName.value) {
+    case "Publicaciones":
+      // Llamada para obtener los datos actualizados de la publicación
+      getDataPublicacion(data).then((response: any) => {
+        // Actualizar existingPublicacionData con los datos obtenidos
+        dataDelete.value.descripcion = response.descripcion; // Asegúrate de que los campos coincidan con el modelo de IPublicacion
+        dataDelete.value.id = response.id;
+        isDeleting.value = true;
+        modalDelete.value = true;
+      });
+      break;
+    case "Libros":
+      getDataLibro(data).then((response: any) => {
+        dataDelete.value.descripcion = response.descripcion; // Asegúrate de que los campos coincidan con el modelo de IPublicacion
+        dataDelete.value.id = response.id;
+        modalDelete.value = true;
+      });
+      break;
+    case "Temas":
+      getDataTemas(data).then((response: any) => {
+        dataDelete.value.descripcion = response.descripcion; // Asegúrate de que los campos coincidan con el modelo de IPublicacion
+        dataDelete.value.id = response.id;
+        isDeleting.value = true;
+        modalDelete.value = true;
+      });
+      break;
+    case "Parte":
+      getDataParte(data).then((response: any) => {
+        dataDelete.value.descripcion = response.descripcion; // Asegúrate de que los campos coincidan con el modelo de IPublicacion
+        dataDelete.value.id = response.id;
+        isDeleting.value = true;
+        modalDelete.value = true;
+      });
+      break;
+    default:
+      console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
+  }
+  //router.push({ name: "eliminar-proyecto_de_inversion", params: { id: data } });
+};
 
 const handleClick = (event?: MouseEvent) => {
   //solo aplica si se esta en la pantalla de datatable
@@ -482,7 +551,6 @@ const handlePaginateLibro = (page: number) => {
     getDatasLibro({ page });
   }
 };
-
 //Catalogo Temas
 const handleTemas = () => {
   if (viewName.value !== "Temas" && temaId.value === "") {
@@ -498,7 +566,6 @@ const handlePaginateTemas = (page: number) => {
     getDatasTemas({ page });
   }
 };
-
 //Catalogo Parte
 const handleParte = () => {
   searchDataParte({ page: 1, search: temaId.value });
@@ -512,7 +579,6 @@ const handlePaginateParte = (page: number) => {
     getDatasParte({ page });
   }
 };
-
 //Catalogo titulo
 const handleTitulo = () => {
   searchDataTitulo({ page: 1, search: parteId.value });
@@ -527,7 +593,6 @@ const handlePaginateTitulo = (page: number) => {
     getDatasTitulo({ page });
   }
 };
-
 //Catalogo capitulo
 const handleCapitulo = () => {
   searchDataCapitulo({ page: 1, search: capituloId.value });
@@ -567,8 +632,6 @@ const handleFilter = () => {
 const cbEntidad = ref<string>("");
 const cbUnidad = ref<string>("");
 const inputSolicitud = ref<string>("");
-
-const modal = ref(false);
 /* const saveActionTrigger = () => {
   modal.value = !modal.value;
   console.log(modal.value);
@@ -657,6 +720,25 @@ const saveForm = async () => {
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
   }
   isEditing.value = false;
+};
+const deleteForm = async () => {
+  switch (viewName.value) {
+    case "Publicaciones":
+      await deleteDataPublicacion(dataDelete.value.id);
+      break;
+    case "Libros":
+      await deleteDataLibro(dataDelete.value.id);
+      break;
+    case "Temas":
+      await deleteDataTemas(dataDelete.value.id);
+      break;
+    case "Parte":
+      await deleteDataParte(dataDelete.value.id);
+      break;
+    default:
+      console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
+  }
+  isDeleting.value = false;
 };
 
 //Colunas
