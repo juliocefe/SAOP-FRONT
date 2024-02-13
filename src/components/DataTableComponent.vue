@@ -86,7 +86,6 @@ const selectRow = (row: any) => {
             rowHtml.classList.remove('selectedRow');
         }
     }
-
     emit('onGetID', row)
 }
 

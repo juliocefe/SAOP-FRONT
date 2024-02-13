@@ -4,9 +4,9 @@
             @click="emit('onCreate')">
             <span><i class="bi bi-plus"></i> <b>Crear</b></span>
         </button>
-        <button v-if="props.showCustomButton" title="custom" class="dt-button btn btn-secondary btn-cancelar" type="button"
+        <button v-if="props.showCustomButton" title="custom" class="dt-button btn btn-secondary btn-cancelar" type="button" :disabled="disableCustomButton"
             @click="emit('onCustom')">
-            <span> <b>{{ props.customLabel }}</b></span>
+            <span><i :class="customIcon"></i> <b>{{ props.customLabel }}</b></span>
         </button>
         <span v-if="showSubactions">
             <button title="Exportar PDF" class="dt-button buttons-pdf buttons-html5 btn btn-light btn-pdf" type="button"
@@ -43,6 +43,10 @@ const props = defineProps({
     customLabel: {
         type: String,
         default: 'Custom'
+    },
+    disableCustomButton: Boolean,
+    customIcon: {
+        type: String,
     },
     showSubactions: {
         type: Boolean,
