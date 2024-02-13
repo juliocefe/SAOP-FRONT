@@ -133,6 +133,7 @@
               <ParteForm
                 v-if="viewName === 'Parte'"
                 @update-data="dataParteForm"
+                :existingData="existingParteData"
               />
               <TituloForm
                 v-if="viewName === 'Titulo'"
@@ -225,7 +226,6 @@
         role="tabpanel"
         aria-labelledby="temas_tab-tab"
       >
-        {{ temaId }}
         <DataTableComponent
           v-if="!arrayDataTemas.loading && libroId"
           rowId="id"
@@ -377,8 +377,10 @@ const {
 const {
   arrayData: arrayDataParte,
   getDatas: getDatasParte,
+  getData: getDataParte,
   searchData: searchDataParte,
   createData: createDataParte,
+  updateData: updateDataParte,
 } = usePetition("cat_parte/");
 const {
   arrayData: arrayDataTitulo,
@@ -418,6 +420,7 @@ const handleCreate = () => router.push({ name: "crear-proyecto_de_inversion" });
 const existingPublicacionData = ref<IPublicacion | null>(null);
 const existingLibroData = ref<ILibro | null>(null);
 const existingTemaData = ref<ITema | null>(null);
+const existingParteData = ref<ITema | null>(null);
 const handleEdit = (data: any) => {
   switch (viewName.value) {
     case "Publicaciones":
@@ -439,6 +442,13 @@ const handleEdit = (data: any) => {
     case "Temas":
       getDataTemas(data).then((response: any) => {
         existingTemaData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    case "Parte":
+      getDataParte(data).then((response: any) => {
+        existingParteData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
         isEditing.value = true;
         modal.value = true;
       });
@@ -669,7 +679,11 @@ const saveForm = async () => {
       savedParteData.value.publicacion = `${publicacionId.value}`;
       savedParteData.value.libro = `${libroId.value}`;
       savedParteData.value.tema = `${temaId.value}`;
-      await createDataParte(savedParteData.value);
+      if (isEditing.value) {
+        await updateDataParte(savedParteData.value);
+      } else {
+        await createDataParte(savedParteData.value);
+      }
       break;
     case "Titulo":
       savedTituloData.value.publicacion = `${libroId.value}`;
