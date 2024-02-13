@@ -131,14 +131,17 @@
               <PublicacionForm
                 v-if="viewName === 'Publicaciones'"
                 @update-data="dataPublicacionForm"
+                :existingData="existingPublicacionData"
               />
               <LibroForm
                 v-if="viewName === 'Libros'"
                 @update-data="dataLibroForm"
+                :existingData="existingLibroData"
               />
               <TemaForm
                 v-if="viewName === 'Temas'"
                 @update-data="dataTemaForm"
+                :existingData="existingTemaData"
               />
               <ParteForm
                 v-if="viewName === 'Parte'"
@@ -227,6 +230,7 @@
         role="tabpanel"
         aria-labelledby="temas_tab-tab"
       >
+        {{ temaId }}
         <DataTableComponent
           v-if="!arrayDataTemas.loading && libroId"
           rowId="id"
@@ -328,20 +332,26 @@ const selectedCat = ref("cat_publicacion/");
 const {
   arrayData: arrayDataPublicacion,
   getDatas: getDatasPublicacion,
+  getData: getDataPublicacion,
   searchData: searchDataPublicacion,
   createData: createDataPublicacion,
+  updateData: updateDataPublicacion,
 } = usePetition("cat_publicacion/");
 const {
   arrayData: arrayDataLibro,
   getDatas: getDatasLibro,
+  getData: getDataLibro,
   searchData: searchDataLibro,
   createData: createDataLibro,
+  updateData: updateDataLibro,
 } = usePetition("cat_libro/");
 const {
   arrayData: arrayDataTemas,
   getDatas: getDatasTemas,
+  getData: getDataTemas,
   searchData: searchDataTemas,
   createData: createDataTemas,
+  updateData: updateDataTemas,
 } = usePetition("cat_tema/");
 const {
   arrayData: arrayDataParte,
@@ -377,11 +387,42 @@ const searchTerm = ref("");
 const idRow = ref("");
 const selectedProyect = ref("");
 const showView = ref(false);
+const isEditing = ref(false);
+
 const handleCreate = () => router.push({ name: "crear-proyecto_de_inversion" });
+
+//Edit
+const existingPublicacionData = ref<IPublicacion | null>(null);
+const existingLibroData = ref<ILibro | null>(null);
+const existingTemaData = ref<ITema | null>(null);
 const handleEdit = (data: any) => {
-  modal.value = true;
-  console.log(data);
-  /* router.push({ name: "editar-proyecto_de_inversion", params: { id: data } }) */
+  switch (viewName.value) {
+    case "Publicaciones":
+      // Llamada para obtener los datos actualizados de la publicación
+      getDataPublicacion(data).then((response: any) => {
+        // Actualizar existingPublicacionData con los datos obtenidos
+        existingPublicacionData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo de IPublicacion
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    case "Libros":
+      getDataLibro(data).then((response: any) => {
+        existingLibroData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    case "Temas":
+      getDataTemas(data).then((response: any) => {
+        existingTemaData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    default:
+      console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
+  }
 };
 const handleDelete = (data: any) =>
   router.push({ name: "eliminar-proyecto_de_inversion", params: { id: data } });
@@ -435,7 +476,7 @@ const handlePaginateLibro = (page: number) => {
 //Catalogo Temas
 const handleTemas = () => {
   if (viewName.value !== "Temas" && temaId.value === "") {
-    searchDataTemas({ page: 1, search: temaId.value });
+    searchDataTemas({ page: 1, search: libroId.value });
   }
   viewName.value = "Temas";
   selectedCat.value = "cat_tema/";
@@ -464,7 +505,7 @@ const handlePaginateParte = (page: number) => {
 
 //Catalogo titulo
 const handleTitulo = () => {
-  searchDataTitulo({ page: 1 });
+  searchDataTitulo({ page: 1, search: parteId.value });
   viewName.value = "Titulo";
   selectedCat.value = "cat_titulo/";
   dynamicComponent.value = TituloForm;
@@ -479,7 +520,7 @@ const handlePaginateTitulo = (page: number) => {
 
 //Catalogo capitulo
 const handleCapitulo = () => {
-  searchDataCapitulo({ page: 1, search: temaId.value });
+  searchDataCapitulo({ page: 1, search: capituloId.value });
   viewName.value = "Capitulo";
   selectedCat.value = "cat_capitulo/";
 };
@@ -565,19 +606,32 @@ const dataParteForm = (dataParte: IParte) => {
 };
 
 const saveForm = async () => {
-  console.log(publicacionId.value);
   switch (viewName.value) {
     case "Publicaciones":
-      await createDataPublicacion(savedPublicacionData.value);
+      if (isEditing.value) {
+        // Llama a la función correspondiente para editar los datos existentes
+        await updateDataPublicacion(savedPublicacionData.value);
+      } else {
+        // Llama a la función correspondiente para crear nuevos datos
+        await createDataPublicacion(savedPublicacionData.value);
+      }
       break;
     case "Libros":
       savedLibroData.value.publicacion = `${publicacionId.value}`;
-      await createDataLibro(savedLibroData.value);
+      if (isEditing.value) {
+        await updateDataLibro(savedLibroData.value);
+      } else {
+        await createDataLibro(savedLibroData.value);
+      }
       break;
     case "Temas":
       savedTemaData.value.publicacion = `${publicacionId.value}`;
       savedTemaData.value.libro = `${libroId.value}`;
-      await createDataTemas(savedTemaData.value);
+      if (isEditing.value) {
+        await updateDataTemas(savedTemaData.value);
+      } else {
+        await createDataTemas(savedTemaData.value);
+      }
       break;
     case "Parte":
       savedParteData.value.publicacion = `${publicacionId.value}`;
@@ -588,6 +642,7 @@ const saveForm = async () => {
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
   }
+  isEditing.value = false;
 };
 
 //Colunas
