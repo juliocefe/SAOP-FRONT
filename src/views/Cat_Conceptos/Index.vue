@@ -106,19 +106,6 @@
               @onCreate="modal = true"
               :show-subactions="false"
             />
-            <!-- <Modal
-              :title="`Agregar ${viewName}`"
-              saveButtonTitle="Aceptar"
-              openButtonTittle="Crear"
-              :large-modal="true"
-              iconClasses="bi bi-plus"
-              @onSaveButton="saveActionTrigger"
-            >
-              <component
-                :is="dynamicComponent"
-                :saveTrigger="modal"
-              ></component>
-            </Modal> -->
             <Modal
               v-if="modal"
               :title="`Agregar ${viewName}`"
@@ -143,6 +130,10 @@
               <ParteForm
                 v-if="viewName === 'Parte'"
                 @update-data="dataParteForm"
+              />
+              <TituloForm
+                v-if="viewName === 'Titulo'"
+                @update-data="dataTituloForm"
               />
             </Modal>
           </div>
@@ -276,7 +267,7 @@
         aria-labelledby="titulo_tab-tab"
       >
         <DataTableComponent
-          v-if="!arrayDataParte.loading && parteId"
+          v-if="!arrayDataTitulo.loading && parteId"
           rowId="id"
           :columns="columnsTitulo"
           :data="arrayDataTitulo.data"
@@ -311,6 +302,7 @@ import TemaForm from "@/components/forms/Tema.vue";
 import { ITema } from "@/utils/models/cat_temas";
 import ParteForm from "@/components/forms/Parte.vue";
 import { IParte } from "@/utils/models/cat_partes";
+import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
 import router from "@/router";
 /* import Modal from "@/components/Modals.vue"; */
 import Modal from "@/components/ModalWithoutButton.vue";
@@ -353,6 +345,7 @@ const {
   arrayData: arrayDataTitulo,
   getDatas: getDatasTitulo,
   searchData: searchDataTitulo,
+  createData: createDataTitulo,
 } = usePetition("cat_titulo/");
 const {
   arrayData: arrayDataCapitulo,
@@ -464,10 +457,9 @@ const handlePaginateParte = (page: number) => {
 
 //Catalogo titulo
 const handleTitulo = () => {
-  searchDataTitulo({ page: 1 });
+  searchDataTitulo({ page: 1, search: temaId.value });
   viewName.value = "Titulo";
   selectedCat.value = "cat_titulo/";
-  dynamicComponent.value = TituloForm;
 };
 const handlePaginateTitulo = (page: number) => {
   if (searchTerm.value) {
@@ -563,6 +555,11 @@ const savedParteData = ref<IParte>({
 const dataParteForm = (dataParte: IParte) => {
   savedParteData.value = dataParte;
 };
+//Titulos
+const savedTituloData = ref<ITitulo>(defaultValuesTitulo);
+const dataTituloForm = (dataTitulo: ITitulo) => {
+  savedTituloData.value = dataTitulo;
+};
 
 const saveForm = async () => {
   console.log(publicacionId.value);
@@ -584,6 +581,13 @@ const saveForm = async () => {
       savedParteData.value.libro = `${libroId.value}`;
       savedParteData.value.tema = `${temaId.value}`;
       await createDataParte(savedParteData.value);
+      break;
+    case "Titulo":
+      savedTituloData.value.publicacion = `${libroId.value}`;
+      savedTituloData.value.libro = `${libroId.value}`;
+      savedTituloData.value.tema = `${temaId.value}`;
+      savedTituloData.value.parte = `${parteId.value}`;
+      await createDataTitulo(savedTituloData.value);
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
