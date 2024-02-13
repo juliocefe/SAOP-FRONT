@@ -822,7 +822,7 @@ const saveForm = async () => {
       }
       break;
     case "Titulos":
-      savedTituloData.value.publicacion = `${libroId.value}`;
+      savedTituloData.value.publicacion = `${publicacionId.value}`;
       savedTituloData.value.libro = `${libroId.value}`;
       savedTituloData.value.tema = `${temaId.value}`;
       savedTituloData.value.parte = `${parteId.value}`;
@@ -835,7 +835,7 @@ const saveForm = async () => {
       }
       break;
     case "Capitulos":
-      savedCapituloData.value.publicacion = `${libroId.value}`;
+      savedCapituloData.value.publicacion = `${publicacionId.value}`;
       savedCapituloData.value.libro = `${libroId.value}`;
       savedCapituloData.value.tema = `${temaId.value}`;
       savedCapituloData.value.parte = `${parteId.value}`;
