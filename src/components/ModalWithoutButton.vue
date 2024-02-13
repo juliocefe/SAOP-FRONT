@@ -1,4 +1,3 @@
-<!-- MyModal.vue -->
 <template>
   <div>
     <div
@@ -13,14 +12,12 @@
       <div :class="['modal-dialog', sizeModal]" role="document">
         <div class="modal-content">
           <div class="custom-modal-header">
-            <h4 class="custom-modal-title">
-              {{ props.title }}
-            </h4>
+            <h4 class="custom-modal-title">{{ props.title }}</h4>
             <button
               type="button"
               class="close"
               aria-label="Close"
-              @click="toggleModal(false)"
+              @click="closeModal"
             >
               <span aria-hidden="true">&times;</span>
             </button>
@@ -28,18 +25,14 @@
           <div class="modal-body">
             <slot></slot>
           </div>
-          <div v-if="!hideActions" class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="toggleModal(false)"
-            >
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeModal">
               Cerrar
             </button>
             <button
               type="button"
               class="btn btn-primary active"
-              @click="toggleModal(false), emit('onSaveButton')"
+              @click="closeAndSaveModal"
             >
               {{ props.saveButtonTitle }}
             </button>
@@ -47,13 +40,6 @@
         </div>
       </div>
     </div>
-    <button
-      type="button"
-      class="btn btn-primary active"
-      @click="toggleModal(true)"
-    >
-    <span><i :class="iconClasses"></i> <b>{{ props.openButtonTittle }}</b></span>
-    </button>
   </div>
 </template>
 
@@ -69,27 +55,24 @@ const props = defineProps({
     type: String,
     default: "Guardar",
   },
-  openButtonTittle: {
-    type: String,
-    default: "Abrir",
-  },
   largeModal: {
     type: Boolean,
     default: false,
   },
-  hideActions: {
-    type: Boolean,
-    default: false,
-  },
-  iconClasses: {
-    type: String,
-  },
 });
-const emit = defineEmits(["onSaveButton"]);
-const isModalOpen = ref(false);
 
-const toggleModal = (open: boolean) => {
-  isModalOpen.value = open;
+const emit = defineEmits(["onSave", "onCloseModal"]);
+const isModalOpen = ref(true);
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  emit("onCloseModal");
+};
+
+const closeAndSaveModal = () => {
+  isModalOpen.value = false;
+  emit("onCloseModal");
+  emit("onSave");
 };
 
 const sizeModal = props.largeModal ? "modal-lg" : "";
