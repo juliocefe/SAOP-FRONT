@@ -22,19 +22,24 @@
 </template>
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
-import { ref, defineEmits } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { ILibro } from "@/utils/models/cat_libros";
 
-const data = ref<ILibro>({
-  descripcion: "",
-  libro: "",
-  publicacion: "",
-});
-
+const props = defineProps(["existingData"]);
+const data = ref<ILibro>({ ...props.existingData });
 const emit = defineEmits(["update-data"]);
 
 const emitData = () => {
   // Emitir el evento 'update-data' con una copia de los datos actualizados
   emit("update-data", { ...data.value });
 };
+
+// Lógica para inicializar campos con existingData si está presente
+onBeforeMount(() => {
+  console.log(props);
+  if (props.existingData) {
+    // Inicializa los datos del formulario con los datos existentes
+    data.value = { ...props.existingData };
+  }
+});
 </script>
