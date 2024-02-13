@@ -88,7 +88,7 @@
           aria-controls="capitulo_tab"
           @click="handleCapitulo()"
         >
-          Capitulo
+          Capitulos
         </button>
       </li>
     </ul>
@@ -141,8 +141,9 @@
                 :existingData="existingTituloData"
               />
               <CapituloForm
-                v-if="viewName === 'Capitulo'"
+                v-if="viewName === 'Capitulos'"
                 @update-data="dataCapituloForm"
+                :existingData="existingCapituloData"
               />
             </Modal>
             <Modal
@@ -157,7 +158,7 @@
                 <div class="card-body text-center">
                   <h5 class="card-title">¿Estás Seguro?</h5>
                   <h6 class="card-subtitle mb-2 text-muted">
-                    La actividad institucional se dará de baja permanentemente.
+                    El registro será eliminado permanetemente.
                   </h6>
                   <p class="card-text">
                     {{ dataDelete.descripcion }}
@@ -168,7 +169,8 @@
           </div>
         </div>
       </div>
-      <div class="d-flex px-2">
+      <!-- buscador -->
+      <!-- <div class="d-flex px-2">
         <div class="pr-3 col-md-1" style="font-size: 30px">
           <i class="px-2 bi bi-funnel-fill"></i>
         </div>
@@ -190,7 +192,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div
         class="tab-pane fade show active"
         id="home"
@@ -414,12 +416,16 @@ const {
   searchData: searchDataTitulo,
   createData: createDataTitulo,
   updateData: updateDataTitulo,
+  deleteData: deleteDataTitulo,
 } = usePetition("cat_titulo/");
 const {
   arrayData: arrayDataCapitulo,
   getDatas: getDatasCapitulo,
+  getData: getDataCapitulo,
   searchData: searchDataCapitulo,
   createData: createDataCapitulo,
+  updateData: updateDataCapitulo,
+  deleteData: deleteDataCapitulo,
 } = usePetition("cat_capitulo/");
 
 const publicacionPrefix = "publicacion";
@@ -452,6 +458,7 @@ const existingLibroData = ref<ILibro | null>(null);
 const existingTemaData = ref<ITema | null>(null);
 const existingParteData = ref<ITema | null>(null);
 const existingTituloData = ref<ITema | null>(null);
+const existingCapituloData = ref<ITema | null>(null);
 const handleEdit = (data: any) => {
   switch (viewName.value) {
     case "Publicaciones":
@@ -487,6 +494,13 @@ const handleEdit = (data: any) => {
     case "Titulos":
       getDataTitulo(data).then((response: any) => {
         existingTituloData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    case "Capitulos":
+      getDataCapitulo(data).then((response: any) => {
+        existingCapituloData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
         isEditing.value = true;
         modal.value = true;
       });
@@ -529,6 +543,22 @@ const handleDelete = (data: any) => {
     case "Parte":
       getDataParte(data).then((response: any) => {
         dataDelete.value.descripcion = response.descripcion; // Asegúrate de que los campos coincidan con el modelo de IPublicacion
+        dataDelete.value.id = response.id;
+        isDeleting.value = true;
+        modalDelete.value = true;
+      });
+      break;
+    case "Titulos":
+      getDataTitulo(data).then((response: any) => {
+        dataDelete.value.descripcion = response.descripcion; 
+        dataDelete.value.id = response.id;
+        isDeleting.value = true;
+        modalDelete.value = true;
+      });
+      break;
+    case "Capitulos":
+      getDataCapitulo(data).then((response: any) => {
+        dataDelete.value.descripcion = response.descripcion; 
         dataDelete.value.id = response.id;
         isDeleting.value = true;
         modalDelete.value = true;
@@ -629,7 +659,7 @@ const handlePaginateTitulo = (page: number) => {
 //Catalogo capitulo
 const handleCapitulo = () => {
   searchDataCapitulo({ page: 1, search: tituloId.value });
-  viewName.value = "Capitulo";
+  viewName.value = "Capitulos";
   selectedCat.value = "cat_capitulo/";
 };
 const handlePaginateCapitulo = (page: number) => {
@@ -775,13 +805,18 @@ const saveForm = async () => {
         await createDataTitulo(savedTituloData.value);
       }
       break;
-    case "Capitulo":
+    case "Capitulos":
       savedCapituloData.value.publicacion = `${libroId.value}`;
       savedCapituloData.value.libro = `${libroId.value}`;
       savedCapituloData.value.tema = `${temaId.value}`;
       savedCapituloData.value.parte = `${parteId.value}`;
       savedCapituloData.value.titulo = `${tituloId.value}`;
-      await createDataCapitulo(savedCapituloData.value);
+      if (isEditing.value) {
+        await updateDataCapitulo(savedCapituloData.value);
+        await searchDataCapitulo({ page: 1, search: parteId.value });
+      } else {
+        await createDataCapitulo(savedCapituloData.value);
+      }
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
@@ -801,6 +836,14 @@ const deleteForm = async () => {
       break;
     case "Parte":
       await deleteDataParte(dataDelete.value.id);
+      break;
+    case "Titulos":
+      await deleteDataTitulo(dataDelete.value.id);
+      await searchDataTitulo({ page: 1, search: parteId.value });
+      break;
+    case "Capitulos":
+      await deleteDataCapitulo(dataDelete.value.id);
+      await searchDataCapitulo({ page: 1, search: parteId.value });
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);

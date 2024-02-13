@@ -14,11 +14,12 @@
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
-import { ref, defineEmits } from "vue";
-import { ICapitulo, defaultValues as defaultValuesCapitulo } from "@/utils/models/cat_capitulos";
+import { ref, defineEmits, onBeforeMount } from "vue";
+import { ICapitulo } from "@/utils/models/cat_capitulos";
 import TextAraComponent from "@/components/TextAraComponent.vue";
 
-const data = ref<ICapitulo>(defaultValuesCapitulo);
+const props = defineProps(["existingData"]);
+const data = ref<ICapitulo>({ ...props.existingData });
 
 const emit = defineEmits(["update-data"]);
 
@@ -36,5 +37,13 @@ const years = () => {
   }
   return years
 }
+// Lógica para inicializar campos con existingData si está presente
+onBeforeMount(() => {
+  console.log(props);
+  if (props.existingData) {
+    // Inicializa los datos del formulario con los datos existentes
+    data.value = { ...props.existingData };
+  }
+});
 
 </script>
