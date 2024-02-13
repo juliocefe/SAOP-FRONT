@@ -104,7 +104,12 @@
           <div class="col-md-8">
             <ButtonBarComponent
               @onCreate="modal = true"
+              @onCustom="modalEtiquetas = true"
               :show-subactions="false"
+              :show-custom-button="viewName == 'Capitulos'"
+              :disable-custom-button="capitulo == null"
+              custom-label="Etiquetas"
+              custom-icon="bi bi-tag"
             />
             <Modal
               v-if="modal"
@@ -165,6 +170,17 @@
                   </p>
                 </div>
               </div>
+            </Modal>
+            <Modal
+              v-if="modalEtiquetas && capitulo"
+              :title="`Etiqueta para el capitulo ${capitulo.descripcion}`"
+              saveButtonTitle="Aceptar"
+              openButtonTittle="Crear"
+              :large-modal="true"
+              @onCloseModal="modalEtiquetas = false"
+              @onSave="saveForm"
+            >
+              <Etiquetas />
             </Modal>
           </div>
         </div>
@@ -336,7 +352,7 @@
           @onEdit="handleEdit"
           @onDelete="handleDelete"
           @onCreate="handleCreate"
-          @onGetID="(data) => (capituloId = data.id)"
+          @onGetID="(data) => (capitulo = data)"
         />
       </div>
     </div>
@@ -356,6 +372,7 @@ import { ILibro } from "@/utils/models/cat_libros";
 import TemaForm from "@/components/forms/Tema.vue";
 import { ITema } from "@/utils/models/cat_temas";
 import ParteForm from "@/components/forms/Parte.vue";
+import Etiquetas from "@/views/Cat_Conceptos/Etiquetas/Index.vue"
 import { IParte } from "@/utils/models/cat_partes";
 import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
 import { ICapitulo, defaultValues as defaultValuesCapitulo } from "@/utils/models/cat_capitulos";
@@ -439,7 +456,7 @@ const parteId = ref("");
 const tituloPrefix = "titulo";
 const tituloId = ref("");
 const capituloPrefix = "capitulo";
-const capituloId = ref("");
+const capitulo = ref<ICapitulo | null>(null);
 
 const searchTerm = ref("");
 const idRow = ref("");
@@ -448,6 +465,7 @@ const showView = ref(false);
 const isEditing = ref(false);
 const isDeleting = ref(false);
 const modal = ref(false);
+const modalEtiquetas = ref(false);
 const modalDelete = ref(false);
 
 const handleCreate = () => router.push({ name: "crear-proyecto_de_inversion" });
