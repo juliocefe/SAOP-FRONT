@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
-import { ref, defineEmits, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { ICapitulo } from "@/utils/models/cat_capitulos";
 import TextAraComponent from "@/components/TextAraComponent.vue";
 

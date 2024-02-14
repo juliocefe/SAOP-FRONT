@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
-import { ref, defineEmits, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { IEtiqueta } from "@/utils/models/cat_etiquetas";
 import SelectComponent from "@/components/SelectComponent.vue";
 

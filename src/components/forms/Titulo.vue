@@ -13,7 +13,7 @@
 </template>
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
-import { ref, defineEmits, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
 
 const props = defineProps(["existingData"]);

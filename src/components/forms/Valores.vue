@@ -14,7 +14,7 @@
 </template>
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
-import { ref, defineEmits, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { IValor } from "@/utils/models/cat_valor";
 import SelectComponent from "@/components/SelectComponent.vue";
 import TextAraComponent from "@/components/TextAraComponent.vue";
