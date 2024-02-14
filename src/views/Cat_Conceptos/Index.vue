@@ -359,7 +359,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount, shallowRef } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 import usePetition from "@/composables/usePetition";
 import DataTableComponent from "@/components/DataTableComponent.vue";
 import ButtonBarComponent from "@/components/ButtonBarComponent.vue";
@@ -391,7 +391,6 @@ import {
 } from "@/utils/listeners/clickListener";
 
 // forms
-var dynamicComponent = shallowRef(CapituloForm);
 
 const viewName = ref("Publicaciones");
 const selectedCat = ref("cat_publicacion/");
@@ -621,7 +620,6 @@ const handlePublicacion = () => {
   libroId.value = "";
   temaId.value = "";
   parteId.value = "";
-  dynamicComponent = shallowRef(PublicacionForm);
 };
 //Catalogo libros
 const handleLibros = () => {
@@ -702,23 +700,23 @@ const handlePaginate = (page: number) => {
   }
 };
 
-const handleFilter = () => {
-  let searchFilter = "";
-  if (cbEntidad.value.length) searchFilter += cbEntidad.value;
-  if (cbUnidad.value.length) {
-    if (searchFilter.length) searchFilter += " ,";
-    searchFilter += cbEntidad.value;
-  }
-  if (inputSolicitud.value.length) {
-    if (searchFilter.length) searchFilter += " ,";
-    searchFilter += inputSolicitud.value;
-  }
-  searchDataPublicacion({ page: 1, search: searchFilter });
-};
+// const handleFilter = () => {
+//   let searchFilter = "";
+//   if (cbEntidad.value.length) searchFilter += cbEntidad.value;
+//   if (cbUnidad.value.length) {
+//     if (searchFilter.length) searchFilter += " ,";
+//     searchFilter += cbEntidad.value;
+//   }
+//   if (inputSolicitud.value.length) {
+//     if (searchFilter.length) searchFilter += " ,";
+//     searchFilter += inputSolicitud.value;
+//   }
+//   searchDataPublicacion({ page: 1, search: searchFilter });
+// };
 
-const cbEntidad = ref<string>("");
-const cbUnidad = ref<string>("");
-const inputSolicitud = ref<string>("");
+// const cbEntidad = ref<string>("");
+// const cbUnidad = ref<string>("");
+// const inputSolicitud = ref<string>("");
 /* const saveActionTrigger = () => {
   modal.value = !modal.value;
   console.log(modal.value);

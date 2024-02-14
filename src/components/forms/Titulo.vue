@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
 import { ref, onBeforeMount } from "vue";
-import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
+import { ITitulo } from "@/utils/models/cat_titulos";
 
 const props = defineProps(["existingData"]);
 const data = ref<ITitulo>({ ...props.existingData });

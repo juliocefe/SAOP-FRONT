@@ -2,7 +2,7 @@ export interface IValor {
     valor: string | null;
     nivel_etiqueta: string | null;
     vista: string | null;
-    descripcion_concepto_total: string | null;
+    descripcion_concepto_total: string | undefined;
     unidad: string | null;
     publicacion: string | null;
     libro: string | null;
@@ -18,7 +18,7 @@ export interface IValor {
     valor: null,
     nivel_etiqueta: null,
     vista: null,
-    descripcion_concepto_total: null,
+    descripcion_concepto_total: undefined,
     unidad: null,
     publicacion: null,
     libro: null,

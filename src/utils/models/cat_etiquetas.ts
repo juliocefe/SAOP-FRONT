@@ -1,8 +1,8 @@
 export interface IEtiqueta {
     etiqueta: string | null;
     vista: string | null;
-    usa_imagen: boolean | null;
-    antes_descripcion: string | null;
+    usa_imagen: boolean;
+    antes_descripcion: boolean;
     publicacion: string | null;
     libro: string | null;
     tema: string | null;
@@ -15,8 +15,8 @@ export interface IEtiqueta {
   export const defaultValues: IEtiqueta = {
     etiqueta: null,
     vista: null,
-    usa_imagen: null,
-    antes_descripcion: null,
+    usa_imagen: false,
+    antes_descripcion: false,
     publicacion: null,
     libro: null,
     tema: null,
