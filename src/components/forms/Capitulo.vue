@@ -5,7 +5,7 @@
     <SelectComponent v-model="data.anio" title="Año:" placeholder="Selecciona..." name="anio" id="anio" class="col-sm-4"
       :options="years()" :optionText="'year'" @input="emitData" />
     <SelectComponent v-model="data.tipo_escalatoria" title="Escalatoria:" placeholder="Selecciona..." name="escalatoria"
-      id="escalatoria" class="col-sm-8" :options="years()" :optionText="'year'" @input="emitData" />
+      id="escalatoria" class="col-sm-8" :options="escalatorias" :optionText="'escalatoria'" @input="emitData" />
     <TextAraComponent v-model="data.descripcion_concepto" :title="'Descripción concepto:'"
       :placeholder="'Agrega una descripción...'" :name="'desc_concepto'" :id="'desc_concepto'"
       class="col-sm-12" @input="emitData" />
@@ -45,5 +45,7 @@ onBeforeMount(() => {
     data.value = { ...props.existingData };
   }
 });
+
+const escalatorias = [{ id: 1, escalatoria: 'Terracerias excluye acarreos' }, { id: 2, escalatoria: 'Estructuras y obras de drenaje' }, { id: 3, escalatoria: 'Pavimentos' }, { id: 4, escalatoria: 'Concreto hidraulico' }, { id: 5, escalatoria: 'Acarreos para terraceria y pav.' }, { id: 6, escalatoria: 'Trabajos de supervision' }, { id: 7, escalatoria: 'Emulsion asfaltica' }]
 
 </script>
