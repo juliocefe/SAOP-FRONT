@@ -2,92 +2,38 @@
   <div>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button
-          class="nav-link active"
-          id="home-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#home"
-          type="button"
-          role="tab"
-          aria-controls="home"
-          aria-selected="true"
-          @click="handlePublicacion()"
-        >
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab"
+          aria-controls="home" aria-selected="true" @click="handlePublicacion()">
           Publicacion
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button
-          :disabled="publicacionId === ''"
-          class="nav-link"
-          id="libro_tab-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#libro_tab"
-          type="button"
-          role="tab"
-          aria-controls="libro_tab"
-          @click="handleLibros()"
-        >
+        <button :disabled="publicacionId === ''" class="nav-link" id="libro_tab-tab" data-bs-toggle="tab"
+          data-bs-target="#libro_tab" type="button" role="tab" aria-controls="libro_tab" @click="handleLibros()">
           Libros
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button
-          :disabled="libroId === ''"
-          class="nav-link"
-          id="temas_tab-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#temas_tab"
-          type="button"
-          role="tab"
-          aria-controls="temas_tab"
-          @click="handleTemas()"
-        >
+        <button :disabled="libroId === ''" class="nav-link" id="temas_tab-tab" data-bs-toggle="tab"
+          data-bs-target="#temas_tab" type="button" role="tab" aria-controls="temas_tab" @click="handleTemas()">
           Temas
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button
-          :disabled="temaId === ''"
-          class="nav-link"
-          id="parte_tab-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#parte_tab"
-          type="button"
-          role="tab"
-          aria-controls="parte_tab"
-          @click="handleParte()"
-        >
+        <button :disabled="temaId === ''" class="nav-link" id="parte_tab-tab" data-bs-toggle="tab"
+          data-bs-target="#parte_tab" type="button" role="tab" aria-controls="parte_tab" @click="handleParte()">
           Parte
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button
-          :disabled="parteId === ''"
-          class="nav-link"
-          id="titulo_tab-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#titulo_tab"
-          type="button"
-          role="tab"
-          aria-controls="titulo_tab"
-          @click="handleTitulo()"
-        >
+        <button :disabled="parteId === ''" class="nav-link" id="titulo_tab-tab" data-bs-toggle="tab"
+          data-bs-target="#titulo_tab" type="button" role="tab" aria-controls="titulo_tab" @click="handleTitulo()">
           Titulos
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button
-          :disabled="tituloId === ''"
-          class="nav-link"
-          id="capitulo_tab-tab"
-          data-bs-toggle="tab"
-          data-bs-target="#capitulo_tab"
-          type="button"
-          role="tab"
-          aria-controls="capitulo_tab"
-          @click="handleCapitulo()"
-        >
+        <button :disabled="tituloId === ''" class="nav-link" id="capitulo_tab-tab" data-bs-toggle="tab"
+          data-bs-target="#capitulo_tab" type="button" role="tab" aria-controls="capitulo_tab" @click="handleCapitulo()">
           Capitulos
         </button>
       </li>
@@ -98,67 +44,25 @@
       </h4>
       <hr class="red" />
       <div class="row app-options-bar">
-        <div
-          class="d-flex align-items-center buttons-component align-items-center"
-        >
+        <div class="d-flex align-items-center buttons-component align-items-center">
           <div class="col-md-8">
-            <ButtonBarComponent
-              @onCreate="modal = true"
-              @onCustom="modalEtiquetas = true"
-              :show-subactions="false"
-              :show-custom-button="viewName == 'Capitulos'"
-              :disable-custom-button="capitulo == null"
-              custom-label="Etiquetas"
-              custom-icon="bi bi-tag"
-            />
-            <Modal
-              v-if="modal"
-              :title="`Agregar ${viewName}`"
-              saveButtonTitle="Aceptar"
-              openButtonTittle="Crear"
-              :large-modal="true"
-              @onCloseModal="modal = false"
-              @onSave="saveForm"
-            >
-              <PublicacionForm
-                v-if="viewName === 'Publicaciones'"
-                @update-data="dataPublicacionForm"
-                :existingData="existingPublicacionData"
-              />
-              <LibroForm
-                v-if="viewName === 'Libros'"
-                @update-data="dataLibroForm"
-                :existingData="existingLibroData"
-              />
-              <TemaForm
-                v-if="viewName === 'Temas'"
-                @update-data="dataTemaForm"
-                :existingData="existingTemaData"
-              />
-              <ParteForm
-                v-if="viewName === 'Parte'"
-                @update-data="dataParteForm"
-                :existingData="existingParteData"
-              />
-              <TituloForm
-                v-if="viewName === 'Titulos'"
-                @update-data="dataTituloForm"
-                :existingData="existingTituloData"
-              />
-              <CapituloForm
-                v-if="viewName === 'Capitulos'"
-                @update-data="dataCapituloForm"
-                :existingData="existingCapituloData"
-              />
+            <ButtonBarComponent @onCreate="openModal()" @onCustom="modalEtiquetas = true" :show-subactions="false"
+              :show-custom-button="viewName == 'Capitulos'" :disable-custom-button="capitulo == null"
+              custom-label="Etiquetas" custom-icon="bi bi-tag" />
+            <Modal v-if="modal" :title="`Agregar ${viewName}`" saveButtonTitle="Aceptar" openButtonTittle="Crear"
+              :large-modal="true" @onCloseModal="modal = false" @onSave="saveForm">
+              <PublicacionForm v-if="viewName === 'Publicaciones'" @update-data="dataPublicacionForm"
+                :existingData="existingPublicacionData" />
+              <LibroForm v-if="viewName === 'Libros'" @update-data="dataLibroForm" :existingData="existingLibroData" />
+              <TemaForm v-if="viewName === 'Temas'" @update-data="dataTemaForm" :existingData="existingTemaData" />
+              <ParteForm v-if="viewName === 'Parte'" @update-data="dataParteForm" :existingData="existingParteData" />
+              <TituloForm v-if="viewName === 'Titulos'" @update-data="dataTituloForm"
+                :existingData="existingTituloData" />
+              <CapituloForm v-if="viewName === 'Capitulos'" @update-data="dataCapituloForm"
+                :existingData="existingCapituloData" />
             </Modal>
-            <Modal
-              v-if="modalDelete"
-              :title="`Eliminar ${viewName}`"
-              saveButtonTitle="Eliminar"
-              :large-modal="true"
-              @onCloseModal="modalDelete = false"
-              @onSave="deleteForm"
-            >
+            <Modal v-if="modalDelete" :title="`Eliminar ${viewName}`" saveButtonTitle="Eliminar" :large-modal="true"
+              @onCloseModal="modalDelete = false" @onSave="deleteForm">
               <div class="card">
                 <div class="card-body text-center">
                   <h5 class="card-title">¿Estás Seguro?</h5>
@@ -171,16 +75,11 @@
                 </div>
               </div>
             </Modal>
-            <Modal
-              v-if="modalEtiquetas && capitulo"
-              :title="`Etiqueta para el capitulo ${capitulo.descripcion}`"
-              saveButtonTitle="Aceptar"
-              openButtonTittle="Crear"
-              :large-modal="true"
-              @onCloseModal="modalEtiquetas = false"
-              @onSave="saveForm"
-            >
-              <Etiquetas :capituloId="capitulo.id" :dataIds="{capitulo: capitulo.id, libro: libroId, parte: parteId, publicacion: publicacionId, tema: temaId, titulo: tituloId}" />
+            <Modal v-if="modalEtiquetas && capitulo" :title="`Etiqueta para el capitulo ${capitulo.descripcion}`"
+              saveButtonTitle="Aceptar" openButtonTittle="Crear" :large-modal="true"
+              @onCloseModal="modalEtiquetas = false" @onSave="saveForm">
+              <Etiquetas :capituloId="capitulo.id"
+                :dataIds="{ capitulo: capitulo.id, libro: libroId, parte: parteId, publicacion: publicacionId, tema: temaId, titulo: tituloId }" />
             </Modal>
           </div>
         </div>
@@ -209,151 +108,48 @@
           </div>
         </div>
       </div> -->
-      <div
-        class="tab-pane fade show active"
-        id="home"
-        role="tabpanel"
-        aria-labelledby="home-tab"
-      >
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div v-if="showView">
-          <DataTableComponent
-            v-if="!arrayDataPublicacion.loading"
-            rowId="id"
-            :columns="columns"
-            :data="arrayDataPublicacion.data"
-            :pagination="arrayDataPublicacion.pagination"
-            :showDelete="true"
-            :showEdit="true"
-            :row-select="true"
-            :fixed-actions="true"
-            :prefix="publicacionPrefix"
-            @onPaginate="handlePaginate"
-            @onEdit="handleEdit"
-            @onDelete="handleDelete"
-            @onCreate="handleCreate"
-            @onGetID="(data) => (publicacionId = data.id)"
-          />
+          <DataTableComponent v-if="!arrayDataPublicacion.loading" rowId="id" :columns="columns"
+            :data="arrayDataPublicacion.data" :pagination="arrayDataPublicacion.pagination" :showDelete="true"
+            :showEdit="true" :row-select="true" :fixed-actions="true" :prefix="publicacionPrefix"
+            @onPaginate="handlePaginate" @onEdit="handleEdit" @onDelete="handleDelete" @onCreate="handleCreate"
+            @onGetID="(data) => (publicacionId = data.id)" />
         </div>
       </div>
-      <div
-        class="tab-pane fade"
-        id="libro_tab"
-        role="tabpanel"
-        aria-labelledby="libro_tab-tab"
-      >
-        <DataTableComponent
-          v-if="!arrayDataLibro.loading && publicacionId"
-          rowId="id"
-          :columns="columnsLibro"
-          :data="arrayDataLibro.data"
-          :pagination="arrayDataLibro.pagination"
-          :showDelete="true"
-          :showEdit="true"
-          :row-select="true"
-          :fixed-actions="true"
-          :prefix="libroPrefix"
-          @onPaginate="handlePaginateLibro"
-          @onEdit="handleEdit"
-          @onDelete="handleDelete"
-          @onCreate="handleCreate"
-          @onGetID="(data) => (libroId = data.id)"
-        />
+      <div class="tab-pane fade" id="libro_tab" role="tabpanel" aria-labelledby="libro_tab-tab">
+        <DataTableComponent v-if="!arrayDataLibro.loading && publicacionId" rowId="id" :columns="columnsLibro"
+          :data="arrayDataLibro.data" :pagination="arrayDataLibro.pagination" :showDelete="true" :showEdit="true"
+          :row-select="true" :fixed-actions="true" :prefix="libroPrefix" @onPaginate="handlePaginateLibro"
+          @onEdit="handleEdit" @onDelete="handleDelete" @onCreate="handleCreate"
+          @onGetID="(data) => (libroId = data.id)" />
       </div>
-      <div
-        class="tab-pane fade"
-        id="temas_tab"
-        role="tabpanel"
-        aria-labelledby="temas_tab-tab"
-      >
-        <DataTableComponent
-          v-if="!arrayDataTemas.loading && libroId"
-          rowId="id"
-          :columns="columnsTemas"
-          :data="arrayDataTemas.data"
-          :pagination="arrayDataTemas.pagination"
-          :showDelete="true"
-          :showEdit="true"
-          :row-select="true"
-          :fixed-actions="true"
-          :prefix="temaPrefix"
-          @onPaginate="handlePaginateTemas"
-          @onEdit="handleEdit"
-          @onDelete="handleDelete"
-          @onCreate="handleCreate"
-          @onGetID="(data) => (temaId = data.id)"
-        />
+      <div class="tab-pane fade" id="temas_tab" role="tabpanel" aria-labelledby="temas_tab-tab">
+        <DataTableComponent v-if="!arrayDataTemas.loading && libroId" rowId="id" :columns="columnsTemas"
+          :data="arrayDataTemas.data" :pagination="arrayDataTemas.pagination" :showDelete="true" :showEdit="true"
+          :row-select="true" :fixed-actions="true" :prefix="temaPrefix" @onPaginate="handlePaginateTemas"
+          @onEdit="handleEdit" @onDelete="handleDelete" @onCreate="handleCreate"
+          @onGetID="(data) => (temaId = data.id)" />
       </div>
-      <div
-        class="tab-pane fade"
-        id="parte_tab"
-        role="tabpanel"
-        aria-labelledby="parte_tab-tab"
-      >
-        <DataTableComponent
-          v-if="!arrayDataParte.loading && temaId"
-          rowId="id"
-          :columns="columnsParte"
-          :data="arrayDataParte.data"
-          :pagination="arrayDataParte.pagination"
-          :showDelete="true"
-          :showEdit="true"
-          :row-select="true"
-          :fixed-actions="true"
-          :prefix="partePrefix"
-          @onPaginate="handlePaginateParte"
-          @onEdit="handleEdit"
-          @onDelete="handleDelete"
-          @onCreate="handleCreate"
-          @onGetID="(data) => (parteId = data.id)"
-        />
+      <div class="tab-pane fade" id="parte_tab" role="tabpanel" aria-labelledby="parte_tab-tab">
+        <DataTableComponent v-if="!arrayDataParte.loading && temaId" rowId="id" :columns="columnsParte"
+          :data="arrayDataParte.data" :pagination="arrayDataParte.pagination" :showDelete="true" :showEdit="true"
+          :row-select="true" :fixed-actions="true" :prefix="partePrefix" @onPaginate="handlePaginateParte"
+          @onEdit="handleEdit" @onDelete="handleDelete" @onCreate="handleCreate"
+          @onGetID="(data) => (parteId = data.id)" />
       </div>
-      <div
-        class="tab-pane fade"
-        id="titulo_tab"
-        role="tabpanel"
-        aria-labelledby="titulo_tab-tab"
-      >
-        <DataTableComponent
-          v-if="!arrayDataTitulo.loading && parteId"
-          rowId="id"
-          :columns="columnsTitulo"
-          :data="arrayDataTitulo.data"
-          :pagination="arrayDataTitulo.pagination"
-          :showDelete="true"
-          :showEdit="true"
-          :row-select="true"
-          :fixed-actions="true"
-          :prefix="tituloPrefix"
-          @onPaginate="handlePaginateTitulo"
-          @onEdit="handleEdit"
-          @onDelete="handleDelete"
-          @onCreate="handleCreate"
-          @onGetID="(data) => (tituloId = data.id)"
-        />
+      <div class="tab-pane fade" id="titulo_tab" role="tabpanel" aria-labelledby="titulo_tab-tab">
+        <DataTableComponent v-if="!arrayDataTitulo.loading && parteId" rowId="id" :columns="columnsTitulo"
+          :data="arrayDataTitulo.data" :pagination="arrayDataTitulo.pagination" :showDelete="true" :showEdit="true"
+          :row-select="true" :fixed-actions="true" :prefix="tituloPrefix" @onPaginate="handlePaginateTitulo"
+          @onEdit="handleEdit" @onDelete="handleDelete" @onCreate="handleCreate"
+          @onGetID="(data) => (tituloId = data.id)" />
       </div>
-      <div
-        class="tab-pane fade"
-        id="capitulo_tab"
-        role="tabpanel"
-        aria-labelledby="capitulo_tab-tab"
-      >
-        <DataTableComponent
-          v-if="!arrayDataCapitulo.loading && parteId"
-          rowId="id"
-          :columns="columnsCapitulo"
-          :data="arrayDataCapitulo.data"
-          :pagination="arrayDataCapitulo.pagination"
-          :showDelete="true"
-          :showEdit="true"
-          :row-select="true"
-          :fixed-actions="true"
-          :prefix="capituloPrefix"
-          @onPaginate="handlePaginateCapitulo"
-          @onEdit="handleEdit"
-          @onDelete="handleDelete"
-          @onCreate="handleCreate"
-          @onGetID="(data) => (capitulo = data)"
-        />
+      <div class="tab-pane fade" id="capitulo_tab" role="tabpanel" aria-labelledby="capitulo_tab-tab">
+        <DataTableComponent v-if="!arrayDataCapitulo.loading && parteId" rowId="id" :columns="columnsCapitulo"
+          :data="arrayDataCapitulo.data" :pagination="arrayDataCapitulo.pagination" :showDelete="true" :showEdit="true"
+          :row-select="true" :fixed-actions="true" :prefix="capituloPrefix" @onPaginate="handlePaginateCapitulo"
+          @onEdit="handleEdit" @onDelete="handleDelete" @onCreate="handleCreate" @onGetID="(data) => (capitulo = data)" />
       </div>
     </div>
   </div>
@@ -699,6 +495,17 @@ const handlePaginate = (page: number) => {
     getDatasPublicacion({ page });
   }
 };
+
+const openModal = () => {
+  existingPublicacionData.value = null
+  existingLibroData.value = null
+  existingTemaData.value = null
+  existingParteData.value = null
+  existingTituloData.value = null
+  existingCapituloData.value = null
+  isEditing.value = false
+  modal.value = true
+}
 
 // const handleFilter = () => {
 //   let searchFilter = "";
