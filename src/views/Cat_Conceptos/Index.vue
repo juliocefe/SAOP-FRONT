@@ -49,7 +49,7 @@
             <ButtonBarComponent @onCreate="openModal()" @onCustom="modalEtiquetas = true" :show-subactions="false"
               :show-custom-button="viewName == 'Capitulos'" :disable-custom-button="capitulo == null"
               custom-label="Etiquetas" custom-icon="bi bi-tag" />
-            <Modal v-if="modal" :title="`Agregar ${viewName}`" saveButtonTitle="Aceptar" openButtonTittle="Crear"
+            <Modal v-if="modal" :title="`${isEditing ? 'Editar' : 'Agregar'} ${viewName.toLowerCase()}`" saveButtonTitle="Aceptar" openButtonTittle="Crear"
               size-modal="lg" @onCloseModal="modal = false" @onSave="saveForm">
               <PublicacionForm v-if="viewName === 'Publicaciones'" @update-data="dataPublicacionForm"
                 :existingData="existingPublicacionData" />

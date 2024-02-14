@@ -22,9 +22,9 @@
       <div class="row app-options-bar">
         <div class="d-flex align-items-center buttons-component align-items-center">
           <div class="col-md-8">
-            <ButtonBarComponent @onCreate="modal = true" :show-subactions="false" custom-label="Etiquetas"
+            <ButtonBarComponent @onCreate="openModal()" :show-subactions="false" custom-label="Etiquetas"
               custom-icon="bi bi-tag" />
-            <Modal v-if="modal" :title="`Agregar ${viewName}`" saveButtonTitle="Aceptar" openButtonTittle="Crear" size-modal="lg"
+            <Modal v-if="modal" :title="`${isEditing ? 'Editar' : 'Agregar'} ${viewName.toLowerCase()}`" saveButtonTitle="Aceptar" openButtonTittle="Crear" size-modal="lg"
                @onCloseModal="modal = false" @onSave="saveForm">
               <EtiquetaForm v-if="viewName == 'Etiquetas'" @update-data="dataEtiquetaForm"
                 :existingData="existingEtiquetaData" :dataIds="dataIds" />
@@ -262,6 +262,14 @@ const handleValores = () => {
   }
   viewName.value = "Valores";
 };
+
+
+const openModal = () => {
+  existingEtiquetaData.value = null
+  existingValorData.value = null
+  isEditing.value = false
+  modal.value = true
+}
 
 onMounted(async () => {
   showView.value = true;
