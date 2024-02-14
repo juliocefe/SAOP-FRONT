@@ -24,14 +24,14 @@
           <div class="col-md-8">
             <ButtonBarComponent @onCreate="modal = true" :show-subactions="false" custom-label="Etiquetas"
               custom-icon="bi bi-tag" />
-            <Modal v-if="modal" :title="`Agregar ${viewName}`" saveButtonTitle="Aceptar" openButtonTittle="Crear"
-              :large-modal="true" @onCloseModal="modal = false" @onSave="saveForm">
+            <Modal v-if="modal" :title="`Agregar ${viewName}`" saveButtonTitle="Aceptar" openButtonTittle="Crear" size-modal="lg"
+               @onCloseModal="modal = false" @onSave="saveForm">
               <EtiquetaForm v-if="viewName == 'Etiquetas'" @update-data="dataEtiquetaForm"
                 :existingData="existingEtiquetaData" :dataIds="dataIds" />
               <ValoresForm v-if="viewName == 'Valores'" @update-data="dataValorForm" :existingData="existingValorData"
                 :dataIds="dataIds" />
             </Modal>
-            <Modal v-if="modalDelete" :title="`Eliminar ${viewName}`" saveButtonTitle="Eliminar" :large-modal="true"
+            <Modal v-if="modalDelete" :title="`Eliminar ${viewName}`" saveButtonTitle="Eliminar" size-modal="lg"
               @onCloseModal="modalDelete = false" @onSave="deleteForm">
               <div class="card">
                 <div class="card-body text-center">
