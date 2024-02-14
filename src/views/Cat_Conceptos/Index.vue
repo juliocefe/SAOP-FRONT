@@ -50,7 +50,7 @@
               :show-custom-button="viewName == 'Capitulos'" :disable-custom-button="capitulo == null"
               custom-label="Etiquetas" custom-icon="bi bi-tag" />
             <Modal v-if="modal" :title="`Agregar ${viewName}`" saveButtonTitle="Aceptar" openButtonTittle="Crear"
-              :large-modal="true" @onCloseModal="modal = false" @onSave="saveForm">
+              size-modal="lg" @onCloseModal="modal = false" @onSave="saveForm">
               <PublicacionForm v-if="viewName === 'Publicaciones'" @update-data="dataPublicacionForm"
                 :existingData="existingPublicacionData" />
               <LibroForm v-if="viewName === 'Libros'" @update-data="dataLibroForm" :existingData="existingLibroData" />
@@ -76,7 +76,7 @@
               </div>
             </Modal>
             <Modal v-if="modalEtiquetas && capitulo" :title="`Etiqueta para el capitulo ${capitulo.descripcion}`"
-              saveButtonTitle="Aceptar" openButtonTittle="Crear" :large-modal="true"
+              saveButtonTitle="Aceptar" openButtonTittle="Crear" size-modal="xl"
               @onCloseModal="modalEtiquetas = false" @onSave="saveForm">
               <Etiquetas :capituloId="capitulo.id"
                 :dataIds="{ capitulo: capitulo.id, libro: libroId, parte: parteId, publicacion: publicacionId, tema: temaId, titulo: tituloId }" />
