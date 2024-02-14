@@ -677,7 +677,7 @@ const handlePaginateTitulo = (page: number) => {
   if (searchTerm.value) {
     searchDataTitulo({ page: page, search: searchTerm.value });
   } else {
-    getDatasTitulo({ page });
+    getDatasTitulo({ page, search: parteId.value });
   }
 };
 //Catalogo capitulo
@@ -690,7 +690,7 @@ const handlePaginateCapitulo = (page: number) => {
   if (searchTerm.value) {
     searchDataCapitulo({ page: page, search: searchTerm.value });
   } else {
-    getDatasCapitulo({ page });
+    getDatasCapitulo({ page, search: tituloId.value });
   }
 };
 

@@ -2,8 +2,8 @@
   <div>
     <InputText
       v-model.trim="data.libro"
-      title="Tipo:"
-      placeholder="Tipo"
+      title="Libro:"
+      placeholder="Libro"
       name="tipo_Publicacion"
       id="tipo_Publicacion"
       class="col-sm-12 mt-4"
