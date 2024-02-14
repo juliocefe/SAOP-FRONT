@@ -2,7 +2,7 @@ export interface ICapitulo {
     id: number | null;
     descripcion: string | null;
     anio: number | null;
-    descripcion_concepto: string | null;
+    descripcion_concepto: string | undefined;
     tipo_escalatoria: string | null;
     publicacion: string | null;
     libro: string | null;
@@ -15,7 +15,7 @@ export interface ICapitulo {
     id: null,
     descripcion: null,
     anio: null,
-    descripcion_concepto: null,
+    descripcion_concepto: undefined,
     tipo_escalatoria: null,
     publicacion: null,
     libro: null,

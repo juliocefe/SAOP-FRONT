@@ -88,7 +88,7 @@
           aria-controls="capitulo_tab"
           @click="handleCapitulo()"
         >
-          Capitulo
+          Capitulos
         </button>
       </li>
     </ul>
@@ -104,7 +104,12 @@
           <div class="col-md-8">
             <ButtonBarComponent
               @onCreate="modal = true"
+              @onCustom="modalEtiquetas = true"
               :show-subactions="false"
+              :show-custom-button="viewName == 'Capitulos'"
+              :disable-custom-button="capitulo == null"
+              custom-label="Etiquetas"
+              custom-icon="bi bi-tag"
             />
             <Modal
               v-if="modal"
@@ -141,8 +146,9 @@
                 :existingData="existingTituloData"
               />
               <CapituloForm
-                v-if="viewName === 'Capitulo'"
+                v-if="viewName === 'Capitulos'"
                 @update-data="dataCapituloForm"
+                :existingData="existingCapituloData"
               />
             </Modal>
             <Modal
@@ -157,7 +163,7 @@
                 <div class="card-body text-center">
                   <h5 class="card-title">¿Estás Seguro?</h5>
                   <h6 class="card-subtitle mb-2 text-muted">
-                    La actividad institucional se dará de baja permanentemente.
+                    El registro será eliminado permanetemente.
                   </h6>
                   <p class="card-text">
                     {{ dataDelete.descripcion }}
@@ -165,10 +171,22 @@
                 </div>
               </div>
             </Modal>
+            <Modal
+              v-if="modalEtiquetas && capitulo"
+              :title="`Etiqueta para el capitulo ${capitulo.descripcion}`"
+              saveButtonTitle="Aceptar"
+              openButtonTittle="Crear"
+              :large-modal="true"
+              @onCloseModal="modalEtiquetas = false"
+              @onSave="saveForm"
+            >
+              <Etiquetas :capituloId="capitulo.id" :dataIds="{capitulo: capitulo.id, libro: libroId, parte: parteId, publicacion: publicacionId, tema: temaId, titulo: tituloId}" />
+            </Modal>
           </div>
         </div>
       </div>
-      <div class="d-flex px-2">
+      <!-- buscador -->
+      <!-- <div class="d-flex px-2">
         <div class="pr-3 col-md-1" style="font-size: 30px">
           <i class="px-2 bi bi-funnel-fill"></i>
         </div>
@@ -190,7 +208,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div
         class="tab-pane fade show active"
         id="home"
@@ -334,14 +352,14 @@
           @onEdit="handleEdit"
           @onDelete="handleDelete"
           @onCreate="handleCreate"
-          @onGetID="(data) => (capituloId = data.id)"
+          @onGetID="(data) => (capitulo = data)"
         />
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount, shallowRef } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 import usePetition from "@/composables/usePetition";
 import DataTableComponent from "@/components/DataTableComponent.vue";
 import ButtonBarComponent from "@/components/ButtonBarComponent.vue";
@@ -354,9 +372,16 @@ import { ILibro } from "@/utils/models/cat_libros";
 import TemaForm from "@/components/forms/Tema.vue";
 import { ITema } from "@/utils/models/cat_temas";
 import ParteForm from "@/components/forms/Parte.vue";
+import Etiquetas from "@/views/Cat_Conceptos/Etiquetas/Index.vue";
 import { IParte } from "@/utils/models/cat_partes";
-import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
-import { ICapitulo, defaultValues as defaultValuesCapitulo } from "@/utils/models/cat_capitulos";
+import {
+  ITitulo,
+  defaultValues as defaultValuesTitulo,
+} from "@/utils/models/cat_titulos";
+import {
+  ICapitulo,
+  defaultValues as defaultValuesCapitulo,
+} from "@/utils/models/cat_capitulos";
 import router from "@/router";
 /* import Modal from "@/components/Modals.vue"; */
 import Modal from "@/components/ModalWithoutButton.vue";
@@ -366,7 +391,6 @@ import {
 } from "@/utils/listeners/clickListener";
 
 // forms
-var dynamicComponent = shallowRef(CapituloForm);
 
 const viewName = ref("Publicaciones");
 const selectedCat = ref("cat_publicacion/");
@@ -414,12 +438,16 @@ const {
   searchData: searchDataTitulo,
   createData: createDataTitulo,
   updateData: updateDataTitulo,
+  deleteData: deleteDataTitulo,
 } = usePetition("cat_titulo/");
 const {
   arrayData: arrayDataCapitulo,
   getDatas: getDatasCapitulo,
+  getData: getDataCapitulo,
   searchData: searchDataCapitulo,
   createData: createDataCapitulo,
+  updateData: updateDataCapitulo,
+  deleteData: deleteDataCapitulo,
 } = usePetition("cat_capitulo/");
 
 const publicacionPrefix = "publicacion";
@@ -433,7 +461,7 @@ const parteId = ref("");
 const tituloPrefix = "titulo";
 const tituloId = ref("");
 const capituloPrefix = "capitulo";
-const capituloId = ref("");
+const capitulo = ref<ICapitulo | null>(null);
 
 const searchTerm = ref("");
 const idRow = ref("");
@@ -442,6 +470,7 @@ const showView = ref(false);
 const isEditing = ref(false);
 const isDeleting = ref(false);
 const modal = ref(false);
+const modalEtiquetas = ref(false);
 const modalDelete = ref(false);
 
 const handleCreate = () => router.push({ name: "crear-proyecto_de_inversion" });
@@ -452,6 +481,7 @@ const existingLibroData = ref<ILibro | null>(null);
 const existingTemaData = ref<ITema | null>(null);
 const existingParteData = ref<ITema | null>(null);
 const existingTituloData = ref<ITema | null>(null);
+const existingCapituloData = ref<ITema | null>(null);
 const handleEdit = (data: any) => {
   switch (viewName.value) {
     case "Publicaciones":
@@ -487,6 +517,13 @@ const handleEdit = (data: any) => {
     case "Titulos":
       getDataTitulo(data).then((response: any) => {
         existingTituloData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
+        isEditing.value = true;
+        modal.value = true;
+      });
+      break;
+    case "Capitulos":
+      getDataCapitulo(data).then((response: any) => {
+        existingCapituloData.value = { ...response }; // Asegúrate de que los campos coincidan con el modelo
         isEditing.value = true;
         modal.value = true;
       });
@@ -534,6 +571,22 @@ const handleDelete = (data: any) => {
         modalDelete.value = true;
       });
       break;
+    case "Titulos":
+      getDataTitulo(data).then((response: any) => {
+        dataDelete.value.descripcion = response.descripcion;
+        dataDelete.value.id = response.id;
+        isDeleting.value = true;
+        modalDelete.value = true;
+      });
+      break;
+    case "Capitulos":
+      getDataCapitulo(data).then((response: any) => {
+        dataDelete.value.descripcion = response.descripcion;
+        dataDelete.value.id = response.id;
+        isDeleting.value = true;
+        modalDelete.value = true;
+      });
+      break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
   }
@@ -567,7 +620,6 @@ const handlePublicacion = () => {
   libroId.value = "";
   temaId.value = "";
   parteId.value = "";
-  dynamicComponent = shallowRef(PublicacionForm);
 };
 //Catalogo libros
 const handleLibros = () => {
@@ -623,20 +675,20 @@ const handlePaginateTitulo = (page: number) => {
   if (searchTerm.value) {
     searchDataTitulo({ page: page, search: searchTerm.value });
   } else {
-    getDatasTitulo({ page });
+    getDatasTitulo({ page, search: parteId.value });
   }
 };
 //Catalogo capitulo
 const handleCapitulo = () => {
   searchDataCapitulo({ page: 1, search: tituloId.value });
-  viewName.value = "Capitulo";
+  viewName.value = "Capitulos";
   selectedCat.value = "cat_capitulo/";
 };
 const handlePaginateCapitulo = (page: number) => {
   if (searchTerm.value) {
     searchDataCapitulo({ page: page, search: searchTerm.value });
   } else {
-    getDatasCapitulo({ page });
+    getDatasCapitulo({ page, search: tituloId.value });
   }
 };
 
@@ -648,23 +700,23 @@ const handlePaginate = (page: number) => {
   }
 };
 
-const handleFilter = () => {
-  let searchFilter = "";
-  if (cbEntidad.value.length) searchFilter += cbEntidad.value;
-  if (cbUnidad.value.length) {
-    if (searchFilter.length) searchFilter += " ,";
-    searchFilter += cbEntidad.value;
-  }
-  if (inputSolicitud.value.length) {
-    if (searchFilter.length) searchFilter += " ,";
-    searchFilter += inputSolicitud.value;
-  }
-  searchDataPublicacion({ page: 1, search: searchFilter });
-};
+// const handleFilter = () => {
+//   let searchFilter = "";
+//   if (cbEntidad.value.length) searchFilter += cbEntidad.value;
+//   if (cbUnidad.value.length) {
+//     if (searchFilter.length) searchFilter += " ,";
+//     searchFilter += cbEntidad.value;
+//   }
+//   if (inputSolicitud.value.length) {
+//     if (searchFilter.length) searchFilter += " ,";
+//     searchFilter += inputSolicitud.value;
+//   }
+//   searchDataPublicacion({ page: 1, search: searchFilter });
+// };
 
-const cbEntidad = ref<string>("");
-const cbUnidad = ref<string>("");
-const inputSolicitud = ref<string>("");
+// const cbEntidad = ref<string>("");
+// const cbUnidad = ref<string>("");
+// const inputSolicitud = ref<string>("");
 /* const saveActionTrigger = () => {
   modal.value = !modal.value;
   console.log(modal.value);
@@ -727,19 +779,21 @@ const saveForm = async () => {
       if (isEditing.value) {
         // Llama a la función correspondiente para editar los datos existentes
         await updateDataPublicacion(savedPublicacionData.value);
-        await searchDataPublicacion({ page: 1, search: parteId.value });
+        searchDataPublicacion({ page: 1, search: searchTerm.value });
       } else {
         // Llama a la función correspondiente para crear nuevos datos
         await createDataPublicacion(savedPublicacionData.value);
+        searchDataPublicacion({ page: 1, search: searchTerm.value });
       }
       break;
     case "Libros":
       savedLibroData.value.publicacion = `${publicacionId.value}`;
       if (isEditing.value) {
         await updateDataLibro(savedLibroData.value);
-        await searchDataLibro({ page: 1, search: parteId.value });
+        await searchDataLibro({ page: 1, search: publicacionId.value });
       } else {
         await createDataLibro(savedLibroData.value);
+        await searchDataLibro({ page: 1, search: publicacionId.value });
       }
       break;
     case "Temas":
@@ -747,9 +801,10 @@ const saveForm = async () => {
       savedTemaData.value.libro = `${libroId.value}`;
       if (isEditing.value) {
         await updateDataTemas(savedTemaData.value);
-        await searchDataTemas({ page: 1, search: parteId.value });
+        await searchDataTemas({ page: 1, search: libroId.value });
       } else {
         await createDataTemas(savedTemaData.value);
+        await searchDataTemas({ page: 1, search: libroId.value });
       }
       break;
     case "Parte":
@@ -758,13 +813,14 @@ const saveForm = async () => {
       savedParteData.value.tema = `${temaId.value}`;
       if (isEditing.value) {
         await updateDataParte(savedParteData.value);
-        await searchDataParte({ page: 1, search: parteId.value });
+        await searchDataParte({ page: 1, search: temaId.value });
       } else {
         await createDataParte(savedParteData.value);
+        await searchDataParte({ page: 1, search: temaId.value });
       }
       break;
     case "Titulos":
-      savedTituloData.value.publicacion = `${libroId.value}`;
+      savedTituloData.value.publicacion = `${publicacionId.value}`;
       savedTituloData.value.libro = `${libroId.value}`;
       savedTituloData.value.tema = `${temaId.value}`;
       savedTituloData.value.parte = `${parteId.value}`;
@@ -773,15 +829,22 @@ const saveForm = async () => {
         await searchDataTitulo({ page: 1, search: parteId.value });
       } else {
         await createDataTitulo(savedTituloData.value);
+        await searchDataTitulo({ page: 1, search: parteId.value });
       }
       break;
-    case "Capitulo":
-      savedCapituloData.value.publicacion = `${libroId.value}`;
+    case "Capitulos":
+      savedCapituloData.value.publicacion = `${publicacionId.value}`;
       savedCapituloData.value.libro = `${libroId.value}`;
       savedCapituloData.value.tema = `${temaId.value}`;
       savedCapituloData.value.parte = `${parteId.value}`;
       savedCapituloData.value.titulo = `${tituloId.value}`;
-      await createDataCapitulo(savedCapituloData.value);
+      if (isEditing.value) {
+        await updateDataCapitulo(savedCapituloData.value);
+        await searchDataCapitulo({ page: 1, search: tituloId.value });
+      } else {
+        await createDataCapitulo(savedCapituloData.value);
+        await searchDataCapitulo({ page: 1, search: tituloId.value });
+      }
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
@@ -792,15 +855,27 @@ const deleteForm = async () => {
   switch (viewName.value) {
     case "Publicaciones":
       await deleteDataPublicacion(dataDelete.value.id);
+      await searchDataPublicacion({ page: 1, search: searchTerm.value });
       break;
     case "Libros":
       await deleteDataLibro(dataDelete.value.id);
+      await searchDataLibro({ page: 1, search: publicacionId.value });
       break;
     case "Temas":
       await deleteDataTemas(dataDelete.value.id);
+      await searchDataTemas({ page: 1, search: libroId.value });
       break;
     case "Parte":
       await deleteDataParte(dataDelete.value.id);
+      await searchDataParte({ page: 1, search: temaId.value });
+      break;
+    case "Titulos":
+      await deleteDataTitulo(dataDelete.value.id);
+      await searchDataTitulo({ page: 1, search: parteId.value });
+      break;
+    case "Capitulos":
+      await deleteDataCapitulo(dataDelete.value.id);
+      await searchDataCapitulo({ page: 1, search: tituloId.value });
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);

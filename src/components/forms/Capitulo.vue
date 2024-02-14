@@ -5,7 +5,7 @@
     <SelectComponent v-model="data.anio" title="Año:" placeholder="Selecciona..." name="anio" id="anio" class="col-sm-4"
       :options="years()" :optionText="'year'" @input="emitData" />
     <SelectComponent v-model="data.tipo_escalatoria" title="Escalatoria:" placeholder="Selecciona..." name="escalatoria"
-      id="escalatoria" class="col-sm-8" :options="years()" :optionText="'year'" @input="emitData" />
+      id="escalatoria" class="col-sm-8" :options="escalatorias" :optionText="'escalatoria'" @input="emitData" />
     <TextAraComponent v-model="data.descripcion_concepto" :title="'Descripción concepto:'"
       :placeholder="'Agrega una descripción...'" :name="'desc_concepto'" :id="'desc_concepto'"
       class="col-sm-12" @input="emitData" />
@@ -14,11 +14,12 @@
 <script setup lang="ts">
 import InputText from "@/components/InputText.vue";
 import SelectComponent from "@/components/SelectComponent.vue";
-import { ref, defineEmits } from "vue";
-import { ICapitulo, defaultValues as defaultValuesCapitulo } from "@/utils/models/cat_capitulos";
+import { ref, onBeforeMount } from "vue";
+import { ICapitulo } from "@/utils/models/cat_capitulos";
 import TextAraComponent from "@/components/TextAraComponent.vue";
 
-const data = ref<ICapitulo>(defaultValuesCapitulo);
+const props = defineProps(["existingData"]);
+const data = ref<ICapitulo>({ ...props.existingData });
 
 const emit = defineEmits(["update-data"]);
 
@@ -36,5 +37,15 @@ const years = () => {
   }
   return years
 }
+// Lógica para inicializar campos con existingData si está presente
+onBeforeMount(() => {
+  console.log(props);
+  if (props.existingData) {
+    // Inicializa los datos del formulario con los datos existentes
+    data.value = { ...props.existingData };
+  }
+});
+
+const escalatorias = [{ id: 1, escalatoria: 'Terracerias excluye acarreos' }, { id: 2, escalatoria: 'Estructuras y obras de drenaje' }, { id: 3, escalatoria: 'Pavimentos' }, { id: 4, escalatoria: 'Concreto hidraulico' }, { id: 5, escalatoria: 'Acarreos para terraceria y pav.' }, { id: 6, escalatoria: 'Trabajos de supervision' }, { id: 7, escalatoria: 'Emulsion asfaltica' }]
 
 </script>
