@@ -55,9 +55,8 @@ const props = defineProps({
     type: String,
     default: "Guardar",
   },
-  largeModal: {
-    type: Boolean,
-    default: false,
+  sizeModal: {
+    type: String
   },
 });
 
@@ -75,7 +74,7 @@ const closeAndSaveModal = () => {
   emit("onSave");
 };
 
-const sizeModal = props.largeModal ? "modal-lg" : "";
+const sizeModal = props.sizeModal ? `modal-${props.sizeModal}` : "";
 </script>
 
 <style scoped>
@@ -101,5 +100,16 @@ const sizeModal = props.largeModal ? "modal-lg" : "";
 
 .custom-modal-header .close:hover {
   color: #ccc;
+}
+@media (min-width: 768px){
+  .modal .modal-dialog.modal-xl {
+    max-width: 1300px !important;
+    width: 100%;
+    margin: 30px auto;
+}
+}
+
+.modal-dialog.modal-xl{
+  max-width: 900px !important;
 }
 </style>
