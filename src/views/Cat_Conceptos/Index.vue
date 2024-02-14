@@ -180,7 +180,7 @@
               @onCloseModal="modalEtiquetas = false"
               @onSave="saveForm"
             >
-              <Etiquetas />
+              <Etiquetas :capituloId="capitulo.id" :dataIds="{capitulo: capitulo.id, libro: libroId, parte: parteId, publicacion: publicacionId, tema: temaId, titulo: tituloId}" />
             </Modal>
           </div>
         </div>
@@ -372,10 +372,16 @@ import { ILibro } from "@/utils/models/cat_libros";
 import TemaForm from "@/components/forms/Tema.vue";
 import { ITema } from "@/utils/models/cat_temas";
 import ParteForm from "@/components/forms/Parte.vue";
-import Etiquetas from "@/views/Cat_Conceptos/Etiquetas/Index.vue"
+import Etiquetas from "@/views/Cat_Conceptos/Etiquetas/Index.vue";
 import { IParte } from "@/utils/models/cat_partes";
-import { ITitulo, defaultValues as defaultValuesTitulo } from "@/utils/models/cat_titulos";
-import { ICapitulo, defaultValues as defaultValuesCapitulo } from "@/utils/models/cat_capitulos";
+import {
+  ITitulo,
+  defaultValues as defaultValuesTitulo,
+} from "@/utils/models/cat_titulos";
+import {
+  ICapitulo,
+  defaultValues as defaultValuesCapitulo,
+} from "@/utils/models/cat_capitulos";
 import router from "@/router";
 /* import Modal from "@/components/Modals.vue"; */
 import Modal from "@/components/ModalWithoutButton.vue";
@@ -568,7 +574,7 @@ const handleDelete = (data: any) => {
       break;
     case "Titulos":
       getDataTitulo(data).then((response: any) => {
-        dataDelete.value.descripcion = response.descripcion; 
+        dataDelete.value.descripcion = response.descripcion;
         dataDelete.value.id = response.id;
         isDeleting.value = true;
         modalDelete.value = true;
@@ -576,7 +582,7 @@ const handleDelete = (data: any) => {
       break;
     case "Capitulos":
       getDataCapitulo(data).then((response: any) => {
-        dataDelete.value.descripcion = response.descripcion; 
+        dataDelete.value.descripcion = response.descripcion;
         dataDelete.value.id = response.id;
         isDeleting.value = true;
         modalDelete.value = true;
@@ -775,19 +781,21 @@ const saveForm = async () => {
       if (isEditing.value) {
         // Llama a la función correspondiente para editar los datos existentes
         await updateDataPublicacion(savedPublicacionData.value);
-        await searchDataPublicacion({ page: 1, search: parteId.value });
+        searchDataPublicacion({ page: 1, search: searchTerm.value });
       } else {
         // Llama a la función correspondiente para crear nuevos datos
         await createDataPublicacion(savedPublicacionData.value);
+        searchDataPublicacion({ page: 1, search: searchTerm.value });
       }
       break;
     case "Libros":
       savedLibroData.value.publicacion = `${publicacionId.value}`;
       if (isEditing.value) {
         await updateDataLibro(savedLibroData.value);
-        await searchDataLibro({ page: 1, search: parteId.value });
+        await searchDataLibro({ page: 1, search: publicacionId.value });
       } else {
         await createDataLibro(savedLibroData.value);
+        await searchDataLibro({ page: 1, search: publicacionId.value });
       }
       break;
     case "Temas":
@@ -795,9 +803,10 @@ const saveForm = async () => {
       savedTemaData.value.libro = `${libroId.value}`;
       if (isEditing.value) {
         await updateDataTemas(savedTemaData.value);
-        await searchDataTemas({ page: 1, search: parteId.value });
+        await searchDataTemas({ page: 1, search: libroId.value });
       } else {
         await createDataTemas(savedTemaData.value);
+        await searchDataTemas({ page: 1, search: libroId.value });
       }
       break;
     case "Parte":
@@ -806,13 +815,14 @@ const saveForm = async () => {
       savedParteData.value.tema = `${temaId.value}`;
       if (isEditing.value) {
         await updateDataParte(savedParteData.value);
-        await searchDataParte({ page: 1, search: parteId.value });
+        await searchDataParte({ page: 1, search: temaId.value });
       } else {
         await createDataParte(savedParteData.value);
+        await searchDataParte({ page: 1, search: temaId.value });
       }
       break;
     case "Titulos":
-      savedTituloData.value.publicacion = `${libroId.value}`;
+      savedTituloData.value.publicacion = `${publicacionId.value}`;
       savedTituloData.value.libro = `${libroId.value}`;
       savedTituloData.value.tema = `${temaId.value}`;
       savedTituloData.value.parte = `${parteId.value}`;
@@ -821,19 +831,21 @@ const saveForm = async () => {
         await searchDataTitulo({ page: 1, search: parteId.value });
       } else {
         await createDataTitulo(savedTituloData.value);
+        await searchDataTitulo({ page: 1, search: parteId.value });
       }
       break;
     case "Capitulos":
-      savedCapituloData.value.publicacion = `${libroId.value}`;
+      savedCapituloData.value.publicacion = `${publicacionId.value}`;
       savedCapituloData.value.libro = `${libroId.value}`;
       savedCapituloData.value.tema = `${temaId.value}`;
       savedCapituloData.value.parte = `${parteId.value}`;
       savedCapituloData.value.titulo = `${tituloId.value}`;
       if (isEditing.value) {
         await updateDataCapitulo(savedCapituloData.value);
-        await searchDataCapitulo({ page: 1, search: parteId.value });
+        await searchDataCapitulo({ page: 1, search: tituloId.value });
       } else {
         await createDataCapitulo(savedCapituloData.value);
+        await searchDataCapitulo({ page: 1, search: tituloId.value });
       }
       break;
     default:
@@ -845,15 +857,19 @@ const deleteForm = async () => {
   switch (viewName.value) {
     case "Publicaciones":
       await deleteDataPublicacion(dataDelete.value.id);
+      await searchDataPublicacion({ page: 1, search: searchTerm.value });
       break;
     case "Libros":
       await deleteDataLibro(dataDelete.value.id);
+      await searchDataLibro({ page: 1, search: publicacionId.value });
       break;
     case "Temas":
       await deleteDataTemas(dataDelete.value.id);
+      await searchDataTemas({ page: 1, search: libroId.value });
       break;
     case "Parte":
       await deleteDataParte(dataDelete.value.id);
+      await searchDataParte({ page: 1, search: temaId.value });
       break;
     case "Titulos":
       await deleteDataTitulo(dataDelete.value.id);
@@ -861,7 +877,7 @@ const deleteForm = async () => {
       break;
     case "Capitulos":
       await deleteDataCapitulo(dataDelete.value.id);
-      await searchDataCapitulo({ page: 1, search: parteId.value });
+      await searchDataCapitulo({ page: 1, search: tituloId.value });
       break;
     default:
       console.error(`Tipo de formulario no reconocido: ${viewName.value}`);
