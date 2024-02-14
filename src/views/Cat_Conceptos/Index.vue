@@ -180,7 +180,7 @@
               @onCloseModal="modalEtiquetas = false"
               @onSave="saveForm"
             >
-              <Etiquetas />
+              <Etiquetas :capituloId="capitulo.id" :dataIds="{capitulo: capitulo.id, libro: libroId, parte: parteId, publicacion: publicacionId, tema: temaId, titulo: tituloId}" />
             </Modal>
           </div>
         </div>
