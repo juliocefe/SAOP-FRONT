@@ -24,6 +24,11 @@ export const routes = [
     component: () => import("@/layouts/LayoutComponent.vue"),
     children: [
       {
+        path: "saop/Home",
+        name: "HomePage",
+        component: () => import("@/views/HomeView.vue"),
+      },
+      {
         path: "saop/table",
         name: "table",
         component: () => import("@/views/BitacoraMovimientos/Index.vue"),
