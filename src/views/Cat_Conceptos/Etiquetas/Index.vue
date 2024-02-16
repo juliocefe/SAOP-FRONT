@@ -1,66 +1,75 @@
 <template>
   <div>
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="etiquetas-tab" data-bs-toggle="tab" data-bs-target="#etiquetas" type="button"
-          role="tab" aria-controls="etiquetas" aria-selected="true" @click="handleEtiquetas()">
-          Etiquetas
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="valor_tab-tab" data-bs-toggle="tab" data-bs-target="#valor_tab" type="button"
-          role="tab" aria-controls="valor_tab" @click="handleValores()" :disabled="etiquetaId === ''">
-          Valores
-        </button>
-      </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-      <h4 class="view-name">
-        <!-- {{ viewName }} -->
-      </h4>
-      <hr class="red" />
-      <div class="row app-options-bar">
-        <div class="d-flex align-items-center buttons-component align-items-center">
-          <div class="col-md-8">
-            <ButtonBarComponent @onCreate="openModal()" :show-subactions="false" custom-label="Etiquetas"
-              custom-icon="bi bi-tag" />
-            <Modal v-if="modal" :title="`${isEditing ? 'Editar' : 'Agregar'} ${viewName.toLowerCase()}`" saveButtonTitle="Aceptar" openButtonTittle="Crear" size-modal="lg"
-               @onCloseModal="modal = false" @onSave="saveForm">
-              <EtiquetaForm v-if="viewName == 'Etiquetas'" @update-data="dataEtiquetaForm"
-                :existingData="existingEtiquetaData" :dataIds="dataIds" />
-              <ValoresForm v-if="viewName == 'Valores'" @update-data="dataValorForm" :existingData="existingValorData"
-                :dataIds="dataIds" />
-            </Modal>
-            <Modal v-if="modalDelete" :title="`Eliminar ${viewName}`" saveButtonTitle="Eliminar" size-modal="lg"
-              @onCloseModal="modalDelete = false" @onSave="deleteForm">
-              <div class="card">
-                <div class="card-body text-center">
-                  <h5 class="card-title">¿Estás Seguro?</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">
-                    El registro será eliminado permanetemente.
-                  </h6>
-                  <p class="card-text">
-                    {{ dataDelete.descripcion }}
-                  </p>
+    <div v-if="!arrayDataEtiqueta.loading">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="etiquetas-tab" data-bs-toggle="tab" data-bs-target="#etiquetas"
+            type="button" role="tab" aria-controls="etiquetas" aria-selected="true" @click="handleEtiquetas()">
+            Etiquetas
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="valor_tab-tab" data-bs-toggle="tab" data-bs-target="#valor_tab" type="button"
+            role="tab" aria-controls="valor_tab" @click="handleValores()" :disabled="etiquetaId === ''">
+            Valores
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <h4 class="view-name">
+          <!-- {{ viewName }} -->
+        </h4>
+        <hr class="red" />
+        <div class="row app-options-bar">
+          <div class="d-flex align-items-center buttons-component align-items-center">
+            <div class="col-md-8">
+              <ButtonBarComponent @onCreate="openModal()" :show-subactions="false" custom-label="Etiquetas"
+                custom-icon="bi bi-tag" />
+              <Modal v-if="modal" :title="`${isEditing ? 'Editar' : 'Agregar'} ${viewName.toLowerCase()}`"
+                saveButtonTitle="Aceptar" openButtonTittle="Crear" size-modal="lg" @onCloseModal="modal = false"
+                @onSave="saveForm">
+                <EtiquetaForm v-if="viewName == 'Etiquetas'" @update-data="dataEtiquetaForm"
+                  :existingData="existingEtiquetaData" :dataIds="dataIds" />
+                <ValoresForm v-if="viewName == 'Valores'" @update-data="dataValorForm" :existingData="existingValorData"
+                  :dataIds="dataIds" />
+              </Modal>
+              <Modal v-if="modalDelete" :title="`Eliminar ${viewName}`" saveButtonTitle="Eliminar" size-modal="lg"
+                @onCloseModal="modalDelete = false" @onSave="deleteForm">
+                <div class="card">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">¿Estás Seguro?</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                      El registro será eliminado permanetemente.
+                    </h6>
+                    <p class="card-text">
+                      {{ dataDelete.descripcion }}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Modal>
+              </Modal>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="tab-pane fade show active" id="etiquetas" role="tabpanel" aria-labelledby="etiquetas-tab">
-        <div v-if="showView">
-          <DataTableComponent v-if="!arrayDataEtiqueta.loading" rowId="id" :columns="columnsEtiqueta"
-            :data="arrayDataEtiqueta.data" :pagination="arrayDataEtiqueta.pagination" :showDelete="true" :showEdit="true"
-            :row-select="true" :fixed-actions="true" :prefix="etiquetaPrefix" @onPaginate="handlePaginateEtiqueta"
-            @onEdit="handleEdit" @onDelete="handleDelete" @onGetID="(data) => (etiquetaId = data.id)" />
+        <div class="tab-pane fade show active" id="etiquetas" role="tabpanel" aria-labelledby="etiquetas-tab">
+          <div v-if="showView">
+            <DataTableComponent v-if="!arrayDataEtiqueta.loading" rowId="id" :columns="columnsEtiqueta"
+              :data="arrayDataEtiqueta.data" :pagination="arrayDataEtiqueta.pagination" :showDelete="true"
+              :showEdit="true" :row-select="true" :fixed-actions="true" :prefix="etiquetaPrefix"
+              @onPaginate="handlePaginateEtiqueta" @onEdit="handleEdit" @onDelete="handleDelete"
+              @onGetID="(data) => (etiquetaId = data.id)" />
+          </div>
+        </div>
+        <div class="tab-pane fade" id="valor_tab" role="tabpanel" aria-labelledby="valor_tab-tab">
+          <DataTableComponent v-if="!arrayDataValor.loading" rowId="id" :columns="columnsValor"
+            :data="arrayDataValor.data" :pagination="arrayDataValor.pagination" :showDelete="true" :showEdit="true"
+            :row-select="true" :fixed-actions="true" :prefix="valorPrefix" @onPaginate="handlePaginateValor"
+            @onEdit="handleEdit" @onDelete="handleDelete" @onGetID="(data) => (valorId = data.id)" />
         </div>
       </div>
-      <div class="tab-pane fade" id="valor_tab" role="tabpanel" aria-labelledby="valor_tab-tab">
-        <DataTableComponent v-if="!arrayDataValor.loading" rowId="id" :columns="columnsValor" :data="arrayDataValor.data"
-          :pagination="arrayDataValor.pagination" :showDelete="true" :showEdit="true" :row-select="true"
-          :fixed-actions="true" :prefix="valorPrefix" @onPaginate="handlePaginateValor" @onEdit="handleEdit"
-          @onDelete="handleDelete" @onGetID="(data) => (valorId = data.id)" />
+    </div>
+    <div v-else class="text-center">
+      <div class="spinner-border spinner" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
   </div>
@@ -202,6 +211,7 @@ const handleDelete = (data: any) => {
 };
 
 const saveForm = async () => {
+  arrayDataEtiqueta.value.loading = true
   switch (viewName.value) {
     case "Etiquetas":
       if (isEditing.value) {
@@ -286,3 +296,10 @@ watch(
   }
 );
 </script>
+<style>
+.spinner {
+  width: 4rem;
+  height: 4rem;
+  color: var(--primary-red);
+}
+</style>

@@ -3,7 +3,7 @@
         <InputText v-model.trim="data.etiqueta" title="Etiqueta:" placeholder="Ingresa una descripción..." name="etiqueta"
             id="etiqueta" class="col-sm-12 mt-4" @input="emitData" />
         <SelectComponent v-model="data.vista" title="Vista:" placeholder="Selecciona..." name="vista" id="vista"
-            class="col-sm-12 mt-4" :options="vistas" :optionText="'vista'" optionValue="id" @input="emitData" />
+            class="col-sm-12 mt-4" :options="vistas" :optionText="'vista'" optionValue="id" @change="emitData" />
         <div class="form-check col-sm-6 mt-4">
             <input v-model.trim="data.usa_imagen" type="checkbox" :checked="data.usa_imagen" id="usa_imagen" @change="emitData"/>
             <label class="form-check-label pl-4" for="usa_imagen"> Maneja imagenes </label>
@@ -31,7 +31,6 @@ const emitData = () => {
 };
 // Lógica para inicializar campos con existingData si está presente
 onBeforeMount(() => {
-    console.log(props);
     if (props.existingData) {
         // Inicializa los datos del formulario con los datos existentes
         data.value = { ...props.existingData };

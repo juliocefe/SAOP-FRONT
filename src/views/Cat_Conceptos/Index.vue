@@ -181,6 +181,7 @@
               size-modal="xl"
               @onCloseModal="modalEtiquetas = false"
               @onSave="saveForm"
+              :showAcceptButton="false"
             >
               <Etiquetas
                 :capituloId="capitulo.id"
