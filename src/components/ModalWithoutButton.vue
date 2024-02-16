@@ -5,7 +5,7 @@
       v-if="isModalOpen"
     ></div>
     <div
-      class="modal fade"
+      class="modal fade overflow-auto"
       :class="{ ' show ': isModalOpen }"
       v-if="isModalOpen"
     >
@@ -30,6 +30,7 @@
               Cerrar
             </button>
             <button
+              v-if="props.showAcceptButton"
               type="button"
               class="btn btn-primary active"
               @click="closeAndSaveModal"
@@ -58,6 +59,10 @@ const props = defineProps({
   sizeModal: {
     type: String
   },
+  showAcceptButton: {
+    type: Boolean,
+    default: true
+  }
 });
 
 const emit = defineEmits(["onSave", "onCloseModal"]);

@@ -6,7 +6,7 @@
     <div class="options-bar container">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link class="nav-link" :to="{ name: 'table' }">
+          <router-link class="nav-link" :to="{ name: 'HomePage' }">
             Inicio
           </router-link>
         </li>
